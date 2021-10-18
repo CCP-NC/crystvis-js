@@ -112,12 +112,12 @@ describe('Visualizer tests', function() {
         var m4 = visualizer.loadModels(exampleFiles['example_single.cif']);
         var m5 = visualizer.loadModels(exampleFiles['ethanol.magres'], 'magres');
 
-        chai.expect(visualizer.model_list.sort()).to.deep.equal(['1501936', 'I', 'magres', 'xyz', 'xyz_1']);
+        chai.expect(visualizer.model_list.sort()).to.deep.equal(['cif_1501936', 'cif_I', 'magres', 'xyz', 'xyz_1']);
     });
 
     it('should correctly visualize a model', function() {
 
-        visualizer.displayModel('I');
+        visualizer.displayModel('cif_I');
 
     });
 
