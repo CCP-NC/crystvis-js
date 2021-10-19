@@ -1,0 +1,19 @@
+#main-app {
+    position: relative;
+    background-color: #002030;
+    width: 40vw;
+    height: 60vh;
+
+    color: white;
+    font-size: 30pt;
+    font-weight: bold;
+    font-family: sans-serif;
+    text-align: center;
+    line-height: 30vh;
+}
+
+#main-app canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

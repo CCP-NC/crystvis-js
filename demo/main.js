@@ -3,7 +3,7 @@
 const CrystVis = require('../lib/visualizer.js').CrystVis;
 const Primitives = require('../lib/primitives/index.js');
 
-var visualizer = new CrystVis('#main-app', 640, 480);
+var visualizer = new CrystVis('#main-app', 0, 0);
 visualizer.highlight_selected = true;
 
 window.loadFile = function() {
