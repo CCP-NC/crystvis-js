@@ -23,6 +23,7 @@ window.loadFile = function() {
             supercell: [sx, sy, sz],
             molecularCrystal: mcryst
         });
+        console.log(loaded);
         visualizer.displayModel(Object.keys(loaded)[0]);
         visualizer.displayed = visualizer.model.find({
             'all': []
