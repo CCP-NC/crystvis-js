@@ -158,6 +158,7 @@ describe('#model', function() {
         var found = pyrmodel._queryElements(['C']);
         expect(found).to.deep.equal([0, 1, 2, 4, 5]);
 
+        // Cell
         found = chamodel._queryCell([5, 5, 5]); // Beyond the supercell size
         expect(found).to.deep.equal([]);
 
@@ -165,6 +166,7 @@ describe('#model', function() {
         expect(found.length).to.equal(chamodel.length);
         expect(found[0]).to.equal(26 * chamodel.length);
 
+        // Box
         found = pyrmodel._queryBox([-1, -0.5, -2.3], [0, 0.5, 1.7]);
         found.sort();
         expect(found).to.deep.equal([0, 3, 6]);
@@ -178,6 +180,12 @@ describe('#model', function() {
 
         found = simodel3._querySphere([0, 0, 0], 2.4);
         expect(found).to.deep.equal([11, 29, 79, 104, 105]);
+
+        // Indices
+        found = simodel3._queryIndices(0);
+        expect(found).to.deep.equal(_.range(27).map((x) => {
+            return 8*x;
+        }));
 
         // Using an atom as the centre
         found = simodel._querySphere(simodel.atoms[0], 2.4);
