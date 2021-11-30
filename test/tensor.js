@@ -12,7 +12,7 @@ import {
 
 chai.use(chaiAlmost(1e-3));
 
-const expect = chai.expect
+const expect = chai.expect;
 
 describe('#tensordata', function() {
 
