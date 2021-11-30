@@ -271,6 +271,28 @@ describe('#model', function() {
         expect(h2omolcryst.positions).to.not.deep.equal(h2omodel.positions);
 
     });
+
+    it('should correctly work with isotopes', function() {
+
+        var h2omodel = new Model(h2o, {
+            supercell: [2,1,1]
+        });
+
+        var a0 = h2omodel.find({indices: 0}).atoms;
+
+        expect(a0[0].isotope).to.equal(16);        
+        expect(a0[1].isotope).to.equal(16);        
+
+        // Now set them both
+        a0[0].isotopeGlobal = 17;
+        expect(a0[0].isotope).to.equal(17);
+        expect(a0[1].isotope).to.equal(17);
+
+        // Now only one
+        a0[1].isotope = 18;
+        expect(a0[0].isotope).to.equal(17);
+        expect(a0[1].isotope).to.equal(18);
+    });
 });
 
 describe('#modelview', function() {
