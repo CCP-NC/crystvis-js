@@ -10,6 +10,10 @@ import {
     TensorData
 } from '../lib/tensor.js'
 
+import {
+    getIsotopeData
+} from '../lib/data.js'
+
 chai.use(chaiAlmost(1e-3));
 
 const expect = chai.expect;
@@ -58,13 +62,12 @@ describe('#tensordata', function() {
     it('should change bases properly', function() {
 
         var td0 = new TensorData([
-            [1,2,2],
-            [2,4,3],
-            [2,3,9]
+            [15, 2, 2],
+            [ 2, 3, 6],
+            [ 2, 6, 9]
         ]);
 
         var td1 = td0.rotate(td0.eigenvectors);
-
         expect(td1.symmetric).to.deep.almost.equal(mjs.diag(td0.eigenvalues));
 
         // And vice versa...
@@ -93,6 +96,22 @@ describe('#tensordata', function() {
         expect(td.span).to.equal(8);
         expect(td.skew).to.almost.equal(0.75);
 
+    });
+
+    it ('should convert properly an EFG tensor to Hz', function() {
+
+        var efg = new TensorData([
+            [ 1.05124449e-01,  1.42197546e-01,  1.53489044e+00],
+            [ 1.42197546e-01,  2.40599479e-02, -9.03880151e-01],
+            [ 1.53489044e+00, -9.03880151e-01, -1.29184397e-01]
+        ]);
+
+        // Convert to Hz
+        var Q = getIsotopeData('O', 17).Q;
+        efg = efg.efgAtomicToHz(Q);
+
+        // Comparison in kHz
+        expect(efg.haeberlen_eigenvalues[2]/1e3).to.almost.equal(11233.854188);
     });
 
 });

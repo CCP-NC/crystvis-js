@@ -292,6 +292,10 @@ describe('#model', function() {
         a0[1].isotope = 18;
         expect(a0[0].isotope).to.equal(17);
         expect(a0[1].isotope).to.equal(18);
+
+        // And attached data
+        expect(a0[0].isotopeData.gamma/1e7).to.almost.equal(-3.628);
+        expect(a0[1].isotopeData.gamma).to.equal(null); // No spin
     });
 });
 
