@@ -130,6 +130,10 @@ describe('#bondimage', function() {
 
 describe('#model', function() {
 
+    it('should generate the right atomic labels', function() {
+        expect(h2omodel._labels).to.deep.equal(['O_1', 'H_1', 'H_2', 'O_2', 'H_3', 'H_4']);
+    });
+
     it('should correctly compute a supercell grid', function() {
         expect(chamodel3.supercell_grid.length).to.be.equal(27);
     });
