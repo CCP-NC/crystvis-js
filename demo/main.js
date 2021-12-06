@@ -39,9 +39,11 @@ window.changeDisplayed = function(query) {
 window.changeLabels = function() {
     var val = document.getElementById('label-check').checked;
     if (val) {
-        visualizer.displayed.addLabels();
+        visualizer.displayed.addLabels((a, i) => (a.element + '_' + a.speciesIndex), 'labels', (a, i) => ({
+            shift: [a.radius, 0, 0]
+        }));
     } else {
-        visualizer.displayed.removeLabels();
+        visualizer.displayed.removeLabels('labels');
     }
 }
 
