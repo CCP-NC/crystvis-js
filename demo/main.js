@@ -40,7 +40,7 @@ window.changeLabels = function() {
     var val = document.getElementById('label-check').checked;
     if (val) {
         visualizer.displayed.addLabels((a, i) => (a.element + '_' + a.speciesIndex), 'labels', (a, i) => ({
-            shift: [a.radius, 0, 0]
+            shift: [1.2*a.radius, 0, 0]
         }));
     } else {
         visualizer.displayed.removeLabels('labels');

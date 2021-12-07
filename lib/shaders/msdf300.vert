@@ -18,8 +18,11 @@ void main() {
 
   mat4 mView = modelViewMatrix;
   float s = targScale;
+
+  // When the scale is fixed, we make sure s and projection matrix cancel each other out
   s = fixScale? s*2.0/projectionMatrix[1][1] : s;
 
+  // If rotation is fixed, the modelView matrix is made to contain scaling only
   if (fixRotation) {
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 3; ++j) {
@@ -34,7 +37,9 @@ void main() {
   }
 
   vec4 shift4 = vec4(0.,0.,0.,0.);
+  // The shift is scaled so that it follows the camera's zoom
+  vec4 pMshift = vec4(projectionMatrix[0][0], projectionMatrix[1][1], projectionMatrix[2][2], 1);
   shift4.xyz = shift;
 
-  gl_Position = projectionMatrix * mView * position + shift4;
+  gl_Position = projectionMatrix * mView * position + shift4 * pMshift;
 }
