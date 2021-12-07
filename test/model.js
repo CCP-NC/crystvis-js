@@ -92,7 +92,7 @@ describe('#atomimage', function() {
 
         for (var i = 0; i < simodel3.atoms.length; ++i) {
             var ai = simodel3.atoms[i];
-            expect(ai.img_index).to.equal(i);
+            expect(ai.imgIndex).to.equal(i);
         }
     });
     it('should correctly identify the closest bonding neighbours', function() {
@@ -102,7 +102,7 @@ describe('#atomimage', function() {
         var atoms = h2omodel.atoms;
         var a = atoms[0];
 
-        expect(a.bonded_atoms).to.deep.equal([atoms[1], atoms[2]]);
+        expect(a.bondedAtoms).to.deep.equal([atoms[1], atoms[2]]);
 
     });
     it('should correctly retrieve a corresponding array value', function() {
@@ -135,7 +135,7 @@ describe('#model', function() {
     });
 
     it('should correctly compute a supercell grid', function() {
-        expect(chamodel3.supercell_grid.length).to.be.equal(27);
+        expect(chamodel3.supercellGrid.length).to.be.equal(27);
     });
 
     it('should correctly compute the minimum supercell for given radii', function() {
