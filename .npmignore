@@ -69,3 +69,7 @@ demo/demo.js
 # Ruby gems in /docs
 docs/vendor
 docs/_site
+
+# YALC
+.yalc 
+yalc.lock
