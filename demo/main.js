@@ -28,6 +28,19 @@ window.loadFile = function() {
         visualizer.displayed = visualizer.model.find({
             'all': []
         });
+
+        var atoms = visualizer.displayed.atoms;
+        for (let i = 0; i < 9; ++i) {
+            if (i === 6) {
+                continue;
+            }
+            visualizer.model.addLink(atoms[6], atoms[i], 'link' + i, 'link' + i, 
+            {
+                onOverlay: true,
+                color: 0xfa00ee,
+                dashed: true
+            });
+        }
     };
 }
 
