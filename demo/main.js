@@ -15,32 +15,23 @@ window.loadFile = function() {
     var sy = parseInt(document.getElementById("scell-y").value) || 1;
     var sz = parseInt(document.getElementById("scell-z").value) || 1;
 
+    var vdwf = parseFloat(document.getElementById("vdw-f").value) || 1;
+
     reader.readAsText(file);
     reader.onload = function() {
         var mcryst = document.getElementById('molcryst-check').checked;
         var name = file.name.split('.')[0];
         var loaded = visualizer.loadModels(reader.result, extension, name, {
             supercell: [sx, sy, sz],
-            molecularCrystal: mcryst
+            molecularCrystal: mcryst,
+            vdwScaling: vdwf
         });
-        console.log(loaded);
+
         visualizer.displayModel(Object.keys(loaded)[0]);
         visualizer.displayed = visualizer.model.find({
             'all': []
         });
 
-        var atoms = visualizer.displayed.atoms;
-        for (let i = 0; i < 9; ++i) {
-            if (i === 6) {
-                continue;
-            }
-            visualizer.model.addLink(atoms[6], atoms[i], 'link' + i, 'link' + i, 
-            {
-                onOverlay: true,
-                color: 0xfa00ee,
-                dashed: true
-            });
-        }
     };
 }
 
