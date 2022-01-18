@@ -300,6 +300,15 @@ describe('#model', function() {
         // And attached data
         expect(a0[0].isotopeData.gamma/1e7).to.almost.equal(-3.628);
         expect(a0[1].isotopeData.gamma).to.equal(null); // No spin
+
+        // Load NMR active isotopes
+        h2omodel = new Model(h2o, {
+            supercell: [1,1,1],
+            useNMRActiveIsotopes: true
+        });
+
+        expect(h2omodel.atoms[0].isotope).to.equal(17);
+        expect(h2omodel.atoms[1].isotope).to.equal(1);
     });
 });
 
