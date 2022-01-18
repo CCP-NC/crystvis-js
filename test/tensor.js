@@ -114,4 +114,20 @@ describe('#tensordata', function() {
         expect(efg.haeberlen_eigenvalues[2]/1e3).to.almost.equal(11233.854188);
     });
 
+    it ('should convert properly an ISC tensor to Hz', function() {
+
+        var isc = new TensorData([
+            [1.8373758951855776, -0.6444912603875048, 0.03379154211567881], 
+            [-0.6738855911039692, 0.72064084469826, -0.4004091413405982], 
+            [0.014472208799926917, -0.3990514190555465, 0.3282668712885049]
+        ]);
+
+        // Convert to Hz
+        var g1 = getIsotopeData('C', 13).gamma;
+        var g2 = getIsotopeData('H', 1).gamma;
+        isc = isc.iscAtomicToHz(g1, g2);
+
+        // Comparison in kHz
+        expect(isc.haeberlen_eigenvalues[2]).to.almost.equal(6.53565087);
+    });
 });
