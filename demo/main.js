@@ -3,8 +3,43 @@
 const CrystVis = require('../lib/visualizer.js').CrystVis;
 const Primitives = require('../lib/primitives/index.js');
 
+const shiftCpkColor = require('../lib/utils').shiftCpkColor;
+
 var visualizer = new CrystVis('#main-app', 0, 0);
 visualizer.highlight_selected = true;
+
+// Generate color grid (for testing shiftCpkColor)
+const gridEl = document.getElementById('colorgrid');
+const gridSize = 10;
+
+function int2hex(c) {
+    c = c.toString(16);
+    return '0'.repeat(6-c.length) + c;
+}
+
+for (let i = 0; i < gridSize; ++i) {
+    for (let j = 0; j < gridSize; ++j) {
+
+        const hue = parseInt(j/gridSize*360);
+        const light = parseInt(i/(gridSize-1)*100);
+        const cbase = `hsl(${hue}, 100%, ${light}%)`;
+        const cplus = shiftCpkColor(cbase, 1.0);
+        const cminus = shiftCpkColor(cbase, -1.0);
+
+        let el = document.createElement('div');
+        el.style['background-color'] = '#' + int2hex(cminus);
+        gridEl.append(el);
+
+        el = document.createElement('div');
+        el.style['background-color'] = cbase;
+        gridEl.append(el);
+
+        el = document.createElement('div');
+        el.style['background-color'] = '#' + int2hex(cplus);
+        gridEl.append(el);
+
+    }
+}
 
 window.loadFile = function() {
     var file = document.getElementById('file-load').files[0];
