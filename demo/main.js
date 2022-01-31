@@ -78,7 +78,7 @@ window.changeDisplayed = function(query) {
 window.changeLabels = function() {
     var val = document.getElementById('label-check').checked;
     if (val) {
-        visualizer.displayed.addLabels((a, i) => (a.element + '_' + a.speciesIndex), 'labels', (a, i) => ({
+        visualizer.displayed.addLabels((a, i) => (a.crystLabel), 'labels', (a, i) => ({
             shift: [1.2*a.radius, 0, 0]
         }));
     } else {
