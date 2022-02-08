@@ -1,0 +1,6 @@
+{
+    "source": {
+        "include": ["index.js", "lib/visualizer.js", "lib/model.js"]
+    },
+    "plugins": ["plugins/markdown"]
+}

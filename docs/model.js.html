@@ -1,4 +1,32 @@
-'use strict';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
 /** 
  * @fileoverview Class holding the atomic models to be plotted
@@ -349,7 +377,7 @@ class AtomImage {
      */
     get mesh() {
         var r = this.renderer;
-        if (!this._mesh && r) {
+        if (!this._mesh &amp;&amp; r) {
             this._mesh = new r.Primitives.AtomMesh(this._xyz, this.radius, this._color);
             this._mesh.image = this;
         }
@@ -363,7 +391,7 @@ class AtomImage {
      */
     get aura() {
         var r = this.renderer;
-        if (!this._aura && r) {
+        if (!this._aura &amp;&amp; r) {
             this._aura = new r.Primitives.AuraMesh({
                 radius: this.radius,
                 scale: 0.02
@@ -400,12 +428,12 @@ class AtomImage {
         this.highlighted = this._highlighted;
 
         // Update connected bonds' visibility
-        for (let i = 0; i < this._bondsFrom.length; ++i) {
+        for (let i = 0; i &lt; this._bondsFrom.length; ++i) {
             let b = this._bondsFrom[i];
             b.visible = b._visible;
         }
 
-        for (let i = 0; i < this._bondsTo.length; ++i) {
+        for (let i = 0; i &lt; this._bondsTo.length; ++i) {
             let b = this._bondsTo[i];
             b.visible = b._visible;
         }
@@ -531,7 +559,7 @@ class AtomImage {
         }
         this._highlighted = h;
         var aura = this.aura;
-        if (h && this._visible) {
+        if (h &amp;&amp; this._visible) {
             aura.visible = true;
         } else {
             aura.visible = false;
@@ -679,8 +707,8 @@ class AtomImage {
 
     // Check equality with another image
     equals(ai) {
-        return (this._model == ai._model &&
-            this._index == ai._index &&
+        return (this._model == ai._model &amp;&amp;
+            this._index == ai._index &amp;&amp;
             _.isEqual(this._ijk, ai._ijk));
     }
 
@@ -791,7 +819,7 @@ class BondImage {
      */
     get mesh() {
         var r = this.renderer;
-        if (!this._mesh && r) {
+        if (!this._mesh &amp;&amp; r) {
             this._mesh = new r.Primitives.BondMesh(this.atom1.xyz, this.atom2.xyz,
                 this._radius,
                 this.atom1.color, this.atom2.color);
@@ -885,7 +913,7 @@ class BondImage {
     set visible(v) {
 
         this._visible = v;
-        v = v && this.atom1.visible && this.atom2.visible;
+        v = v &amp;&amp; this.atom1.visible &amp;&amp; this.atom2.visible;
 
         var mesh = this.mesh;
         if (v) {
@@ -983,7 +1011,7 @@ class Model {
             else {
                 // Build them
                 this._labels = [];
-                for (let i = 0; i < this._elems.length; ++i) {
+                for (let i = 0; i &lt; this._elems.length; ++i) {
                     this._labels.push(this._elems[i] + '_' + (this._species_indices[i]+1));
                 }
             }
@@ -1024,10 +1052,10 @@ class Model {
         if (parameters.molecularCrystal) {
             atoms = _.cloneDeep(atoms);
             var pos = this.positions;
-            for (let i = 0; i < this.length; ++i) {
+            for (let i = 0; i &lt; this.length; ++i) {
                 let mol_i = this._molinds[i];
                 let mol = this._molecules[mol_i];
-                for (let j = 0; j < mol.length; ++j) {
+                for (let j = 0; j &lt; mol.length; ++j) {
                     var a = mol[j];
                     if (a.index == i) {
                         pos[i] = mjs.add(pos[i], this.fracToAbs(a.cell));
@@ -1067,7 +1095,6 @@ class Model {
     
     /**
      * Number of atoms in this model's original cell
-     * @readonly
      * @type {int}
      */
     get length() {
@@ -1076,90 +1103,44 @@ class Model {
 
     /**
      * Chemical symbols in this model's original cell
-     * @readonly
      * @type {String[]}
      */
     get symbols() {
         return this._atoms_base.get_chemical_symbols();
     }
 
-    /**
-     * Atomic numbers in this model's original cell
-     * @readonly
-     * @type {int[]}
-     */
     get numbers() {
         return this._atoms_base.get_atomic_numbers();
     }
 
-    /**
-     * Coordinates of the atoms in this model's original cell
-     * @readonly
-     * @type {Array[]}
-     */
     get positions() {
         return this._atoms_base.get_positions();
     }
 
-    /**
-     * Fractional coordinates of the atoms in this model's original cell
-     * @readonly
-     * @type {Array[]}
-     */
     get scaledPositions() {
         return this._atoms_base.get_scaled_positions();
     }
 
-    /**
-     * Unit cell of the model's original cell
-     * @readonly
-     * @type {Array[]}
-     */
     get cell() {
         return this._atoms_base.get_cell();
     }
 
-    /**
-     * Periodic boundary conditions
-     * @readonly
-     * @type {bool[]}
-     */
     get pbc() {
         return this._atoms_base.get_pbc();
     }
 
-    /**
-     * Additional information from the model's original cell
-     * @readonly
-     * @type {Object}
-     */
     get info() {
         return this._atoms_base.info;
     }
 
-    /**
-     * Whether this model is periodic in all three directions of space
-     * @readonly
-     * @type {bool}
-     */
     get periodic() {
         return this._periodic;
     }
 
-    /**
-     * Indices of each atom by their species (e.g. C1, C2, H1, C3, H2, etc.)
-     * @readonly
-     * @type {int[]}
-     */
     get speciesIndices() {
         return Array.from(this._species_indices);   
     }
 
-    /**
-     * Crystallographic labels of each atom
-     * @readonly
-     * @type {String[]}
-     */
     get crystalLabels() {
         return Array.from(this._labels);
     }
@@ -1325,7 +1306,7 @@ class Model {
     removeGraphics(name) {
         var g = this._primitives[name];
         var r = this._renderer;
-        if (g && r)
+        if (g &amp;&amp; r)
             r.remove(g);
         delete this._primitives[name];
     }
@@ -1387,17 +1368,17 @@ class Model {
         }
 
         // Now iterate over all atom pairs
-        for (let i = 0; i < this.length; ++i) {
+        for (let i = 0; i &lt; this.length; ++i) {
 
             var p1 = p[i];
 
-            for (let j = i; j < this.length; ++j) {
+            for (let j = i; j &lt; this.length; ++j) {
 
                 var p2 = p[j];
 
-                for (let k = 0; k < sgrid.length; ++k) {
+                for (let k = 0; k &lt; sgrid.length; ++k) {
                     var c = sgrid[k];
-                    if ((i == j) && (c[0] == 0 && c[1] == 0 && c[2] == 0)) {
+                    if ((i == j) &amp;&amp; (c[0] == 0 &amp;&amp; c[1] == 0 &amp;&amp; c[2] == 0)) {
                         // Just the same atom, skip
                         continue;
                     }
@@ -1411,7 +1392,7 @@ class Model {
                     }
                     r = [p2[0] - p1[0] + r[0], p2[1] - p1[1] + r[1], p2[2] - p1[2] + r[2]];
                     r = Math.sqrt(r[0] * r[0] + r[1] * r[1] + r[2] * r[2]);
-                    if (r < (vdwr[i] + vdwr[j]) / 2.0) {
+                    if (r &lt; (vdwr[i] + vdwr[j]) / 2.0) {
                         // Bond!
                         this._bondmat[i][j].push([c[0], c[1], c[2]]);
                         this._bondmat[j][i].push([-c[0], -c[1], -c[2]]);
@@ -1430,7 +1411,7 @@ class Model {
         this._molecules = [];
         this._molinds = [];
 
-        if (this.length < 2) {
+        if (this.length &lt; 2) {
             // No molecules can be computed
             this._molecules = null;
             return;
@@ -1461,7 +1442,7 @@ class Model {
                     if (!unsorted_atoms.includes(a2) || link12.length == 0)
                         continue;
 
-                    for (let j = 0; j < link12.length; ++j) {
+                    for (let j = 0; j &lt; link12.length; ++j) {
                         var c2 = link12[j];
                         mol_queue.push([a2, mjs.add(c1, c2)]);
                     }
@@ -1475,10 +1456,10 @@ class Model {
             ]);
         }
 
-        for (let i = 0; i < mol_sets.length; ++i) {
+        for (let i = 0; i &lt; mol_sets.length; ++i) {
 
             var mol = [];
-            for (let j = 0; j < mol_sets[i][0].length; ++j) {
+            for (let j = 0; j &lt; mol_sets[i][0].length; ++j) {
                 mol.push({
                     'index': mol_sets[i][0][j],
                     'cell': mol_sets[i][1][j]
@@ -1491,9 +1472,9 @@ class Model {
         // Assign the molecule's index for each atom
         this._molinds = _.range(this.length);
 
-        for (let i = 0; i < this._molecules.length; ++i) {
+        for (let i = 0; i &lt; this._molecules.length; ++i) {
             var m = this._molecules[i];
-            for (let j = 0; j < m.length; ++j) {
+            for (let j = 0; j &lt; m.length; ++j) {
                 var a = m[j];
                 this._molinds[a.index] = i;
             }
@@ -1511,7 +1492,7 @@ class Model {
         var imgs = [];
         var indices = _.range(this.length);
         var model = this;
-        for (let i = 0; i < sgrid.length; ++i) {
+        for (let i = 0; i &lt; sgrid.length; ++i) {
             var cell = sgrid[i];
             imgs = imgs.concat(_.map(indices, function(a) {
                 return new AtomImage(model, a, cell);
@@ -1529,18 +1510,18 @@ class Model {
     _bondImages() {
         var bondimgs = [];
 
-        for (let ii = 0; ii < this._atom_images.length; ++ii) {
+        for (let ii = 0; ii &lt; this._atom_images.length; ++ii) {
             var im1 = this._atom_images[ii];
             var i = im1.index;
             var bonds = this._bondmat[i];
             var c1 = im1.ijk;
-            for (let j = i; j < this.length; ++j) {
+            for (let j = i; j &lt; this.length; ++j) {
                 var blist = bonds[j];
-                for (let k = 0; k < blist.length; ++k) {
+                for (let k = 0; k &lt; blist.length; ++k) {
                     var r = blist[k];
                     var c2 = [c1[0] + r[0], c1[1] + r[1], c1[2] + r[2]];
                     var jj = utils.supercellIndex(j, c2, this._supercell, this.length);
-                    if (jj >= 0 && jj < this._atom_images.length) {
+                    if (jj >= 0 &amp;&amp; jj &lt; this._atom_images.length) {
                         var im2 = this._atom_images[jj];
                         var bimg = new BondImage(this, im1, im2);
                         bondimgs.push(bimg);
@@ -1600,17 +1581,17 @@ class Model {
         });
         var utransf_mat = mjs.multiply(this._r_diag.vectors, mjs.diag(diag));
         var utransf_norm = mjs.transpose(utransf_mat);
-        for (let i = 0; i < 3; ++i) {
+        for (let i = 0; i &lt; 3; ++i) {
             var norm = mjs.norm(utransf_mat[i]);
-            for (let j = 0; j < 3; ++j) {
+            for (let j = 0; j &lt; 3; ++j) {
                 utransf_norm[j][i] *= r / norm;
             }
         }
         var qmatrix = mjs.multiply(utransf_mat, utransf_norm);
         var scell = [];
-        for (let i = 0; i < 3; ++i) {
+        for (let i = 0; i &lt; 3; ++i) {
             var b = 0;
-            for (let j = 0; j < 3; ++j) {
+            for (let j = 0; j &lt; 3; ++j) {
                 b = Math.max(Math.ceil(Math.abs(qmatrix[i][j])), b);
             }
             scell.push(2 * b + 1);
@@ -1653,7 +1634,7 @@ class Model {
         // Value can be a single value or an Array
         var isarr = (value instanceof Array);
 
-        for (let i = 0; i < aimages.length; ++i) {
+        for (let i = 0; i &lt; aimages.length; ++i) {
             var id = aimages[i];
             if (id instanceof AtomImage)
                 id = id.imgIndex;
@@ -1675,7 +1656,7 @@ class Model {
         // Value can be a single value or an Array
         var isarr = (value instanceof Array);
 
-        for (let i = 0; i < bimages.length; ++i) {
+        for (let i = 0; i &lt; bimages.length; ++i) {
             var bimg = bimages[i];
             bimg[name] = isarr ? value[i] : value;
         }
@@ -1743,7 +1724,7 @@ class Model {
             return _.isEqual(x, ijk);
         });
 
-        if (ind < 0) {
+        if (ind &lt; 0) {
             return [];
         }
 
@@ -1801,11 +1782,11 @@ class Model {
         var found = []
 
         // Now iterate over the cells, and atoms
-        for (let i = fxmin[0]; i < fxmax[0]; ++i) {
-            for (let j = fxmin[1]; j < fxmax[1]; ++j) {
-                for (let k = fxmin[2]; k < fxmax[2]; ++k) {
+        for (let i = fxmin[0]; i &lt; fxmax[0]; ++i) {
+            for (let j = fxmin[1]; j &lt; fxmax[1]; ++j) {
+                for (let k = fxmin[2]; k &lt; fxmax[2]; ++k) {
                     // var p0 = this.fracToAbs([i, j, k]);
-                    for (let a = 0; a < this.length; ++a) {
+                    for (let a = 0; a &lt; this.length; ++a) {
 
                         var ind = utils.supercellIndex(a, [i, j, k], this._supercell,
                             this.length);
@@ -1813,7 +1794,7 @@ class Model {
 
                         // Is it in the box?
                         var isin = _.reduce(aimg.xyz, function(r, x, e) {
-                            return (r && (xmin[e] <= x) && (x <= xmax[e]));
+                            return (r &amp;&amp; (xmin[e] &lt;= x) &amp;&amp; (x &lt;= xmax[e]));
                         }, true);
 
                         if (isin)
@@ -1871,17 +1852,17 @@ class Model {
 
         var found = [];
 
-        for (let i = fxmin[0]; i < fxmax[0]; ++i) {
-            for (let j = fxmin[1]; j < fxmax[1]; ++j) {
-                for (let k = fxmin[2]; k < fxmax[2]; ++k) {
-                    for (let a = 0; a < this.length; ++a) {
+        for (let i = fxmin[0]; i &lt; fxmax[0]; ++i) {
+            for (let j = fxmin[1]; j &lt; fxmax[1]; ++j) {
+                for (let k = fxmin[2]; k &lt; fxmax[2]; ++k) {
+                    for (let a = 0; a &lt; this.length; ++a) {
 
                         var ind = utils.supercellIndex(a, [i, j, k], this._supercell,
                             this.length);
                         var aimg = this._atom_images[ind];
 
                         // Is it in the sphere?
-                        var isin = mjs.distance(aimg.xyz, x0) <= r;
+                        var isin = mjs.distance(aimg.xyz, x0) &lt;= r;
 
                         if (isin)
                             found.push(ind);
@@ -1904,14 +1885,14 @@ class Model {
         if (atoms instanceof ModelView) {
             atoms = atoms._images;
         }
-        if (atoms instanceof Array && typeof(atoms[0]) == 'number') {
+        if (atoms instanceof Array &amp;&amp; typeof(atoms[0]) == 'number') {
             var imgs = this._atom_images;
             atoms = _.map(atoms, function(i) {
                 return imgs[i];
             });
         }
 
-        if (distance < 1) {
+        if (distance &lt; 1) {
             return [];
         }
 
@@ -1925,10 +1906,10 @@ class Model {
         var bonded_tree = [atoms]; // We start with distance zero and build up
         var found = [];
 
-        for (let d = 1; d <= distance; ++d) {
+        for (let d = 1; d &lt;= distance; ++d) {
             var previous = bonded_tree[d - 1];
             var next = [];
-            for (let i = 0; i < previous.length; ++i) {
+            for (let i = 0; i &lt; previous.length; ++i) {
                 next = next.concat(previous[i].bondedAtoms);
             }
             bonded_tree.push(next);
@@ -1958,7 +1939,7 @@ class Model {
         if (atoms instanceof ModelView) {
             atoms = atoms._images;
         }
-        if (atoms instanceof Array && typeof(atoms[0]) == 'number') {
+        if (atoms instanceof Array &amp;&amp; typeof(atoms[0]) == 'number') {
             var imgs = this._atom_images;
             atoms = _.map(atoms, function(i) {
                 return imgs[i];
@@ -1968,7 +1949,7 @@ class Model {
         var found = [];
 
         // For each atom, select the whole molecule
-        for (let i = 0; i < atoms.length; ++atoms) {
+        for (let i = 0; i &lt; atoms.length; ++atoms) {
             var a = atoms[i];
 
             var ind = a.index;
@@ -1981,12 +1962,12 @@ class Model {
             }).cell;
 
             // Supercell indices?
-            for (let j = 0; j < mol.length; ++j) {
+            for (let j = 0; j &lt; mol.length; ++j) {
                 var am = mol[j];
                 var cm = mjs.subtract(am.cell, c0);
                 var im = am.index;
                 var iim = utils.supercellIndex(im, cm, this._supercell, this.length);
-                if (iim >= 0 && iim < this._atom_images.length) {
+                if (iim >= 0 &amp;&amp; iim &lt; this._atom_images.length) {
                     found.push(iim);
                 }
             }
@@ -2002,4 +1983,26 @@ export {
     AtomImage,
     BondImage,
     Model
-}
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AtomImage.html">AtomImage</a></li><li><a href="BondImage.html">BondImage</a></li><li><a href="CrystVis.html">CrystVis</a></li><li><a href="Model.html">Model</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Feb 08 2022 17:36:23 GMT+0000 (Greenwich Mean Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

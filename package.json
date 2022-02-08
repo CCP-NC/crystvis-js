@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "mocha --reporter spec",
+    "docs": "jsdoc -d docs --configure jsconf.json index.js",
     "prepare": "npm run build-resources",
     "build-fonts": "node scripts/build-fonts.js",
     "build-demo": "node scripts/build-bundle.js demo/main.js demo/demo.js",
@@ -79,6 +80,7 @@
     "eslint": "^7.15.0",
     "glob": "^7.1.6",
     "jpeg-js": ">=0.4.0",
+    "jsdoc": "^3.6.10",
     "minimist": "^1.2.5",
     "mocha": "^9.0.0",
     "msdf-bmfont-xml": "^2.5.4",
