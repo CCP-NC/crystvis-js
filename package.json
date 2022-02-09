@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "mocha --reporter spec",
+    "start": "npm run watch-testserver",
     "clean-docs": "rm -rf docs/* || true",
     "predocs": "npm run clean-docs",
     "docs": "jsdoc -d docs -u docs-tutorials --configure jsconf.json index.js; touch docs/.nojekyll",

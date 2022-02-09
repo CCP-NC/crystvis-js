@@ -1077,8 +1077,51 @@ body .markdown-body
 <h3 id="supported-formats">Supported formats<a class="headerlink" href="#supported-formats" title="Permanent link"></a></h3>
 <p>The currently supported file formats are the following:</p>
 <ul>
-<li>CIF, using <a href="https://github.com/stur86/crystcif-parse">crystcif-parse</a>;</li>
-<li>XYZ, including Extended XYZ such as the one written by the Atomic Simulation Environment;</li>
-<li>CELL, input file supported by the DFT package <a href="http://www.castep.org/">CASTEP</a>;</li>
-<li>Magres, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the <a href="https://www.ccpnc.ac.uk/">CCP for NMR Crystallography</a>.</li>
-</ul></article></body></html>
+<li><strong>CIF</strong>, using <a href="https://github.com/stur86/crystcif-parse">crystcif-parse</a>;</li>
+<li><strong>XYZ</strong>, including Extended XYZ such as the one written by the <a href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation Environment</a>;</li>
+<li><strong>CELL</strong>, input file supported by the DFT package <a href="http://www.castep.org/">CASTEP</a>;</li>
+<li><strong>Magres</strong>, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the <a href="https://www.ccpnc.ac.uk/">CCP for NMR Crystallography</a>.</li>
+</ul>
+<h3 id="getting-started">Getting started<a class="headerlink" href="#getting-started" title="Permanent link"></a></h3>
+<p>In order to install <code>crystvis-js</code>, simply use the Node Package Manager:</p>
+<div class="highlight"><pre>npm install crystvis-js --save
+</pre></div>
+
+<p>You can then create a visualizer for your webpage by simply importing and instantiating it:</p>
+<div class="highlight"><pre><span class="kr">import</span> <span class="nx">CrystVis</span> <span class="nx">from</span> <span class="s1">&#39;crystvis-js&#39;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">visualizer</span> <span class="o">=</span> <span class="nx">CrystVis</span><span class="p">(</span><span class="s1">&#39;#target-id&#39;</span><span class="p">,</span> <span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">)</span>
+</pre></div>
+
+<p>will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string and then pass them to the visualizer&rsquo;s <code>loadModels</code> method:</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">loaded</span> <span class="o">=</span> <span class="nx">visualizer</span><span class="p">.</span><span class="nx">loadModels</span><span class="p">(</span><span class="nx">contents</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Models loaded: &#39;</span><span class="p">,</span> <span class="nx">loaded</span><span class="p">);</span>
+<span class="nx">visualizer</span><span class="p">.</span><span class="nx">displayModel</span><span class="p">(</span><span class="nx">loaded</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+<h3 id="preparing-for-development">Preparing for development<a class="headerlink" href="#preparing-for-development" title="Permanent link"></a></h3>
+<p>If you want to develop for crystvis-js, you should follow these steps:</p>
+<ul>
+<li>fork the repository</li>
+<li>clone the forked repository locally to your system</li>
+<li>install all the required packages, <em>including the development dependencies</em>, with <code>npm install --production=false</code></li>
+</ul>
+<p>You&rsquo;re then ready to develop. In particular you can use:</p>
+<ul>
+<li><code>npm test</code> to run with Mocha the suite of tests found in <code>./test</code></li>
+<li><code>npm start</code> to start a server that includes the in-browser tests from <code>./test/test-html</code> as well as the demo from <code>./demo</code></li>
+<li><code>npm run docs</code> to compile the documents</li>
+<li><code>npm run deploy-docs</code> to compile the documents and then deploy them to the <code>gh-pages</code> branch of your repository</li>
+</ul>
+<h4 id="fonts-and-shaders">Fonts and shaders<a class="headerlink" href="#fonts-and-shaders" title="Permanent link"></a></h4>
+<p>Some additional steps are necessary when dealing with fonts and shaders. You generally shouldn&rsquo;t worry about these when working 
+with most of the code, but in some special cases it might be necessary to do this.</p>
+<p>Fonts in crystvis-js need to be translated to a bitmap format to be usable. In other words, a regular font format (like a TTF file)
+must be rendered into a bitmap texture and a table of coordinates designating each letter to then be used in graphical rendering. This operation
+relies on the library <code>msdf-bmfont-xml</code> and is executed by running the command <code>npm run build-fonts</code>. The original fonts are found in
+the <code>./fonts</code> folder, and they get rendered to <code>./lib/assets/fonts</code>. This command needs only to be repeated if </p>
+<p>Shaders are provided as <code>.frag</code> and <code>.vert</code> files. Both shaders and font textures need to baked directly into the JavaScript files in order to be 
+included in the final build. Since ESBuild (the package used to build crystvis-js) has a hard time dealing with them in the final pass, they get
+pre-baked with an additional step that only needs to be repeated whenever either of them changes. This consists of taking &ldquo;template&rdquo; JS files (for
+shaders it&rsquo;s <code>./lib/shaders/index.in.js</code>, for fonts <code>./lib/assets/fonts/bmpfonts.in.js</code>) and rebuilding them into final files with the 
+assets imported in data URL form. The script to do this is <code>npm run build-resources</code>.</p></article></body></html>
