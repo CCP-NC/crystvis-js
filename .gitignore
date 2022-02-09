@@ -70,9 +70,9 @@ demo/demo.js
 lib/assets/fonts/bmpfonts.js 
 lib/shaders/index.js
 
-# Ruby gems in /docs
-docs/vendor
-docs/_site
+# All built docs
+docs/*
+!docs/.nojekyll
 
 # Yalc
 .yalc
