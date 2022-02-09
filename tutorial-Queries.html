@@ -31,7 +31,7 @@
 
 
     <title>
-      Home
+      Tutorial: Queries
     </title>
 
     <!--[if lt IE 9]>
@@ -97,64 +97,62 @@
 
     <div id="main" class="main-content">
       
-
+      <h1 id='page-title' class="page-title">
+        Tutorial: Queries
+      </h1>
       
 
+      <section>
 
-
+<header>
     
 
+    <h2>Queries</h2>
+</header>
 
-
-
-
-
-
-
-
-    
-
-
-    <section class="readme">
-        <article><h1>crystvis-js</h1>
-<p>A <a href="https://threejs.org/">Three.js</a> based crystallographic visualisation tool. It reads multiple file formats and renders them with WebGL to a <code>canvas</code> element, allowing the user to interact with them. A few of the key functionality:</p>
-<ul>
-<li>visualize popular file formats as ball-and-stick structures, easily embedded within a webpage, with orbit mouse control for rotation and zooming;</li>
-<li>interactive visualisation responsive to user clicks via customizable callbacks;</li>
-<li>high definition text labels;</li>
-<li>advanced searching and selection functions to interact with specific subset of atoms (select by proximity, bonding, species and more);</li>
-<li>smart visualisation of molecular crystal: reconstruct full molecules across the periodic boundary;</li>
-<li>compute and display isosurfaces from volumetric data;</li>
-<li>visualize tensor data as ellipsoids centred on atoms.</li>
-</ul>
-<h3>Supported formats</h3>
-<p>The currently supported file formats are the following:</p>
-<ul>
-<li><strong>CIF</strong>, using <a href="https://github.com/stur86/crystcif-parse">crystcif-parse</a>;</li>
-<li><strong>XYZ</strong>, including Extended XYZ such as the one written by the <a href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation Environment</a>;</li>
-<li><strong>CELL</strong>, input file supported by the DFT package <a href="http://www.castep.org/">CASTEP</a>;</li>
-<li><strong>Magres</strong>, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the <a href="https://www.ccpnc.ac.uk/">CCP for NMR Crystallography</a>.</li>
-</ul>
-<h3>Getting started</h3>
-<p>In order to install <code>crystvis-js</code>, simply use the Node Package Manager:</p>
-<pre class="prettyprint source lang-bash"><code>npm install crystvis-js --save
+<article>
+    <p>In CrystVis-js, it's possible to use the <code>.find()</code> method in <code>Model</code> and <code>ModelView</code> objects to retrieve atoms based on various search criteria. The <code>.find()</code> method takes as argument a <em>query</em>; these queries are structured in a way that's inspired by queries used for example in the MongoDB interface. It's worth taking a minute to learn how they work.</p>
+<h3>Basic structure of a query</h3>
+<p>A query passed to the <code>.find()</code> method has to be an object. Typically, a query unit is structured as follows:</p>
+<pre class="prettyprint source lang-js"><code>var query = {
+    &quot;query_name&quot;: [&quot;argument_1&quot;, &quot;argument_2&quot;, ...]
+}
 </code></pre>
-<p>You can then create a visualizer for your webpage by simply importing and instantiating it:</p>
-<pre class="prettyprint source lang-js"><code>import CrystVis from 'crystvis-js';
-
-const visualizer = CrystVis('#target-id', 800, 600);
+<p>where the appropriate actual name and arguments of course must be replaced. For example, one might use</p>
+<pre class="prettyprint source lang-js"><code>var H_atoms = model.find({
+    &quot;elements&quot;: [&quot;H&quot;]
+})
 </code></pre>
-<p>will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string and then pass them to the visualizer's <code>loadModels</code> method:</p>
-<pre class="prettyprint source lang-js"><code>var loaded = visualizer.loadModels(contents);
-console.log('Models loaded: ', loaded);
-visualizer.displayModel(loaded[0]);
-</code></pre></article>
-    </section>
+<p>to identify all hydrogen atoms within the model. The functions accepted for queries by a model are the following:</p>
+<ul>
+<li><code>all</code> (no arguments): return all atoms in the model</li>
+<li><code>indices</code> (<code>indices</code>): return all atoms with the given index or Array of indices</li>
+<li><code>elements</code> (<code>elems</code>): return all atoms with the given element or one of an Array of elements</li>
+<li><code>cell</code> (<code>ijk</code>): return atoms within the cell with indices i, j and k</li>
+<li><code>box</code> (<code>x0</code>, <code>x1</code>): return atoms inside a box defined by two corners (points or atoms)</li>
+<li><code>sphere</code> (<code>x0</code>, <code>r</code>): return atoms inside a sphere defined by a center (point or atom) and a radius</li>
+<li><code>bonded</code> (<code>atoms</code>, <code>distance</code>, <code>exact</code>): return atoms within a certain number of bonds (&quot;distance&quot;) from one or more atoms. For example, asking for all atoms within one bond from the oxygen in a water molecule will return the whole molecule. If &quot;exact&quot; is set to true instead, only atoms at the exact distance will be returned. In the water molecule example, this would return only the hydrogens</li>
+<li><code>molecule</code> (<code>atoms</code>): return all atoms belonging to the same molecule as one of the atoms passed as argument</li>
+</ul>
+<h3>Boolean operators</h3>
+<p>In addition to the simple functions described above, queries accept boolean operators that can be used to build more complex ones. For example one could use this query:</p>
+<pre class="prettyprint source lang-js"><code>var query = {
+    &quot;$and&quot;: [{
+        &quot;elements&quot;: [[&quot;H&quot;, &quot;C&quot;]]
+    }, {
+        &quot;sphere&quot;: [[0, 0, 0], 4.0]
+    }]
+}
+</code></pre>
+<p>to retrieve all atoms of either hydrogen or carbon located within a radius of 4 Angstroms from the origin of the cell. A boolean operator takes more queries as arguments, which means they can be nested further for more complex searches. The accepted boolean operators are the following:</p>
+<ul>
+<li><code>$and</code> (<code>query_1</code>, <code>query_2</code>, ...): returns the intersection of all the passed queries</li>
+<li><code>$or</code> (<code>query_1</code>, <code>query_2</code>, ...): returns the union of all the passed queries</li>
+<li><code>$xor</code> (<code>query_1</code>, <code>query_2</code>, ...): return the exclusive OR of all queries (in other words, any atom that is returned by only one query but no other)</li>
+</ul>
+</article>
 
-
-
-
-
+</section>
 
     </div>
 

@@ -31,7 +31,7 @@
 
 
     <title>
-      Home
+      BondImage
     </title>
 
     <!--[if lt IE 9]>
@@ -97,11 +97,52 @@
 
     <div id="main" class="main-content">
       
+      <h1 id='page-title' class="page-title">
+        BondImage
+      </h1>
+      
 
       
 
 
 
+
+<section>
+
+
+<header>
+    
+        
+        <h2>
+        
+            <span class="ancestors"><a href="lib_model.module_js.html">lib/model.js</a>~</span>
+        
+        BondImage
+        
+        </h2>
+        
+        
+            <div class="class-description"><p>An 'image' of a single bond in the model. This represents the connection
+between two specific AtomImages</p></div>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+    
+        <h2>Constructor</h2>
+    
+
+    <h4 class="name" id="BondImage">
+        <a href="#BondImage">#</a>
+        <span class="type-signature"></span>new BondImage<span class="signature">(model, im1, im2)</span><span class="type-signature"></span>
+    </h4>
+
     
 
 
@@ -112,46 +153,1276 @@
 
 
 
+
+
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
+        <tr>
+            
+                <td class="name"><code>model</code></td>
+            
 
-    <section class="readme">
-        <article><h1>crystvis-js</h1>
-<p>A <a href="https://threejs.org/">Three.js</a> based crystallographic visualisation tool. It reads multiple file formats and renders them with WebGL to a <code>canvas</code> element, allowing the user to interact with them. A few of the key functionality:</p>
-<ul>
-<li>visualize popular file formats as ball-and-stick structures, easily embedded within a webpage, with orbit mouse control for rotation and zooming;</li>
-<li>interactive visualisation responsive to user clicks via customizable callbacks;</li>
-<li>high definition text labels;</li>
-<li>advanced searching and selection functions to interact with specific subset of atoms (select by proximity, bonding, species and more);</li>
-<li>smart visualisation of molecular crystal: reconstruct full molecules across the periodic boundary;</li>
-<li>compute and display isosurfaces from volumetric data;</li>
-<li>visualize tensor data as ellipsoids centred on atoms.</li>
-</ul>
-<h3>Supported formats</h3>
-<p>The currently supported file formats are the following:</p>
-<ul>
-<li><strong>CIF</strong>, using <a href="https://github.com/stur86/crystcif-parse">crystcif-parse</a>;</li>
-<li><strong>XYZ</strong>, including Extended XYZ such as the one written by the <a href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation Environment</a>;</li>
-<li><strong>CELL</strong>, input file supported by the DFT package <a href="http://www.castep.org/">CASTEP</a>;</li>
-<li><strong>Magres</strong>, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the <a href="https://www.ccpnc.ac.uk/">CCP for NMR Crystallography</a>.</li>
-</ul>
-<h3>Getting started</h3>
-<p>In order to install <code>crystvis-js</code>, simply use the Node Package Manager:</p>
-<pre class="prettyprint source lang-bash"><code>npm install crystvis-js --save
-</code></pre>
-<p>You can then create a visualizer for your webpage by simply importing and instantiating it:</p>
-<pre class="prettyprint source lang-js"><code>import CrystVis from 'crystvis-js';
-
-const visualizer = CrystVis('#target-id', 800, 600);
-</code></pre>
-<p>will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string and then pass them to the visualizer's <code>loadModels</code> method:</p>
-<pre class="prettyprint source lang-js"><code>var loaded = visualizer.loadModels(contents);
-console.log('Models loaded: ', loaded);
-visualizer.displayModel(loaded[0]);
-</code></pre></article>
-    </section>
+            <td class="type">
+            
+                
+<span class="param-type">Model</span>
 
 
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The model from which the image is from</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>im1</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AtomImage</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>AtomImage from which the bond starts</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>im2</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">AtomImage</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>AtomImage to which the bond ends</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line697">line 697</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="atom1">
+    <a href="#atom1">#</a>
+    <span class="type-signature">(readonly) </span>atom1<span class="type-signature"> :AtomImage</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>First atom connected to this bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">AtomImage</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line755">line 755</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="atom2">
+    <a href="#atom2">#</a>
+    <span class="type-signature">(readonly) </span>atom2<span class="type-signature"> :AtomImage</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Second atom connected to this bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">AtomImage</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line764">line 764</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="color1">
+    <a href="#color1">#</a>
+    <span class="type-signature"></span>color1<span class="type-signature"> :int</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>First color of the bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">int</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line825">line 825</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="color2">
+    <a href="#color2">#</a>
+    <span class="type-signature"></span>color2<span class="type-signature"> :int</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Second color of the bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">int</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line839">line 839</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="key">
+    <a href="#key">#</a>
+    <span class="type-signature">(readonly) </span>key<span class="type-signature"> :String</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>A unique string key used to quickly reference the bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">String</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line773">line 773</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="length">
+    <a href="#length">#</a>
+    <span class="type-signature">(readonly) </span>length<span class="type-signature"> :float</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Bond length in Angstroms</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">float</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line783">line 783</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="mesh">
+    <a href="#mesh">#</a>
+    <span class="type-signature">(readonly) </span>mesh<span class="type-signature"> :AtomMesh</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Mesh corresponding to this bond image</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">AtomMesh</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line792">line 792</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="model">
+    <a href="#model">#</a>
+    <span class="type-signature">(readonly) </span>model<span class="type-signature"> :Model</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Model this bond belongs to</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">Model</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line733">line 733</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="opacity1">
+    <a href="#opacity1">#</a>
+    <span class="type-signature"></span>opacity1<span class="type-signature"> :float</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>First opacity of the bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">float</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line853">line 853</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="opacity2">
+    <a href="#opacity2">#</a>
+    <span class="type-signature"></span>opacity2<span class="type-signature"> :float</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Second opacity of the bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">float</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line867">line 867</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="radius">
+    <a href="#radius">#</a>
+    <span class="type-signature"></span>radius<span class="type-signature"> :float</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Radius of the bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">float</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line806">line 806</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="renderer">
+    <a href="#renderer">#</a>
+    <span class="type-signature">(readonly) </span>renderer<span class="type-signature"> :Renderer</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Renderer used by this bond</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">Renderer</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line742">line 742</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+            
+<h4 class="name" id="visible">
+    <a href="#visible">#</a>
+    <span class="type-signature"></span>visible<span class="type-signature"> :bool</span>
+</h4>
+
+
+
+
+<div class="description">
+    <p>Whether the bond is visible</p>
+</div>
+
+
+
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
+<span class="param-type">bool</span>
+
+
+            </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line881">line 881</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+        
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

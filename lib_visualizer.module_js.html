@@ -31,7 +31,7 @@
 
 
     <title>
-      Home
+      lib/visualizer.js
     </title>
 
     <!--[if lt IE 9]>
@@ -97,61 +97,112 @@
 
     <div id="main" class="main-content">
       
+      <h1 id='page-title' class="page-title">
+        lib/visualizer.js
+      </h1>
+      
 
       
 
 
 
+
+<section>
+
+
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>Class constituting the main object that plots crystals in the webpage</p></div>
+        
+
+        
+
+
+
+
+<dl class="details">
+
     
 
-
-
-
-
-
-
-
+    
 
     
 
+    
 
-    <section class="readme">
-        <article><h1>crystvis-js</h1>
-<p>A <a href="https://threejs.org/">Three.js</a> based crystallographic visualisation tool. It reads multiple file formats and renders them with WebGL to a <code>canvas</code> element, allowing the user to interact with them. A few of the key functionality:</p>
-<ul>
-<li>visualize popular file formats as ball-and-stick structures, easily embedded within a webpage, with orbit mouse control for rotation and zooming;</li>
-<li>interactive visualisation responsive to user clicks via customizable callbacks;</li>
-<li>high definition text labels;</li>
-<li>advanced searching and selection functions to interact with specific subset of atoms (select by proximity, bonding, species and more);</li>
-<li>smart visualisation of molecular crystal: reconstruct full molecules across the periodic boundary;</li>
-<li>compute and display isosurfaces from volumetric data;</li>
-<li>visualize tensor data as ellipsoids centred on atoms.</li>
-</ul>
-<h3>Supported formats</h3>
-<p>The currently supported file formats are the following:</p>
-<ul>
-<li><strong>CIF</strong>, using <a href="https://github.com/stur86/crystcif-parse">crystcif-parse</a>;</li>
-<li><strong>XYZ</strong>, including Extended XYZ such as the one written by the <a href="https://wiki.fysik.dtu.dk/ase/">Atomic Simulation Environment</a>;</li>
-<li><strong>CELL</strong>, input file supported by the DFT package <a href="http://www.castep.org/">CASTEP</a>;</li>
-<li><strong>Magres</strong>, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the <a href="https://www.ccpnc.ac.uk/">CCP for NMR Crystallography</a>.</li>
-</ul>
-<h3>Getting started</h3>
-<p>In order to install <code>crystvis-js</code>, simply use the Node Package Manager:</p>
-<pre class="prettyprint source lang-bash"><code>npm install crystvis-js --save
-</code></pre>
-<p>You can then create a visualizer for your webpage by simply importing and instantiating it:</p>
-<pre class="prettyprint source lang-js"><code>import CrystVis from 'crystvis-js';
+    
 
-const visualizer = CrystVis('#target-id', 800, 600);
-</code></pre>
-<p>will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string and then pass them to the visualizer's <code>loadModels</code> method:</p>
-<pre class="prettyprint source lang-js"><code>var loaded = visualizer.loadModels(contents);
-console.log('Models loaded: ', loaded);
-visualizer.displayModel(loaded[0]);
-</code></pre></article>
-    </section>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="visualizer.js.html">visualizer.js</a>, <a href="visualizer.js.html#line3">line 3</a>
+            </li></ul></dd>
+        </div>
+    
+
+    
+
+    
+
+    
+</dl>
 
 
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="lib_visualizer.module_js-CrystVis.html">CrystVis</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+     
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 
