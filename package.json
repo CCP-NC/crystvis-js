@@ -33,6 +33,8 @@
   },
   "scripts": {
     "test": "mocha --reporter spec",
+    "clean-docs": "rm -rf docs/* || true",
+    "predocs": "npm run clean-docs",
     "docs": "jsdoc -d docs -u docs-tutorials --configure jsconf.json index.js",
     "predeploy-docs": "npm run docs",
     "deploy-docs": "gh-pages -d docs",
