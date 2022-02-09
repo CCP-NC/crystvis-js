@@ -1,6 +1,14 @@
 {
     "source": {
-        "include": ["index.js", "lib/visualizer.js", "lib/model.js"]
+        "include": ["README.md", "index.js", "lib/visualizer.js", "lib/model.js", 
+                    "lib/modelview.js"]
+    },
+    "opts": {
+        "encoding": "utf8",
+        "template": "node_modules/clean-jsdoc-theme",
+        "theme_opts": {
+            "theme": "dark"
+        }
     },
     "plugins": ["plugins/markdown"]
 }

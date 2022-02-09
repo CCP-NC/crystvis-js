@@ -23,12 +23,13 @@ The currently supported file formats are the following:
 
 In order to install `crystvis-js`, simply use the Node Package Manager:
 
-    npm install crystvis-js --save
+```bash
+npm install crystvis-js --save
+```
 
 You can then create a visualizer for your webpage by simply importing and instantiating it:
 
 ```js
-
 import CrystVis from 'crystvis-js';
 
 const visualizer = CrystVis('#target-id', 800, 600);

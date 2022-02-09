@@ -1,39 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Class: AtomImage</title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Adding favicon -->
+    
+
+    <!-- Adding meta -->
+    
+
+    <!-- Adding external script-->
+    
+
+    <!-- Adding external style-->
+    
+
+    <!-- Adding scripts-->
+    
+
+    <!-- Adding style-->
+    
+
+    <!-- Adding overlay script-->
+    
+
+    <!-- Adding overlay style-->
+    
+
+
+    <title>
+      AtomImage
+    </title>
+
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Class: AtomImage</h1>
-
+    <link type="text/css" rel="stylesheet" href="styles/third-party/ionicons.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/third-party/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/reset.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme-base.css">
+    <link type="text/css" rel="stylesheet" href="styles/clean-jsdoc-theme-dark.css">
     
+    <svg aria-hidden="true" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    style="display:none">
+    <defs>
+        <symbol id="copy-icon" viewbox="0 0 488.3 488.3">
+            <g>
+                <path
+                    d="M314.25,85.4h-227c-21.3,0-38.6,17.3-38.6,38.6v325.7c0,21.3,17.3,38.6,38.6,38.6h227c21.3,0,38.6-17.3,38.6-38.6V124    C352.75,102.7,335.45,85.4,314.25,85.4z M325.75,449.6c0,6.4-5.2,11.6-11.6,11.6h-227c-6.4,0-11.6-5.2-11.6-11.6V124    c0-6.4,5.2-11.6,11.6-11.6h227c6.4,0,11.6,5.2,11.6,11.6V449.6z" />
+                <path
+                    d="M401.05,0h-227c-21.3,0-38.6,17.3-38.6,38.6c0,7.5,6,13.5,13.5,13.5s13.5-6,13.5-13.5c0-6.4,5.2-11.6,11.6-11.6h227    c6.4,0,11.6,5.2,11.6,11.6v325.7c0,6.4-5.2,11.6-11.6,11.6c-7.5,0-13.5,6-13.5,13.5s6,13.5,13.5,13.5c21.3,0,38.6-17.3,38.6-38.6    V38.6C439.65,17.3,422.35,0,401.05,0z" />
+            </g>
+        </symbol>
+        <symbol id='search-icon' viewBox="0 0 512 512">
+            <g>
+                <g>
+                    <path
+                        d="M225.474,0C101.151,0,0,101.151,0,225.474c0,124.33,101.151,225.474,225.474,225.474    c124.33,0,225.474-101.144,225.474-225.474C450.948,101.151,349.804,0,225.474,0z M225.474,409.323    c-101.373,0-183.848-82.475-183.848-183.848S124.101,41.626,225.474,41.626s183.848,82.475,183.848,183.848    S326.847,409.323,225.474,409.323z" />
+                </g>
+            </g>
+            <g>
+                <g>
+                    <path
+                        d="M505.902,476.472L386.574,357.144c-8.131-8.131-21.299-8.131-29.43,0c-8.131,8.124-8.131,21.306,0,29.43l119.328,119.328    c4.065,4.065,9.387,6.098,14.715,6.098c5.321,0,10.649-2.033,14.715-6.098C514.033,497.778,514.033,484.596,505.902,476.472z" />
+                </g>
+            </g>
+        </symbol>
+        <symbol id="down-icon" viewBox="0 0 16 16">
+            <path 
+                fill-rule="evenodd" 
+                clip-rule="evenodd" 
+                d="M12.7803 6.21967C13.0732 6.51256 13.0732 6.98744 12.7803 7.28033L8.53033 11.5303C8.23744 11.8232 7.76256 11.8232 7.46967 11.5303L3.21967 7.28033C2.92678 6.98744 2.92678 6.51256 3.21967 6.21967C3.51256 5.92678 3.98744 5.92678 4.28033 6.21967L8 9.93934L11.7197 6.21967C12.0126 5.92678 12.4874 5.92678 12.7803 6.21967Z"
+            >
+            </path>
+        </symbol>
+    </defs>
+</svg>
+  </head>
+
+  <body>
+
+    <nav class="navbar" id="navbar">
+      <div class="navbar-heading" id="navbar-heading"><a href="index.html"><h2 class="navbar-heading-text">Home</h2></a></div><div class="search-box" id="search-box"><div class="search-box-input-container"><input class="search-box-input" type="text" placeholder="Search..." id="search-box-input" /><svg class="search-icon" alt="search-icon"><use xlink:href="#search-icon"></use></svg></div><div class="search-item-container" id="search-item-container"><ul class="search-item-ul" id="search-item-ul"></ul></div></div><div class="sidebar-main-content" id="sidebar-main-content"><div class="accordion collapsed" id="1615090" > <h3 class="accordion-heading">Modules<svg><use xlink:href="#down-icon"></use></svg></h3><ul class="accordion-content"><li class="accordion-list" id=""><a href="lib_visualizer.module_js.html">lib/visualizer.js</a></li></ul> </div><div class="accordion collapsed" id="393834" > <h3 class="accordion-heading">Classes<svg><use xlink:href="#down-icon"></use></svg></h3><ul class="accordion-content"><li class="accordion collapsed child" id=8705533><div class="accordion-heading child"><a href="AtomImage.html">AtomImage</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="AtomImage.html#addEllipsoid">addEllipsoid</a></li><li data-type='method'><a href="AtomImage.html#addLabel">addLabel</a></li><li data-type='method'><a href="AtomImage.html#ellipsoidProperty">ellipsoidProperty</a></li><li data-type='method'><a href="AtomImage.html#getArrayValue">getArrayValue</a></li><li data-type='method'><a href="AtomImage.html#labelProperty">labelProperty</a></li><li data-type='method'><a href="AtomImage.html#removeEllipsoid">removeEllipsoid</a></li><li data-type='method'><a href="AtomImage.html#removeLabel">removeLabel</a></li></ul></li><li class="accordion-list" id=""><a href="BondImage.html">BondImage</a></li><li class="accordion collapsed child" id=1580800><div class="accordion-heading child"><a href="lib_visualizer.module_js-CrystVis.html">CrystVis</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#addPrimitive">addPrimitive</a></li><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#deleteModel">deleteModel</a></li><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#displayModel">displayModel</a></li><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#getScreenshotData">getScreenshotData</a></li><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#loadModels">loadModels</a></li><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#reloadModel">reloadModel</a></li><li data-type='method'><a href="lib_visualizer.module_js-CrystVis.html#removePrimitive">removePrimitive</a></li></ul></li><li class="accordion collapsed child" id=6546596><div class="accordion-heading child"><a href="Model.html">Model</a><svg><use xlink:href="#down-icon"></use></svg></div><ul class='methods accordion-content'><li data-type='method'><a href="Model.html#absToFrac">absToFrac</a></li><li data-type='method'><a href="Model.html#addLink">addLink</a></li><li data-type='method'><a href="Model.html#clearGraphics">clearGraphics</a></li><li data-type='method'><a href="Model.html#find">find</a></li><li data-type='method'><a href="Model.html#fracToAbs">fracToAbs</a></li><li data-type='method'><a href="Model.html#minimumSupercell">minimumSupercell</a></li><li data-type='method'><a href="Model.html#removeGraphics">removeGraphics</a></li><li data-type='method'><a href="Model.html#view">view</a></li></ul></li></ul> </div>
+      
+
+    </nav>
+    <div class="navbar-ham" id="navbar-ham">
+      <div>
+        <div class="first"></div>
+        <div class="second"></div>
+        <div class="third"></div>
+      </div>
+    </div>
+
+    <div id="main" class="main-content">
+      
+      <h1 id='page-title' class="page-title">
+        AtomImage
+      </h1>
+      
+
+      
 
 
 
 
 <section>
 
+
 <header>
     
-        <h2><span class="attribs"><span class="type-signature"></span></span>AtomImage<span class="signature">(model, index, ijk)</span><span class="type-signature"></span></h2>
+        
+        <h2>
+        
+        AtomImage
+        
+        </h2>
+        
         
             <div class="class-description"><p>An 'image' of a single atom from a model. This represents a specific periodic copy of that atom (if applicable).</p></div>
         
     
 </header>
+
 
 <article>
     <div class="container-overview">
@@ -41,12 +132,13 @@
         
 
     
-    <h2>Constructor</h2>
+        <h2>Constructor</h2>
     
 
-    
-    <h4 class="name" id="AtomImage"><span class="type-signature"></span>new AtomImage<span class="signature">(model, index, ijk)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="AtomImage">
+        <a href="#AtomImage">#</a>
+        <span class="type-signature"></span>new AtomImage<span class="signature">(model, index, ijk)</span><span class="type-signature"></span>
+    </h4>
 
     
 
@@ -60,8 +152,9 @@
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -154,6 +247,9 @@
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -186,10 +282,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line32">line 32</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line32">line 32</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -198,8 +296,6 @@
 
     
 </dl>
-
-
 
 
 
@@ -227,9 +323,7 @@
 
     
 
-    
-
-    
+     
 
     
 
@@ -238,7 +332,10 @@
 
         
             
-<h4 class="name" id="aura"><span class="type-signature">(readonly) </span>aura<span class="type-signature"> :AuraMesh</span></h4>
+<h4 class="name" id="aura">
+    <a href="#aura">#</a>
+    <span class="type-signature">(readonly) </span>aura<span class="type-signature"> :AuraMesh</span>
+</h4>
 
 
 
@@ -249,15 +346,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">AuraMesh</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -290,10 +391,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line364">line 364</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line364">line 364</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -308,9 +411,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="baseRadius"><span class="type-signature"></span>baseRadius<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="baseRadius">
+    <a href="#baseRadius">#</a>
+    <span class="type-signature"></span>baseRadius<span class="type-signature"> :float</span>
+</h4>
 
 
 
@@ -321,15 +429,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">float</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -362,10 +474,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line418">line 418</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line418">line 418</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -380,9 +494,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="bondedAtoms"><span class="type-signature">(readonly) </span>bondedAtoms<span class="type-signature"> :Array.&lt;<a href="AtomImage.html">AtomImage</a>></span></h4>
+<h4 class="name" id="bondedAtoms">
+    <a href="#bondedAtoms">#</a>
+    <span class="type-signature">(readonly) </span>bondedAtoms<span class="type-signature"> :Array.&lt;<a href="AtomImage.html">AtomImage</a>></span>
+</h4>
 
 
 
@@ -393,15 +512,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;<a href="AtomImage.html">AtomImage</a>></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -434,10 +557,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line282">line 282</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line282">line 282</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -452,9 +577,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="bonds"><span class="type-signature">(readonly) </span>bonds<span class="type-signature"> :Array.&lt;<a href="BondImage.html">BondImage</a>></span></h4>
+<h4 class="name" id="bonds">
+    <a href="#bonds">#</a>
+    <span class="type-signature">(readonly) </span>bonds<span class="type-signature"> :Array.&lt;<a href="BondImage.html">BondImage</a>></span>
+</h4>
 
 
 
@@ -465,15 +595,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;<a href="BondImage.html">BondImage</a>></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -506,10 +640,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line273">line 273</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line273">line 273</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -524,9 +660,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="bondsFrom"><span class="type-signature">(readonly) </span>bondsFrom<span class="type-signature"> :Array.&lt;<a href="BondImage.html">BondImage</a>></span></h4>
+<h4 class="name" id="bondsFrom">
+    <a href="#bondsFrom">#</a>
+    <span class="type-signature">(readonly) </span>bondsFrom<span class="type-signature"> :Array.&lt;<a href="BondImage.html">BondImage</a>></span>
+</h4>
 
 
 
@@ -537,15 +678,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;<a href="BondImage.html">BondImage</a>></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -578,10 +723,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line255">line 255</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line255">line 255</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -596,9 +743,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="bondsTo"><span class="type-signature">(readonly) </span>bondsTo<span class="type-signature"> :Array.&lt;<a href="BondImage.html">BondImage</a>></span></h4>
+<h4 class="name" id="bondsTo">
+    <a href="#bondsTo">#</a>
+    <span class="type-signature">(readonly) </span>bondsTo<span class="type-signature"> :Array.&lt;<a href="BondImage.html">BondImage</a>></span>
+</h4>
 
 
 
@@ -609,15 +761,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;<a href="BondImage.html">BondImage</a>></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -650,10 +806,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line264">line 264</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line264">line 264</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -668,9 +826,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="color"><span class="type-signature"></span>color<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="color">
+    <a href="#color">#</a>
+    <span class="type-signature"></span>color<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -681,15 +844,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -722,10 +889,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line467">line 467</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line467">line 467</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -740,9 +909,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="cpkColor"><span class="type-signature">(readonly) </span>cpkColor<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="cpkColor">
+    <a href="#cpkColor">#</a>
+    <span class="type-signature">(readonly) </span>cpkColor<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -754,15 +928,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -795,10 +973,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line237">line 237</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line237">line 237</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -813,9 +993,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="crystLabel"><span class="type-signature">(readonly) </span>crystLabel<span class="type-signature"> :String</span></h4>
+<h4 class="name" id="crystLabel">
+    <a href="#crystLabel">#</a>
+    <span class="type-signature">(readonly) </span>crystLabel<span class="type-signature"> :String</span>
+</h4>
 
 
 
@@ -826,15 +1011,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">String</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -867,10 +1056,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line162">line 162</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line162">line 162</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -885,9 +1076,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="element"><span class="type-signature">(readonly) </span>element<span class="type-signature"> :String</span></h4>
+<h4 class="name" id="element">
+    <a href="#element">#</a>
+    <span class="type-signature">(readonly) </span>element<span class="type-signature"> :String</span>
+</h4>
 
 
 
@@ -898,15 +1094,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">String</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -939,10 +1139,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line153">line 153</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line153">line 153</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -957,9 +1159,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="elementData"><span class="type-signature">(readonly) </span>elementData<span class="type-signature"> :Object</span></h4>
+<h4 class="name" id="elementData">
+    <a href="#elementData">#</a>
+    <span class="type-signature">(readonly) </span>elementData<span class="type-signature"> :Object</span>
+</h4>
 
 
 
@@ -970,15 +1177,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1011,10 +1222,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line171">line 171</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line171">line 171</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1029,9 +1242,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="fxyz"><span class="type-signature">(readonly) </span>fxyz<span class="type-signature"> :Array.&lt;float></span></h4>
+<h4 class="name" id="fxyz">
+    <a href="#fxyz">#</a>
+    <span class="type-signature">(readonly) </span>fxyz<span class="type-signature"> :Array.&lt;float></span>
+</h4>
 
 
 
@@ -1042,15 +1260,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;float></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1083,10 +1305,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line332">line 332</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line332">line 332</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1101,9 +1325,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="fxyz0"><span class="type-signature">(readonly) </span>fxyz0<span class="type-signature"> :Array.&lt;float></span></h4>
+<h4 class="name" id="fxyz0">
+    <a href="#fxyz0">#</a>
+    <span class="type-signature">(readonly) </span>fxyz0<span class="type-signature"> :Array.&lt;float></span>
+</h4>
 
 
 
@@ -1114,15 +1343,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;float></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1155,10 +1388,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line323">line 323</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line323">line 323</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1173,9 +1408,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="highlighted"><span class="type-signature"></span>highlighted<span class="type-signature"> :bool</span></h4>
+<h4 class="name" id="highlighted">
+    <a href="#highlighted">#</a>
+    <span class="type-signature"></span>highlighted<span class="type-signature"> :bool</span>
+</h4>
 
 
 
@@ -1186,15 +1426,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">bool</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1227,10 +1471,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line524">line 524</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line524">line 524</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1245,9 +1491,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="id"><span class="type-signature">(readonly) </span>id<span class="type-signature"> :String</span></h4>
+<h4 class="name" id="id">
+    <a href="#id">#</a>
+    <span class="type-signature">(readonly) </span>id<span class="type-signature"> :String</span>
+</h4>
 
 
 
@@ -1258,15 +1509,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">String</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1299,10 +1554,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line126">line 126</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line126">line 126</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1317,9 +1574,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="ijk"><span class="type-signature">(readonly) </span>ijk<span class="type-signature"> :Array.&lt;int></span></h4>
+<h4 class="name" id="ijk">
+    <a href="#ijk">#</a>
+    <span class="type-signature">(readonly) </span>ijk<span class="type-signature"> :Array.&lt;int></span>
+</h4>
 
 
 
@@ -1330,15 +1592,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;int></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1371,10 +1637,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line296">line 296</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line296">line 296</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1389,9 +1657,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="imgIndex"><span class="type-signature">(readonly) </span>imgIndex<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="imgIndex">
+    <a href="#imgIndex">#</a>
+    <span class="type-signature">(readonly) </span>imgIndex<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -1402,15 +1675,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1443,10 +1720,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line135">line 135</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line135">line 135</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1461,9 +1740,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="index"><span class="type-signature">(readonly) </span>index<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="index">
+    <a href="#index">#</a>
+    <span class="type-signature">(readonly) </span>index<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -1474,15 +1758,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1515,10 +1803,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line117">line 117</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line117">line 117</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1533,9 +1823,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="isotope"><span class="type-signature"></span>isotope<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="isotope">
+    <a href="#isotope">#</a>
+    <span class="type-signature"></span>isotope<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -1546,15 +1841,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1587,10 +1886,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line191">line 191</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line191">line 191</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1605,9 +1906,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="isotopeData"><span class="type-signature">(readonly) </span>isotopeData<span class="type-signature"> :Object</span></h4>
+<h4 class="name" id="isotopeData">
+    <a href="#isotopeData">#</a>
+    <span class="type-signature">(readonly) </span>isotopeData<span class="type-signature"> :Object</span>
+</h4>
 
 
 
@@ -1618,15 +1924,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Object</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1659,10 +1969,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line180">line 180</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line180">line 180</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1677,9 +1989,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="isotopeGlobal"><span class="type-signature"></span>isotopeGlobal<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="isotopeGlobal">
+    <a href="#isotopeGlobal">#</a>
+    <span class="type-signature"></span>isotopeGlobal<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -1690,15 +2007,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1731,10 +2052,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line209">line 209</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line209">line 209</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1749,9 +2072,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="mesh"><span class="type-signature">(readonly) </span>mesh<span class="type-signature"> :AtomMesh</span></h4>
+<h4 class="name" id="mesh">
+    <a href="#mesh">#</a>
+    <span class="type-signature">(readonly) </span>mesh<span class="type-signature"> :AtomMesh</span>
+</h4>
 
 
 
@@ -1762,15 +2090,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">AtomMesh</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1803,10 +2135,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line350">line 350</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line350">line 350</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1821,9 +2155,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="model"><span class="type-signature">(readonly) </span>model<span class="type-signature"> :<a href="Model.html">Model</a></span></h4>
+<h4 class="name" id="model">
+    <a href="#model">#</a>
+    <span class="type-signature">(readonly) </span>model<span class="type-signature"> :<a href="Model.html">Model</a></span>
+</h4>
 
 
 
@@ -1834,15 +2173,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type"><a href="Model.html">Model</a></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1875,10 +2218,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line93">line 93</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line93">line 93</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1893,9 +2238,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="moleculeIndex"><span class="type-signature">(readonly) </span>moleculeIndex<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="moleculeIndex">
+    <a href="#moleculeIndex">#</a>
+    <span class="type-signature">(readonly) </span>moleculeIndex<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -1906,15 +2256,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -1947,10 +2301,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line341">line 341</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line341">line 341</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -1965,9 +2321,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="number"><span class="type-signature">(readonly) </span>number<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="number">
+    <a href="#number">#</a>
+    <span class="type-signature">(readonly) </span>number<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -1978,15 +2339,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2019,10 +2384,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line226">line 226</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line226">line 226</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2037,9 +2404,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="opacity"><span class="type-signature"></span>opacity<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="opacity">
+    <a href="#opacity">#</a>
+    <span class="type-signature"></span>opacity<span class="type-signature"> :float</span>
+</h4>
 
 
 
@@ -2050,15 +2422,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">float</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2091,10 +2467,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line499">line 499</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line499">line 499</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2109,9 +2487,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="radius"><span class="type-signature"></span>radius<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="radius">
+    <a href="#radius">#</a>
+    <span class="type-signature"></span>radius<span class="type-signature"> :float</span>
+</h4>
 
 
 
@@ -2122,15 +2505,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">float</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2163,10 +2550,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line452">line 452</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line452">line 452</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2181,9 +2570,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="renderer"><span class="type-signature">(readonly) </span>renderer<span class="type-signature"> :Renderer</span></h4>
+<h4 class="name" id="renderer">
+    <a href="#renderer">#</a>
+    <span class="type-signature">(readonly) </span>renderer<span class="type-signature"> :Renderer</span>
+</h4>
 
 
 
@@ -2194,15 +2588,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Renderer</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2235,10 +2633,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line102">line 102</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line102">line 102</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2253,9 +2653,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="scale"><span class="type-signature"></span>scale<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="scale">
+    <a href="#scale">#</a>
+    <span class="type-signature"></span>scale<span class="type-signature"> :float</span>
+</h4>
 
 
 
@@ -2266,15 +2671,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">float</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2307,10 +2716,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line435">line 435</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line435">line 435</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2325,9 +2736,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="speciesIndex"><span class="type-signature">(readonly) </span>speciesIndex<span class="type-signature"> :int</span></h4>
+<h4 class="name" id="speciesIndex">
+    <a href="#speciesIndex">#</a>
+    <span class="type-signature">(readonly) </span>speciesIndex<span class="type-signature"> :int</span>
+</h4>
 
 
 
@@ -2338,15 +2754,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">int</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2379,10 +2799,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line144">line 144</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line144">line 144</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2397,9 +2819,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="vdwRadius"><span class="type-signature">(readonly) </span>vdwRadius<span class="type-signature"> :float</span></h4>
+<h4 class="name" id="vdwRadius">
+    <a href="#vdwRadius">#</a>
+    <span class="type-signature">(readonly) </span>vdwRadius<span class="type-signature"> :float</span>
+</h4>
 
 
 
@@ -2410,15 +2837,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">float</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2451,10 +2882,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line246">line 246</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line246">line 246</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2469,9 +2902,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="visible"><span class="type-signature"></span>visible<span class="type-signature"> :bool</span></h4>
+<h4 class="name" id="visible">
+    <a href="#visible">#</a>
+    <span class="type-signature"></span>visible<span class="type-signature"> :bool</span>
+</h4>
 
 
 
@@ -2482,15 +2920,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">bool</span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2523,10 +2965,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line383">line 383</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line383">line 383</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2541,9 +2985,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="xyz"><span class="type-signature">(readonly) </span>xyz<span class="type-signature"> :Array.&lt;float></span></h4>
+<h4 class="name" id="xyz">
+    <a href="#xyz">#</a>
+    <span class="type-signature">(readonly) </span>xyz<span class="type-signature"> :Array.&lt;float></span>
+</h4>
 
 
 
@@ -2554,15 +3003,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;float></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2595,10 +3048,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line314">line 314</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line314">line 314</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2613,9 +3068,14 @@
 
 
 
+
+
         
             
-<h4 class="name" id="xyz0"><span class="type-signature">(readonly) </span>xyz0<span class="type-signature"> :Array.&lt;float></span></h4>
+<h4 class="name" id="xyz0">
+    <a href="#xyz0">#</a>
+    <span class="type-signature">(readonly) </span>xyz0<span class="type-signature"> :Array.&lt;float></span>
+</h4>
 
 
 
@@ -2626,15 +3086,19 @@
 
 
 
-    <h5>Type:</h5>
-    <ul>
-        <li>
-            
+    <div class="member-item-container flex">
+        <strong>Type: </strong>
+        <ul>
+            <li>
+                
 <span class="param-type">Array.&lt;float></span>
 
 
-        </li>
-    </ul>
+            </li>
+        </ul>
+    </div>
+
+
 
 
 
@@ -2667,10 +3131,12 @@
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line305">line 305</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line305">line 305</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2679,6 +3145,8 @@
 
     
 </dl>
+
+
 
 
 
@@ -2696,17 +3164,18 @@
 
     
 
-    
-    <h4 class="name" id="addEllipsoid"><span class="type-signature"></span>addEllipsoid<span class="signature">(data, name, parameters)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="addEllipsoid">
+        <a href="#addEllipsoid">#</a>
+        <span class="type-signature"></span>addEllipsoid<span class="signature">(data, name, parameters)</span><span class="type-signature"></span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Add an ellipsoid to the atom.</p>
-</div>
+    <div class="description">
+        <p>Add an ellipsoid to the atom.</p>
+    </div>
 
 
 
@@ -2716,8 +3185,9 @@
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -2823,6 +3293,9 @@ pass (see EllipsoidMesh)</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -2855,10 +3328,12 @@ pass (see EllipsoidMesh)</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line612">line 612</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line612">line 612</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -2885,24 +3360,23 @@ pass (see EllipsoidMesh)</p></td>
 
 
 
-
-
         
             
 
     
 
-    
-    <h4 class="name" id="addLabel"><span class="type-signature"></span>addLabel<span class="signature">(text, name, parameters)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="addLabel">
+        <a href="#addLabel">#</a>
+        <span class="type-signature"></span>addLabel<span class="signature">(text, name, parameters)</span><span class="type-signature"></span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Add a text label to the atom.</p>
-</div>
+    <div class="description">
+        <p>Add a text label to the atom.</p>
+    </div>
 
 
 
@@ -2912,8 +3386,9 @@ pass (see EllipsoidMesh)</p></td>
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -3006,6 +3481,9 @@ pass (see EllipsoidMesh)</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -3038,10 +3516,12 @@ pass (see EllipsoidMesh)</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line548">line 548</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line548">line 548</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -3068,24 +3548,23 @@ pass (see EllipsoidMesh)</p></td>
 
 
 
-
-
         
             
 
     
 
-    
-    <h4 class="name" id="ellipsoidProperty"><span class="type-signature"></span>ellipsoidProperty<span class="signature">(name, property, value)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="ellipsoidProperty">
+        <a href="#ellipsoidProperty">#</a>
+        <span class="type-signature"></span>ellipsoidProperty<span class="signature">(name, property, value)</span><span class="type-signature"></span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Retrieve or set an ellipsoid's properties</p>
-</div>
+    <div class="description">
+        <p>Retrieve or set an ellipsoid's properties</p>
+    </div>
 
 
 
@@ -3095,8 +3574,9 @@ pass (see EllipsoidMesh)</p></td>
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -3206,6 +3686,9 @@ value instead.</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -3238,10 +3721,12 @@ value instead.</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line662">line 662</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line662">line 662</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -3268,24 +3753,23 @@ value instead.</p></td>
 
 
 
-
-
         
             
 
     
 
-    
-    <h4 class="name" id="getArrayValue"><span class="type-signature"></span>getArrayValue<span class="signature">(name)</span><span class="type-signature"> &rarr; {*}</span></h4>
-    
+    <h4 class="name" id="getArrayValue">
+        <a href="#getArrayValue">#</a>
+        <span class="type-signature"></span>getArrayValue<span class="signature">(name)</span><span class="type-signature"> &rarr; {*}</span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Get the value for one array for this image</p>
-</div>
+    <div class="description">
+        <p>Get the value for one array for this image</p>
+    </div>
 
 
 
@@ -3295,8 +3779,9 @@ value instead.</p></td>
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -3343,6 +3828,9 @@ value instead.</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -3375,10 +3863,12 @@ value instead.</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line676">line 676</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line676">line 676</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -3402,16 +3892,17 @@ value instead.</p></td>
 
 
 
-<h5>Returns:</h5>
-
+    <div class="method-member-container mt-20">
+    <strong>Returns:</strong>
         
+            
 <div class="param-desc">
     <p>Value of the array for this atom</p>
 </div>
 
 
 
-<dl>
+<dl class="param-type">
     <dt>
         Type
     </dt>
@@ -3423,8 +3914,8 @@ value instead.</p></td>
     </dd>
 </dl>
 
-    
-
+            
+    </div>
 
 
 
@@ -3434,17 +3925,18 @@ value instead.</p></td>
 
     
 
-    
-    <h4 class="name" id="labelProperty"><span class="type-signature"></span>labelProperty<span class="signature">(name, property, value)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="labelProperty">
+        <a href="#labelProperty">#</a>
+        <span class="type-signature"></span>labelProperty<span class="signature">(name, property, value)</span><span class="type-signature"></span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Retrieve or set a label's properties</p>
-</div>
+    <div class="description">
+        <p>Retrieve or set a label's properties</p>
+    </div>
 
 
 
@@ -3454,8 +3946,9 @@ value instead.</p></td>
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -3565,6 +4058,9 @@ value instead.</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -3597,10 +4093,12 @@ value instead.</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line590">line 590</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line590">line 590</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -3627,24 +4125,23 @@ value instead.</p></td>
 
 
 
-
-
         
             
 
     
 
-    
-    <h4 class="name" id="removeEllipsoid"><span class="type-signature"></span>removeEllipsoid<span class="signature">(name)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="removeEllipsoid">
+        <a href="#removeEllipsoid">#</a>
+        <span class="type-signature"></span>removeEllipsoid<span class="signature">(name)</span><span class="type-signature"></span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Remove the ellipsoid with a given name</p>
-</div>
+    <div class="description">
+        <p>Remove the ellipsoid with a given name</p>
+    </div>
 
 
 
@@ -3654,8 +4151,9 @@ value instead.</p></td>
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -3702,6 +4200,9 @@ value instead.</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -3734,10 +4235,12 @@ value instead.</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line647">line 647</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line647">line 647</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -3764,24 +4267,23 @@ value instead.</p></td>
 
 
 
-
-
         
             
 
     
 
-    
-    <h4 class="name" id="removeLabel"><span class="type-signature"></span>removeLabel<span class="signature">(name)</span><span class="type-signature"></span></h4>
-    
+    <h4 class="name" id="removeLabel">
+        <a href="#removeLabel">#</a>
+        <span class="type-signature"></span>removeLabel<span class="signature">(name)</span><span class="type-signature"></span>
+    </h4>
 
     
 
 
 
-<div class="description">
-    <p>Remove the label of a given name</p>
-</div>
+    <div class="description">
+        <p>Remove the label of a given name</p>
+    </div>
 
 
 
@@ -3791,8 +4293,9 @@ value instead.</p></td>
 
 
 
-    <h5>Parameters:</h5>
-    
+    <div class="method-member-container flex flex-col w-100 overflow-auto mt-20">
+        <strong>Parameters:</strong>
+        
 
 <table class="params">
     <thead>
@@ -3839,6 +4342,9 @@ value instead.</p></td>
     </tbody>
 </table>
 
+    </div>
+
+
 
 
 
@@ -3871,10 +4377,12 @@ value instead.</p></td>
     
 
     
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="model.js.html">model.js</a>, <a href="model.js.html#line574">line 574</a>
-    </li></ul></dd>
+        <div class="details-item-container">
+            <dt class="tag-source">Source:</dt>
+            <dd class="tag-source"><ul class="dummy"><li>
+                <a href="model.js.html">model.js</a>, <a href="model.js.html#line574">line 574</a>
+            </li></ul></dd>
+        </div>
     
 
     
@@ -3883,8 +4391,6 @@ value instead.</p></td>
 
     
 </dl>
-
-
 
 
 
@@ -3916,19 +4422,39 @@ value instead.</p></td>
 
 
 
-</div>
+    </div>
 
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="AtomImage.html">AtomImage</a></li><li><a href="BondImage.html">BondImage</a></li><li><a href="CrystVis.html">CrystVis</a></li><li><a href="Model.html">Model</a></li></ul>
-</nav>
+    <footer class="footer" id="footer">
+      
+    </footer>
 
-<br class="clear">
+    <script src="scripts/third-party/prettify.js"></script>
+    <script src="scripts/third-party/lang-css.js"></script>
+    <script type="text/javascript" src="scripts/misc.js"></script>
 
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue Feb 08 2022 17:46:50 GMT+0000 (Greenwich Mean Time)
-</footer>
+    <script>prettyPrint();</script>
+    <script src="scripts/linenumber.js"></script>
+    <script src="scripts/fix-code-block.js"></script>
+    <script src="scripts/fix-navbar.js"></script>
+    
+      <script src="scripts/search.js"></script>
+      <script src="scripts/third-party/fuse.js"></script>
+      <script>
+        var list = [{"title":"lib/visualizer.js","link":"<a href=\"lib_visualizer.module_js.html\">lib/visualizer.js</a>"},{"title":"AtomImage","link":"<a href=\"AtomImage.html\">AtomImage</a>"},{"title":"AtomImage#addEllipsoid","link":"<a href=\"AtomImage.html#addEllipsoid\">AtomImage &rtrif; addEllipsoid</a>"},{"title":"AtomImage#addLabel","link":"<a href=\"AtomImage.html#addLabel\">AtomImage &rtrif; addLabel</a>"},{"title":"AtomImage#ellipsoidProperty","link":"<a href=\"AtomImage.html#ellipsoidProperty\">AtomImage &rtrif; ellipsoidProperty</a>"},{"title":"AtomImage#getArrayValue","link":"<a href=\"AtomImage.html#getArrayValue\">AtomImage &rtrif; getArrayValue</a>"},{"title":"AtomImage#labelProperty","link":"<a href=\"AtomImage.html#labelProperty\">AtomImage &rtrif; labelProperty</a>"},{"title":"AtomImage#removeEllipsoid","link":"<a href=\"AtomImage.html#removeEllipsoid\">AtomImage &rtrif; removeEllipsoid</a>"},{"title":"AtomImage#removeLabel","link":"<a href=\"AtomImage.html#removeLabel\">AtomImage &rtrif; removeLabel</a>"},{"title":"BondImage","link":"<a href=\"BondImage.html\">BondImage</a>"},{"title":"CrystVis","link":"<a href=\"lib_visualizer.module_js-CrystVis.html\">CrystVis</a>"},{"title":"lib/visualizer.module:js~CrystVis#addPrimitive","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#addPrimitive\">lib/visualizer.module:js~CrystVis &rtrif; addPrimitive</a>"},{"title":"lib/visualizer.module:js~CrystVis#deleteModel","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#deleteModel\">lib/visualizer.module:js~CrystVis &rtrif; deleteModel</a>"},{"title":"lib/visualizer.module:js~CrystVis#displayModel","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#displayModel\">lib/visualizer.module:js~CrystVis &rtrif; displayModel</a>"},{"title":"lib/visualizer.module:js~CrystVis#getScreenshotData","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#getScreenshotData\">lib/visualizer.module:js~CrystVis &rtrif; getScreenshotData</a>"},{"title":"lib/visualizer.module:js~CrystVis#loadModels","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#loadModels\">lib/visualizer.module:js~CrystVis &rtrif; loadModels</a>"},{"title":"lib/visualizer.module:js~CrystVis#reloadModel","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#reloadModel\">lib/visualizer.module:js~CrystVis &rtrif; reloadModel</a>"},{"title":"lib/visualizer.module:js~CrystVis#removePrimitive","link":"<a href=\"lib_visualizer.module_js-CrystVis.html#removePrimitive\">lib/visualizer.module:js~CrystVis &rtrif; removePrimitive</a>"},{"title":"Model","link":"<a href=\"Model.html\">Model</a>"},{"title":"Model#absToFrac","link":"<a href=\"Model.html#absToFrac\">Model &rtrif; absToFrac</a>"},{"title":"Model#addLink","link":"<a href=\"Model.html#addLink\">Model &rtrif; addLink</a>"},{"title":"Model#clearGraphics","link":"<a href=\"Model.html#clearGraphics\">Model &rtrif; clearGraphics</a>"},{"title":"Model#find","link":"<a href=\"Model.html#find\">Model &rtrif; find</a>"},{"title":"Model#fracToAbs","link":"<a href=\"Model.html#fracToAbs\">Model &rtrif; fracToAbs</a>"},{"title":"Model#minimumSupercell","link":"<a href=\"Model.html#minimumSupercell\">Model &rtrif; minimumSupercell</a>"},{"title":"Model#removeGraphics","link":"<a href=\"Model.html#removeGraphics\">Model &rtrif; removeGraphics</a>"},{"title":"Model#view","link":"<a href=\"Model.html#view\">Model &rtrif; view</a>"}];
+        var options = 
+          setupSearch(list, options)
+      </script>
+    
 
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
+    
+
+    
+
+    
+
+    
+
+
+  </body>
+
 </html>
