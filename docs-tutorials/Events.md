@@ -40,3 +40,18 @@ Most events by default are bound to nothing, mean, nothing will happen unless yo
 * `CrystVis.LEFT_CLICK + CrystVis.CTRL_BUTTON` defaults to switching the clicked atom in or out of the selection
 
 To best see how the selection changes, set `.highlightSelected = true`.
+
+### Box selection
+
+In addition to the various events described above, there is a special behaviour. Clicking while pressing Shift on a point that does *not* have an atom allows the user to drag
+a box around multiple atoms, for example to select them in group. This behaviour can also be customized, by setting a callback with the method `.onAtomBox()`. Here is an example:
+
+```js
+function boxCallback(atomview) {
+    alert(atomview.map((atom) => atom.element));
+}
+
+visualizer.onAtomBox(boxCallback)
+```
+
+that will create an alert popup with a list of all the elements in the selected box.
