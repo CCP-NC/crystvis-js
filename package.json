@@ -72,7 +72,7 @@
     "load-bmfont": "^1.4.1",
     "lodash": "^4.17.21",
     "mathjs": "^8.0.1",
-    "three": ">=0.129.0",
+    "three": "^0.137.5",
     "yargs-parser": "^20.2.4"
   },
   "devDependencies": {
