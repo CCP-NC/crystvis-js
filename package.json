@@ -1,6 +1,6 @@
 {
   "name": "crystvis-js",
-  "version": "0.4.11",
+  "version": "0.4.12",
   "description": "A Three.js based crystallographic visualisation tool",
   "main": "index.js",
   "type": "module",
