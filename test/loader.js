@@ -103,5 +103,12 @@ describe('#loading', function() {
         expect(a.get_cell()).to.almost.deep.equal([[10.0, 0, 0], [10.0, 10.0, 0], [0, 0, 10.0]]);
         expect(a.get_positions()[0]).to.almost.deep.equal([10.0, 5.0, 5.0]);
 
+
+        // Test an example with ABC lattice and ABS positions but with bohr units
+        cell = fs.readFileSync(path.join(__dirname, 'data', 'bohr.cell'), "utf8");
+        a = loader.load(cell, 'cell')['cell'];
+
+        expect(a.get_cell()).to.almost.deep.equal([[3.7042404756, 0, 0], [0, 3.7042404756, 0], [0, 0, 3.7042404756]]);
+        expect(a.get_positions()[1]).to.almost.deep.equal([1.8521202378, 0.0, 0.0]);
     });
 });
