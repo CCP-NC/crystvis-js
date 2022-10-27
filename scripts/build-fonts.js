@@ -5,8 +5,12 @@ import glob from 'glob';
 
 // We update by hand whenever we want to build a new font
 const fontList = [
-    'fonts/Rubik/static/Rubik-Medium.ttf'
+    'fonts/Rubik/static/Rubik-Medium.ttf',
+    'fonts/OpenSans/static/OpenSans/OpenSans-Medium.ttf'
 ];
+
+const defaultCharset = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ αβγδεζηθικλμνξοπρστυφχψωΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟΠΡΣΤΥΦΧΨΩÅ°".split('');
+
 
 const savePath = 'lib/assets/fonts';
 
@@ -19,7 +23,7 @@ old_files.forEach((fname, index) => {
 for (var i in fontList) {
     const fname = fontList[i];
 
-    generateBMFont(fname, (error, textures, font) => {
+    generateBMFont(fname, {charset: defaultCharset}, (error, textures, font) => {
 
         textures.forEach((texture, index) => {
 

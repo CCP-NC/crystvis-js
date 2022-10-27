@@ -17,7 +17,7 @@ import {
 } from '../../lib/visualizer.js';
 import * as Primitives from '../../lib/primitives';
 import {
-    RubikMedium
+    OpenSans
 } from '../../lib/assets/fonts';
 
 import {
@@ -30,12 +30,12 @@ var visualizer;
 describe('Font tests', function() {
 
     it('should successfully create a BitmapFont', function() {
-        chai.expect(RubikMedium.ready).to.equal(true);
+        chai.expect(OpenSans.ready).to.equal(true);
     });
 
     it('should successfully create a geometry from said font', function() {
 
-        var geo = RubikMedium.getTextGeometry('Hello world');
+        var geo = OpenSans.getTextGeometry('Hello world');
     });
 });
 
@@ -160,6 +160,36 @@ describe('Visualizer tests', function() {
         visualizer.displayed.atoms[1].ellipsoidProperty('test2', 'color', 0x8800ee);
 
     });
+
+    // euler disks
+    // it('should correctly add/remove euler disks to the displayed atoms', function() {
+
+    //     var data = {
+    //         dataA = {eigenvectors: [
+    //             [1, 1, 0],
+    //             [1, -1, 0],
+    //             [0, 0, 1]
+    //            ]
+    //         };
+    //         dataB = {eigenvectors: [
+    //             [1, 1, 0],
+    //             [1, -1, 0],
+    //             [0, 0, 1]
+    //             ]
+    //         }
+    //     };
+
+    //     visualizer.displayed.atoms[0].addEulerDisk(data, 'test');
+    //     visualizer.displayed.atoms[1].addEulerDisk(data, 'test2', {
+    //         color: 0x00ee88
+    //     });
+    //     visualizer.displayed.atoms[0].removeEulerDisk('test');
+
+    //     // Set their properties
+    //     visualizer.displayed.atoms[1].eulerDiskProperty('test2', 'color', 0x8800ee);
+
+    // });
+
 
     it('should correctly draw simple primitives', function() {
 
