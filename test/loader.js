@@ -55,6 +55,20 @@ describe('#loading', function() {
             [1.7848106706548383, 1.959874486240255, 12.914460443940394]
         ]);
     });
+    it ('should load a noisy .xyz file', function() {
+
+        var loader = new Loader();
+
+        var xyz = fs.readFileSync(path.join(__dirname, 'data', 'si8_noisy.xyz'), "utf8");
+        var a = loader.load(xyz, 'xyz')['xyz'];
+
+        expect(a.get_cell()).to.deep.almost.equal([
+            [5.475, 0, 0],
+            [0, 5.475, 0],
+            [0, 0, 5.475]
+        ]);
+    });
+
     it('should load properly a Magres file', function() {
 
         var loader = new Loader();
