@@ -155,6 +155,14 @@ describe('#model', function() {
         expect(pyrmodel.cell).to.be.null;
     });
 
+    it('should correctly identify CH bond presence', function() {
+        expect(chamodel._queryCHBond()).to.be.false;
+        expect(simodel._queryCHBond()).to.be.false;
+        expect(pyrmodel._queryCHBond()).to.be.true;
+        expect(h2omodel._queryCHBond()).to.be.false;
+        expect(orgmodel._queryCHBond()).to.be.true;
+    });
+
     it('should correctly query for atoms in various ways', function() {
         // Here we only test the raw query functions, not meant for 
         // public use
