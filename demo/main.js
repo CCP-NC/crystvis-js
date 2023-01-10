@@ -7,6 +7,7 @@ const shiftCpkColor = require('../lib/utils').shiftCpkColor;
 
 var visualizer = new CrystVis('#main-app', 0, 0);
 visualizer.highlight_selected = true;
+visualizer.theme = 'dark';
 
 // Generate color grid (for testing shiftCpkColor)
 const gridEl = document.getElementById('colorgrid');
