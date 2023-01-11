@@ -142,3 +142,14 @@ window.changeIsosurface = function() {
     }
 
 }
+
+// display test message
+window.displayMessage = function() {
+    var message = document.getElementById('message').value;
+    visualizer.addNotification(message);
+}
+
+// clear messages
+window.clearMessages = function() {
+    visualizer.clearNotifications();
+}
