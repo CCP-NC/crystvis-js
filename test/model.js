@@ -373,4 +373,19 @@ describe('#modelview', function() {
 
     });
 
+    it('should correctly identify the unique sites based on the labels', function() {
+            // modelview with all atoms
+            var mv = chamodel.find({'all': []});
+            // 
+            let newMV = mv.uniqueSites();
+            // O1, O2, O3, O4, T1 (5 sites)
+            expect(newMV.length).to.equal(5);
+            expect(newMV._indices.sort()).to.deep.equal([0, 18, 36, 54, 72]);
+
+            // make sure it works with subsets
+            var mv2 = chamodel.find({'elements': ['Si']});           
+            newMV = mv2.uniqueSites();
+            expect(newMV.length).to.equal(1);
+            expect(newMV._indices.sort()).to.deep.equal([72]);   
+    });
 });
