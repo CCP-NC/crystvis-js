@@ -72,7 +72,7 @@
     "@jkshenton/three-bmfont-text": "^3.0.5",
     "buffer": "^6.0.3",
     "chroma-js": "^2.4.2",
-    "crystcif-parse": "^0.2.9",
+    "@ccp-nc/crystcif-parse": "^0.2.9",
     "isosurface": "^1.0.0",
     "jquery": "^3.6.0",
     "load-bmfont": "^1.4.1",

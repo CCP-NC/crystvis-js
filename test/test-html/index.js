@@ -215,7 +215,7 @@ describe('Visualizer tests', function() {
 $(document).ready(function() {
 
 
-    // var Atoms = require('crystcif-parse').Atoms;
+    // var Atoms = require('@ccp-nc/crystcif-parse').Atoms;
 
     // var a = new Atoms(['C'], [[0, 0, 1]], [[2, 0, 0], [0, 2, 0], [0, 1, 2]]);
 
