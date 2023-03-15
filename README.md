@@ -14,7 +14,7 @@ A [Three.js](https://threejs.org/) based crystallographic visualisation tool. It
 
 The currently supported file formats are the following:
 
-* **CIF**, using [crystcif-parse](https://github.com/stur86/crystcif-parse);
+* **CIF**, using [crystcif-parse](https://github.com/CCP-NC/crystcif-parse);
 * **XYZ**, specifically the Extended XYZ such as the one written by the [Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/);
 * **CELL**, input file supported by the DFT package [CASTEP](http://www.castep.org/);
 * **Magres**, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the [CCP for NMR Crystallography](https://www.ccpnc.ac.uk/).
