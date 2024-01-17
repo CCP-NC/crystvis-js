@@ -83,7 +83,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",
-    "chai": "^4.3.6",
+    "chai": "^5.0.0",
     "chai-almost": "^1.0.1",
     "clean-jsdoc-theme": "^4.2.17",
     "datauri": "^4.1.0",
@@ -91,11 +91,11 @@
     "esbuild": "^0.19.11",
     "eslint": "^8.56.0",
     "gh-pages": "^4.0.0",
-    "glob": "^8.0.3",
+    "glob": "^10.3.10",
     "jpeg-js": ">=0.4.4",
     "jsdoc": "^4.0.2",
     "minimist": "^1.2.8",
-    "mocha": "^10.0.0",
+    "mocha": "^10.2.0",
     "msdf-bmfont-xml": "^2.5.4",
     "npm-watch": "^0.11.0",
     "serve": "^14.2.1"

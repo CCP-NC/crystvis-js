@@ -5,7 +5,7 @@ import $ from 'jquery';
 import * as THREE from 'three';
 import chroma from 'chroma-js';
 
-import chai from 'chai';
+import * as chai from 'chai';
 import {
     Renderer
 } from '../../lib/render.js';
