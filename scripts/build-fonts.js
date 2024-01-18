@@ -1,7 +1,8 @@
 import generateBMFont from 'msdf-bmfont-xml';
 import fs from 'fs';
 import path from 'path';
-import glob from 'glob';
+import * as glob from 'glob';
+
 
 // We update by hand whenever we want to build a new font
 const fontList = [
