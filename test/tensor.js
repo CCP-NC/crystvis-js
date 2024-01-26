@@ -397,35 +397,95 @@ describe('#tensordata', function() {
 
     it ('should convert properly calculate Euler angles for edge cases', function() {
         // TODO
+        // Spherical tensors
+        // ms H 1 100 0 0 0 100 0 0 0 100
+        let A = new TensorData([
+            [1,0,0],
+            [0,1,0],
+            [0,0,1]
+        ]);
+        // eigenvalues: 1, 1, 1
+        expect(A.eigenvalues).to.deep.equal([1, 1, 1]);
+        // should be zeros for all conventions combinations
+        for (let conv of ['zyz', 'zxz']) {
+            for (let active of [true, false]) {
+                for (let order of ['increasing', 'decreasing', 'haeberlen', 'nqr']) {
+                    expect(A.euler(conv, active, order)).to.deep.almost.equal([0, 0, 0]);
+                }
+            }
+        }
+    
+        // ms H 2 100 50 0 50 100 0 0 0 200
+        let B = new TensorData([
+            [100,50,0],
+            [50,100,0],
+            [0,0,200]
+        ]);
+        // eigenvalues: 50, 150, 200
+        expect(B.eigenvalues).to.deep.equal([50, 150, 200]);
+        console.log(B.equivalentEuler('zyz', true))
+        // expect(B.euler('zyz', true, 'increasing')).to.deep.almost.equal([135, 0, 0].map((x) => x*PI/180));
+        // expect(B.euler('zyz', false)).to.deep.almost.equal([0, 0, 225].map((x) => x*PI/180));
+        // expect(B.euler('zxz', true)).to.deep.almost.equal([135, 0, 0].map((x) => x*PI/180));
+        // expect(B.euler('zxz', false)).to.deep.almost.equal([0, 0, 225].map((x) => x*PI/180));
+    
+        // efg H 1 0  0  2. 1.41421356 1.41421356 0   1.41421356 -1.41421356  0  
+        let C = new TensorData([
+            [0, 0, 2],
+            [mjs.sqrt(2), mjs.sqrt(2), 0],
+            [mjs.sqrt(2), -mjs.sqrt(2), 0]
+        ]);
+        // TODO! add more. Fix the ones that are failing.
     });
 
-    // ms H 1 100 0 0 0 100 0 0 0 100
-    let A = new TensorData([
-        [1,0,0],
-        [0,1,0],
-        [0,0,1]
-    ]);
+    it ('should convert properly calculate relative rotation matrices', function() {
+        let A = new TensorData([
+            [0, 0, 2],
+            [mjs.sqrt(2), mjs.sqrt(2), 0],
+            [mjs.sqrt(2), -mjs.sqrt(2), 0]
+        ]);
 
-    // ms H 2 100 50 0 50 100 0 0 0 200
-    let B = new TensorData([
-        [100,50,0],
-        [50,100,0],
-        [0,0,200]
-    ]);
-    // eigenvalues: 50, 150, 200
-    expect(B.eigenvalues).to.deep.equal([50, 150, 200]);
-    console.log(B.equivalentEuler('zyz', true))
-    // expect(B.euler('zyz', true)).to.deep.almost.equal([135, 0, 0].map((x) => x*PI/180));
-    // expect(B.euler('zyz', false)).to.deep.almost.equal([0, 0, 225].map((x) => x*PI/180));
-    // expect(B.euler('zxz', true)).to.deep.almost.equal([135, 0, 0].map((x) => x*PI/180));
-    // expect(B.euler('zxz', false)).to.deep.almost.equal([0, 0, 225].map((x) => x*PI/180));
+        const Bdata = [
+            [1.00, 0.12, 0.13],
+            [0.21, 2.00, 0.23],
+            [0.31, 0.32, -6.00]
+        ];
+        
+        let B = new TensorData(Bdata);
 
-    // efg H 1 0  0  2. 1.41421356 1.41421356 0   1.41421356 -1.41421356  0  
-    let C = new TensorData([
-        [0, 0, 2],
-        [mjs.sqrt(2), mjs.sqrt(2), 0],
-        [mjs.sqrt(2), -mjs.sqrt(2), 0]
-    ]);
+        let I = [
+            [1,0,0],
+            [0,1,0],
+            [0,0,1]
+        ]
+        let Itensor = new TensorData(I);
+        // basic tests:
+        // Self rotation -> identity
+        let R = A.rotationTo(A);
+        expect(R).to.deep.almost.equal(I);
+        // Rotation to itself -> identity
+        expect(Itensor.rotationTo(Itensor)).to.deep.almost.equal(I);
+        // Rotation from identity to another tensor -> that tensor
+        expect(Itensor.rotationTo(A)).to.deep.almost.equal(A.eigenvectors);
+        expect(Itensor.rotationTo(B)).to.deep.almost.equal(B.eigenvectors);
+        
+        // actual tests:
+        R = A.rotationTo(B);
+        // make sure it's a rotation matrix
+        // make sure determinant is 1
+        expect(mjs.det(R)).to.almost.equal(1);
+        // make sure it's orthogonal
+        expect(mjs.multiply(R, mjs.transpose(R))).to.deep.almost.equal(I);
+
+        // make sure it rotates A into B
+        expect(mjs.multiply(R, A.eigenvectors)).to.deep.almost.equal(B.eigenvectors);
+        // survives re-ordering of eigenvalues
+        A.convention = "decreasing";
+        B.convention = "nqr";
+        R = A.rotationTo(B);
+        expect(mjs.multiply(R, A.eigenvectors)).to.deep.almost.equal(B.eigenvectors);
+        
+    });
 
 });
 
