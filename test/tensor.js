@@ -269,7 +269,7 @@ describe('#tensordata', function() {
         expect(isc.haeberlen_eigenvalues[2]).to.almost.equal(6.53565087);
     });
 
-    it ('should convert properly calculate general Euler angles', function() {
+    it ('should properly calculate general Euler angles', function() {
         
         var A = new TensorData([
             [1,0,0],
@@ -375,7 +375,7 @@ describe('#tensordata', function() {
     });
 
 
-    it ('should convert properly calculate equivalent Euler angles', function() {
+    it ('should properly calculate equivalent Euler angles', function() {
         const ref_euler_c = [
             [3*PI/2, PI/2,   0],
             [3*PI/2, PI/2, PI],
@@ -395,7 +395,7 @@ describe('#tensordata', function() {
     });
 
 
-    it ('should convert properly calculate Euler angles for edge cases', function() {
+    it ('should properly calculate Euler angles for edge cases', function() {
         // TODO
         // Spherical tensors
         // ms H 1 100 0 0 0 100 0 0 0 100
@@ -417,13 +417,13 @@ describe('#tensordata', function() {
     
         // ms H 2 100 50 0 50 100 0 0 0 200
         let B = new TensorData([
-            [100,50,0],
-            [50,100,0],
-            [0,0,200]
+            [1,0.5,0],
+            [0.5,1,0],
+            [0,0,2]
         ]);
-        // eigenvalues: 50, 150, 200
-        expect(B.eigenvalues).to.deep.equal([50, 150, 200]);
-        console.log(B.equivalentEuler('zyz', true))
+        expect(B.eigenvalues).to.deep.equal([0.50, 1.50, 2.00]);
+        // TODO: This case needs to be investigated as it doesn't agree in Soprano either
+        // console.log(B.equivalentEuler('zyz', true))
         // expect(B.euler('zyz', true, 'increasing')).to.deep.almost.equal([135, 0, 0].map((x) => x*PI/180));
         // expect(B.euler('zyz', false)).to.deep.almost.equal([0, 0, 225].map((x) => x*PI/180));
         // expect(B.euler('zxz', true)).to.deep.almost.equal([135, 0, 0].map((x) => x*PI/180));
@@ -436,9 +436,25 @@ describe('#tensordata', function() {
             [mjs.sqrt(2), -mjs.sqrt(2), 0]
         ]);
         // TODO! add more. Fix the ones that are failing.
+
+        let D = new TensorData([
+            [5, 0 ,0],
+            [0, 10, 0],
+            [0, 0, 5]
+        ]);
+        expect(D.euler('zyz', true, 'increasing')).to.deep.almost.equal([90,90, 0].map((x) => x*PI/180));
+        let E = new TensorData([
+            [10, 0 ,0],
+            [0, 5, 0],
+            [0, 0, 5]
+        ]);
+        expect(E.euler('zyz', true, 'increasing')).to.deep.almost.equal([180,90, 0].map((x) => x*PI/180));
+
+
+
     });
 
-    it ('should convert properly calculate relative rotation matrices', function() {
+    it ('should properly calculate relative rotation matrices', function() {
         let A = new TensorData([
             [0, 0, 2],
             [mjs.sqrt(2), mjs.sqrt(2), 0],
@@ -465,9 +481,9 @@ describe('#tensordata', function() {
         expect(R).to.deep.almost.equal(I);
         // Rotation to itself -> identity
         expect(Itensor.rotationTo(Itensor)).to.deep.almost.equal(I);
-        // Rotation from identity to another tensor -> that tensor
-        expect(Itensor.rotationTo(A)).to.deep.almost.equal(A.eigenvectors);
-        expect(Itensor.rotationTo(B)).to.deep.almost.equal(B.eigenvectors);
+        // // Rotation from identity to another tensor -> that tensor
+        expect(Itensor.rotationTo(A)).to.deep.almost.equal(mjs.transpose(A.eigenvectors));
+        expect(Itensor.rotationTo(B)).to.deep.almost.equal(mjs.transpose(B.eigenvectors));
         
         // actual tests:
         R = A.rotationTo(B);
@@ -478,14 +494,138 @@ describe('#tensordata', function() {
         expect(mjs.multiply(R, mjs.transpose(R))).to.deep.almost.equal(I);
 
         // make sure it rotates A into B
-        expect(mjs.multiply(R, A.eigenvectors)).to.deep.almost.equal(B.eigenvectors);
+        expect(mjs.multiply(R, mjs.transpose(A.eigenvectors))).to.deep.almost.equal(mjs.transpose(B.eigenvectors));
         // survives re-ordering of eigenvalues
         A.convention = "decreasing";
         B.convention = "nqr";
         R = A.rotationTo(B);
-        expect(mjs.multiply(R, A.eigenvectors)).to.deep.almost.equal(B.eigenvectors);
+        expect(mjs.multiply(R, mjs.transpose(A.eigenvectors))).to.deep.almost.equal(mjs.transpose(B.eigenvectors));
         
     });
+
+    it('calculates relative Euler angles correctly for general case', () => {
+        // # ALA case from the TensorView for MATLAB examples dir
+
+        // Probably the MS tensor
+        let A = new TensorData([
+            [ -5.9766,   -60.302,   -10.8928],
+            [-65.5206,   -23.0881,  -25.2372],
+            [ -9.5073,   -28.2399,   56.2779],
+        ]);
+        // probably the EFG tensor
+        let B = new TensorData([
+            [-0.7806, 0.7215, 0.2987],
+            [ 0.7215, 1.3736, 0.9829],
+            [ 0.2987, 0.9829, -0.5929]
+        ]);
+
+        const equivalent_eulers = A.equivalentEulerTo(B, "zyz", true, 1e-12, true)
+        const ref_eulers = [
+            [155.10491563,  89.95022697,  24.80660839],
+            [335.10491563,  90.04977303, 335.19339161],
+            [335.10491563,  90.04977303, 155.19339161],
+            [155.10491563,  89.95022697, 204.80660839],
+            [204.89508437,  90.04977303, 204.80660839],
+            [ 24.89508437,  89.95022697, 155.19339161],
+            [ 24.89508437,  89.95022697, 335.19339161],
+            [204.89508437,  90.04977303,  24.80660839],
+            [ 24.89508437,  90.04977303, 204.80660839],
+            [204.89508437,  89.95022697, 155.19339161],
+            [204.89508437,  89.95022697, 335.19339161],
+            [ 24.89508437,  90.04977303,  24.80660839],
+            [335.10491563,  89.95022697,  24.80660839],
+            [155.10491563,  90.04977303, 335.19339161],
+            [155.10491563,  90.04977303, 155.19339161],
+            [335.10491563,  89.95022697, 204.80660839],
+        ];
+        expect(equivalent_eulers).to.deep.almost.equal(ref_eulers);
+    });
+
+
+    it('calculates relative Euler angles correctly for axial symmetry cases', () => {
+
+        // First an example from the MagresView2 tests 
+        // (Both are axially symmetric tensors - tricky case!)
+        // The first is *almost* a spherical tensor, but not quite
+        // 
+        let A = new TensorData([
+            [0.93869474, 0.33129348, -0.09537721],
+            [0.33771007, -0.93925902, 0.06119153],
+            [-0.06931155, -0.08965002, -0.99355865]
+        ]);
+        // 
+        let B = new TensorData([
+            [-0.52412461, 0.49126909, -0.69566377],
+            [-0.56320663, 0.41277966, 0.71582906],
+            [0.63882054, 0.76698607, 0.06033803]
+        ]);
+    
+        // First make sure the eigenvalues are correct:
+        const refAEigenvalues = [-0.99706147, -0.99706146, 1.0];
+        const refBEigenvalues = [-0.52550346, -0.52550346, 1.0];
+        expect(A.eigenvalues).to.deep.almost.equal(refAEigenvalues);
+        expect(B.eigenvalues).to.deep.almost.equal(refBEigenvalues);
+
+        // Now let's check the individual Euler angles
+        expect(A.euler("zyz", true, null, true)).to.deep.almost.equal([ 189.8040, 87.5997, 0.0])
+        expect(B.euler("zyz", true, null, true)).to.deep.almost.equal([ 92.1953, 51.7056, 0.0])
+
+
+        const eulers = A.equivalentEulerTo(B, "zyz", true, 1e-4, true)
+        const ref_euler = [
+            [  0.0000,  85.5337,   0.0000], // 1
+            [180.0000,  94.4663,   0.0000], // 2
+            [180.0000,  94.4663, 180.0000], // 3
+            [  0.0000,  85.5337, 180.0000], // 4
+            [  0.0000,  94.4663, 180.0000], // 5
+            [180.0000,  85.5337, 180.0000], // 6
+            [180.0000,  85.5337,   0.0000], // 7
+            [  0.0000,  94.4663,   0.0000], // 8
+            [180.0000,  94.4663, 180.0000], // 9
+            [  0.0000,  85.5337, 180.0000], // 10
+            [  0.0000,  85.5337,   0.0000], // 11
+            [180.0000,  94.4663,   0.0000], // 12
+            [180.0000,  85.5337,   0.0000], // 13
+            [  0.0000,  94.4663,   0.0000], // 14
+            [  0.0000,  94.4663, 180.0000], // 15
+            [180.0000,  85.5337, 180.0000], // 16
+        ];
+        expect(eulers).to.deep.almost.equal(ref_euler);
+    });
+
+
+
+
+    it('calculates relative Euler angles correctly for gimbal lock case', () => {
+
+        const c30 = mjs.sqrt(3)/ 2.0;
+        const c45 = mjs.sqrt(2) / 2.0;
+        const c60 = 0.5;
+        // 
+        let A = new TensorData([
+            [c30,  c60, 0.0],
+            [-c60, c30, 0.0],
+            [ 0.0, 0.0, 1.0]
+        ]);
+        // 
+        let B = new TensorData([
+            [c45,  c45, 0.0],
+            [-c45, c45, 0.0],
+            [ 0.0, 0.0, 1.0]
+        ]);
+
+        const eulers1 = A.eulerTo(B, "zyz", true, 1e-12)
+        const eulers2 = A.eulerTo(B, "zxz", true, 1e-12,)
+        const eulers3 = A.eulerTo(B, "zyz", false, 1e-12)
+        const eulers4 = A.eulerTo(B, "zxz", false, 1e-12)
+        const ref_euler = [0.0, 0.0, 0.0];
+        expect(eulers1).to.deep.almost.equal(ref_euler);
+        expect(eulers2).to.deep.almost.equal(ref_euler);
+        expect(eulers3).to.deep.almost.equal(ref_euler);
+        expect(eulers4).to.deep.almost.equal(ref_euler);
+    });
+
+
 
 });
 
@@ -511,7 +651,7 @@ describe('equivalentEuler', () => {
 
     it('should return the correct number of equivalent angles', () => {
         const eulerAngles = [PI / 2, PI / 3, PI / 4];
-        const result = equivalentEuler(eulerAngles, 'zyz', true);
+        const result = equivalentEuler(eulerAngles, true);
         expect(result.length).to.equal(4);
     });
 
@@ -523,7 +663,7 @@ describe('equivalentEuler', () => {
             [  PI/2, PI/2, PI],
             [  PI/2, PI/2,   0],
         ];
-        const result = equivalentEuler(eulerAngles, 'zyz', true);
+        const result = equivalentEuler(eulerAngles, true);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
     });
@@ -536,7 +676,7 @@ describe('equivalentEuler', () => {
             [PI, PI/2, PI/2],
             [PI, PI/2, 3*PI/2],
         ];
-        const result = equivalentEuler(eulerAngles, 'zxz', true);
+        const result = equivalentEuler(eulerAngles, true);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
     });
@@ -549,7 +689,7 @@ describe('equivalentEuler', () => {
             [PI, PI/2, PI/2],
             [0, PI/2, PI/2],
         ];
-        const result = equivalentEuler(eulerAngles, 'zyz', false);
+        const result = equivalentEuler(eulerAngles, false);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
     });
@@ -562,7 +702,7 @@ describe('equivalentEuler', () => {
             [PI/2, PI/2, 0],
             [3*PI/2, PI/2, 0],
         ];
-        const result = equivalentEuler(eulerAngles, 'zxz', false);
+        const result = equivalentEuler(eulerAngles, false);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
     });
@@ -576,7 +716,7 @@ describe('equivalentEuler', () => {
             [PI, PI, PI],
             [PI, PI, 0],
         ];
-        let result = equivalentEuler(eulerAngles, 'zyz', true);
+        let result = equivalentEuler(eulerAngles, true);
         expect(result).to.deep.almost.equal(ref_euler_c);
         // zyz, passive
         ref_euler_c = [
@@ -585,7 +725,7 @@ describe('equivalentEuler', () => {
             [PI, PI, PI],
             [0, PI, PI],
         ];
-        result = equivalentEuler(eulerAngles, 'zyz', false);
+        result = equivalentEuler(eulerAngles, false);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
         // zxz, active
@@ -595,7 +735,7 @@ describe('equivalentEuler', () => {
             [PI, PI, PI],
             [PI, PI, 0],
         ];
-        result = equivalentEuler(eulerAngles, 'zxz', true);
+        result = equivalentEuler(eulerAngles, true);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
         // zxz, passive
@@ -605,7 +745,7 @@ describe('equivalentEuler', () => {
             [PI, PI, PI],
             [0, PI, PI],
         ];
-        result = equivalentEuler(eulerAngles, 'zxz', false);
+        result = equivalentEuler(eulerAngles, false);
         expect(result).to.deep.almost.equal(ref_euler_c);
 
     });
