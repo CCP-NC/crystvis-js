@@ -15,6 +15,7 @@ import {
 import {
     getIsotopeData
 } from '../lib/data.js'
+import { deepAlmostEqualUnordered } from '../lib/utils.js';
 
 chai.use(chaiAlmost(1e-3));
 
@@ -23,36 +24,6 @@ const assert = chai.assert;
 
 
 const PI = mjs.pi;
-
-// Helper function to compare two arrays of arrays that may be in different order
-// i.e. the rows can be swapped, but not the elements in each row
-const deepAlmostEqualUnordered = (arr1, arr2, tolerance = 1e-3) => {
-    if (arr1.length !== arr2.length) return false;
-
-    const lexSort = (a, b) => {
-        for (let i = 0; i < 3; i++) {
-          const diff = a[i] - b[i];
-          if (Math.abs(diff) > tolerance) {
-            return diff;
-          }
-        }
-        return 0;
-    };
-  
-    const sortRows = arr => arr.map(row => [...row]).sort(lexSort);
-    const sortedArr1 = sortRows(arr1);
-    const sortedArr2 = sortRows(arr2);
-  
-    for (let i = 0; i < sortedArr1.length; i++) {
-      for (let j = 0; j < sortedArr1[i].length; j++) {
-        if (Math.abs(sortedArr1[i][j] - sortedArr2[i][j]) > tolerance) {
-          return false;
-        }
-      }
-    }
-  
-    return true;
-  };
 
 describe('#tensordata', function() {
 
