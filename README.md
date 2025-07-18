@@ -1,6 +1,10 @@
 # crystvis-js
 
-A [Three.js](https://threejs.org/) based crystallographic visualisation tool. It reads multiple file formats and renders them with WebGL to a `canvas` element, allowing the user to interact with them. A few of the key functionality:
+A [Three.js](https://threejs.org/) based crystallographic visualisation tool. It reads multiple file formats and renders them with WebGL to a `canvas` element, allowing the user to interact with them. 
+
+> **Note:** Version 0.6.0 includes a major update from Three.js 0.137 to 0.178. See [Three.js Migration Notes](docs-tutorials/ThreejsMigration.md) and [CHANGELOG](CHANGELOG.md) for details.
+
+A few of the key functionality:
 
 * visualize popular file formats as ball-and-stick structures, easily embedded within a webpage, with orbit mouse control for rotation and zooming;
 * interactive visualisation responsive to user clicks via customizable callbacks;
