@@ -9,7 +9,8 @@ import * as mjs from 'mathjs'
 import {
     TensorData,
     rotateTensor,
-    equivalentEuler
+    equivalentEuler,
+    convertToMatrix
 } from '../lib/tensor.js'
 
 import {
@@ -24,6 +25,85 @@ const assert = chai.assert;
 
 
 const PI = mjs.pi;
+
+
+describe('convertToMatrix', () => {
+    it('should convert 3x3 array to mathjs matrix', () => {
+        const input = [
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ];
+        const result = convertToMatrix(input);
+        expect(result).to.deep.equal(mjs.matrix(input));
+    });
+
+    it('should convert 9-element array to 3x3 mathjs matrix', () => {
+        const input = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        const expected = mjs.matrix([
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]);
+        const result = convertToMatrix(input);
+        expect(result).to.deep.equal(expected);
+    });
+
+    it('should convert eigenvalues and eigenvectors to mathjs matrix', () => {
+        const eigs = [1, 2, 3];
+        const evecs = [
+            [1, 0, 0],
+            [0, 1, 0],
+            [0, 0, 1]
+        ];
+        const input = [eigs, evecs];
+        const expected = mjs.matrix([
+            [1, 0, 0],
+            [0, 2, 0],
+            [0, 0, 3]
+        ]);
+        const result = convertToMatrix(input);
+        expect(result).to.deep.equal(expected);
+    });
+
+    it('should return mathjs matrix if input is already a 3x3 matrix', () => {
+        const input = mjs.matrix([
+            [1, 2, 3],
+            [4, 5, 6],
+            [7, 8, 9]
+        ]);
+        const result = convertToMatrix(input);
+        expect(result).to.deep.equal(input);
+    });
+
+    it('should convert object with eigenvalues and eigenvectors to mathjs matrix', () => {
+        const input = {
+            eigenvalues: [1, 2, 3],
+            eigenvectors: [
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1]
+            ]
+        };
+        const expected = mjs.matrix([
+            [1, 0, 0],
+            [0, 2, 0],
+            [0, 0, 3]
+        ]);
+        const result = convertToMatrix(input);
+        expect(result).to.deep.equal(expected);
+    });
+
+    it('should throw error for invalid array length', () => {
+        const input = [1, 2, 3, 4];
+        expect(() => convertToMatrix(input)).to.throw('Array must be 3x3 or 9-element or [eigenvalues, eigenvectors]');
+    });
+
+    it('should throw error for invalid input type', () => {
+        const input = 'invalid';
+        expect(() => convertToMatrix(input)).to.throw('Invalid input type');
+    });
+});
 
 describe('#tensordata', function() {
 
