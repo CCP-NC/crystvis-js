@@ -20,9 +20,6 @@ import {
     BondImage
 } from '../lib/model.js';
 import {
-    ModelView as ModelView
-} from '../lib/modelview.js';
-import {
     Loader as Loader
 } from '../lib/loader.js';
 
