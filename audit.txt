@@ -1,0 +1,12 @@
+## Security Audit
+# npm audit report
+
+elliptic  *
+Elliptic Uses a Cryptographic Primitive with a Risky Implementation - https://github.com/advisories/GHSA-848j-6mx2-7j84
+No fix available
+node_modules/elliptic
+
+1 low severity vulnerability
+
+Some issues need review, and may require choosing
+a different dependency.
