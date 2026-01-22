@@ -1,6 +1,6 @@
 {
   "name": "@ccp-nc/crystvis-js",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "A Three.js based crystallographic visualisation tool",
   "main": "index.js",
   "type": "module",

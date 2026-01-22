@@ -25,3 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shader compilation errors with GLSL 3.0
 - EllipsoidMesh color handling with different material types
 - Proper handling of atoms and bond materials
+
+## [0.6.1] - 2026-01-22
+
+### Changed
+ - Added support for selecting a specific frame when loading multi-frame XYZ/Extended XYZ files via an `index` option.
+ - Proper handling and conversion of per-atom 9-element tensors in Extended XYZ files: `ms` (magnetic shielding) and `efg` tensors are detected and converted to `TensorData` objects.
+ - Improved Extended XYZ parsing: stricter handling of atom lines and properties to avoid accidental token merging when input contains stray newlines.
+ - Parser now reports clearer errors for malformed Extended XYZ files.
+
