@@ -82,12 +82,11 @@
     "yargs-parser": "^22.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.28.5",
+    "@babel/eslint-parser": "^7.28.6",
     "chai": "^5.3.3",
     "chai-almost": "^1.0.1",
     "clean-jsdoc-theme": "^4.3.0",
     "datauri": "^4.1.0",
-    "elliptic": "^6.6.1",
     "esbuild": "^0.25.12",
     "eslint": "^9.39.2",
     "gh-pages": "^6.3.0",

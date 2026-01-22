@@ -10,3 +10,28 @@ node_modules/elliptic
 
 Some issues need review, and may require choosing
 a different dependency.
+
+## Security Audit
+# npm audit report
+
+diff  <8.0.3
+jsdiff has a Denial of Service vulnerability in parsePatch and applyPatch - https://github.com/advisories/GHSA-73rr-hh4g-fpgx
+fix available via `npm audit fix --force`
+Will install mocha@0.13.0, which is a breaking change
+node_modules/diff
+  mocha  0.14.0 - 12.0.0-beta-3
+  Depends on vulnerable versions of diff
+  node_modules/mocha
+
+elliptic  *
+Elliptic Uses a Cryptographic Primitive with a Risky Implementation - https://github.com/advisories/GHSA-848j-6mx2-7j84
+No fix available
+node_modules/elliptic
+
+3 low severity vulnerabilities
+
+To address all issues possible (including breaking changes), run:
+  npm audit fix --force
+
+Some issues need review, and may require choosing
+a different dependency.
