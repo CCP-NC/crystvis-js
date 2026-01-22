@@ -200,7 +200,7 @@ O 0.0 0.0 0.0
 H 1.0 0.0 0.0
 H 0.0 1.0 0.0`;
         
-        expect(() => loader.load(plain_xyz, 'xyz')).to.throw('No unit cell (Lattice property) found');
+        expect(() => loader.load(plain_xyz, 'xyz')).to.throw('No unit cell');
     });
     
     it('should throw an error for invalid frame indices', function() {

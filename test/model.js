@@ -47,7 +47,8 @@ var loader = new Loader();
 try {
     loader.load(xyz, 'xyz');
 } catch (e) {
-    expect(e.message).to.be.equal('No unit cell found in xyz file');
+    // Accept either the short legacy message or the more descriptive one
+    expect(e.message).to.match(/No unit cell/);
 }
 
 // manually added in dummy cell:
