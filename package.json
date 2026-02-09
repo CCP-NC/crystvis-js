@@ -76,7 +76,7 @@
     "isosurface": "^1.0.0",
     "jquery": "^3.7.1",
     "load-bmfont": "^1.4.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "mathjs": "^14.9.1",
     "three": "^0.178.0",
     "yargs-parser": "^22.0.0"
