@@ -1,16 +1,58 @@
 ## Security Audit
 # npm audit report
 
+ajv  7.0.0-alpha.0 - 8.17.1
+Severity: moderate
+ajv has ReDoS when using `$data` option - https://github.com/advisories/GHSA-2g4f-4pwh-qvx6
+fix available via `npm audit fix --force`
+Will install serve@13.0.4, which is a breaking change
+node_modules/serve/node_modules/ajv
+  serve  >=7.0.0
+  Depends on vulnerable versions of ajv
+  Depends on vulnerable versions of serve-handler
+  node_modules/serve
+
 diff  6.0.0 - 8.0.2
 jsdiff has a Denial of Service vulnerability in parsePatch and applyPatch - https://github.com/advisories/GHSA-73rr-hh4g-fpgx
 fix available via `npm audit fix --force`
 Will install mocha@11.3.0, which is a breaking change
 node_modules/diff
-  mocha  11.4.0 - 12.0.0-beta-3
+  mocha  >=1.10.0
   Depends on vulnerable versions of diff
+  Depends on vulnerable versions of glob
+  Depends on vulnerable versions of minimatch
   node_modules/mocha
 
-2 low severity vulnerabilities
+minimatch  <10.2.1
+Severity: high
+minimatch has a ReDoS via repeated wildcards with non-matching literal in pattern - https://github.com/advisories/GHSA-3ppc-4f35-3m26
+fix available via `npm audit fix --force`
+Will install mocha@11.3.0, which is a breaking change
+node_modules/minimatch
+node_modules/mocha/node_modules/minimatch
+node_modules/serve-handler/node_modules/minimatch
+  @eslint/config-array  <=0.22.0
+  Depends on vulnerable versions of minimatch
+  node_modules/@eslint/config-array
+    eslint  0.7.1 - 2.0.0-rc.1 || 4.1.0 - 10.0.0-rc.2
+    Depends on vulnerable versions of @eslint/config-array
+    Depends on vulnerable versions of @eslint/eslintrc
+    Depends on vulnerable versions of minimatch
+    node_modules/eslint
+      @babel/eslint-parser  7.16.0 - 8.0.0-rc.1
+      Depends on vulnerable versions of eslint
+      node_modules/@babel/eslint-parser
+  @eslint/eslintrc  0.0.1 || >=0.1.1
+  Depends on vulnerable versions of minimatch
+  node_modules/@eslint/eslintrc
+  glob  3.0.0 - 10.5.0
+  Depends on vulnerable versions of minimatch
+  node_modules/mocha/node_modules/glob
+  serve-handler  >=1.1.0
+  Depends on vulnerable versions of minimatch
+  node_modules/serve-handler
+
+11 vulnerabilities (1 low, 1 moderate, 9 high)
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
