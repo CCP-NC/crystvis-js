@@ -93,6 +93,7 @@
     "glob": "^11.1.0",
     "jpeg-js": "^0.4.4",
     "jsdoc": "^4.0.5",
+    "jsdom": "^27.0.1",
     "minimist": "^1.2.8",
     "mocha": "^11.7.5",
     "msdf-bmfont-xml": "^2.8.0",
