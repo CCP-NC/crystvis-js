@@ -42,6 +42,13 @@ for (let i = 0; i < gridSize; ++i) {
     }
 }
 
+function showError(msg) {
+    var banner = document.getElementById('error-banner');
+    banner.textContent = msg + '  (click to dismiss)';
+    banner.style.display = 'block';
+    banner.onclick = function() { banner.style.display = 'none'; };
+}
+
 window.loadFile = function() {
     var file = document.getElementById('file-load').files[0];
     var reader = new FileReader();
@@ -57,13 +64,24 @@ window.loadFile = function() {
     reader.onload = function() {
         var mcryst = document.getElementById('molcryst-check').checked;
         var name = file.name.split('.')[0];
-        var loaded = visualizer.loadModels(reader.result, extension, name, {
-            supercell: [sx, sy, sz],
-            molecularCrystal: mcryst,
-            vdwScaling: vdwf
-        });
+        var loaded;
+        try {
+            loaded = visualizer.loadModels(reader.result, extension, name, {
+                supercell: [sx, sy, sz],
+                molecularCrystal: mcryst,
+                vdwScaling: vdwf
+            });
+        } catch (e) {
+            showError('Could not load file: ' + e.message);
+            return;
+        }
 
-        visualizer.displayModel(Object.keys(loaded)[0]);
+        var modelName = Object.keys(loaded)[0];
+        if (loaded[modelName] !== 0) {
+            showError('Failed to load "' + modelName + '": ' + loaded[modelName]);
+            return;
+        }
+        visualizer.displayModel(modelName);
         visualizer.displayed = visualizer.model.find({
             'all': []
         });
