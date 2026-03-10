@@ -36,7 +36,7 @@ You can then create a visualizer for your webpage by simply importing and instan
 ```js
 import CrystVis from 'crystvis-js';
 
-const visualizer = CrystVis('#target-id', 800, 600)
+const visualizer = new CrystVis('#target-id', 800, 600)
 ```
 
 will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string and then pass them to the visualizer's `loadModels` method:
@@ -44,7 +44,13 @@ will create an 800x600 canvas with the visualizer inside the element specified b
 ```js
 var loaded = visualizer.loadModels(contents);
 console.log('Models loaded: ', loaded);
-visualizer.displayModel(loaded[0])
+// loaded is an object: keys are model names, values are 0 (success) or an error string
+var modelName = Object.keys(loaded)[0];
+if (loaded[modelName] !== 0) {
+    console.error('Failed to load model:', loaded[modelName]);
+} else {
+    visualizer.displayModel(modelName);
+}
 ```
 
 ### Preparing for development
