@@ -33,14 +33,3 @@
     box-sizing: border-box;
     cursor: pointer;
 }
-
-#colorgrid {
-    display: grid;
-    grid-template-rows: repeat(10, 1fr);
-    grid-template-columns: repeat(30, 1fr);
-
-    width: 300px;
-    height: 300px;
-
-    background-color: #000000;
-}

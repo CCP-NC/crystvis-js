@@ -259,8 +259,122 @@ H 0.0 1.0 0.0`;
         expect(loader.error_message).to.equal('Invalid Magres file format: block opened without closing');
 
     });
-    it('should load properly a CELL file', function() {
 
+    it('should parse hyperfine tensors from magres_old block', function() {
+
+        var loader = new Loader();
+
+        // Test with the synthetic HF tensor test file (non-zero values)
+        var magres = fs.readFileSync(path.join(__dirname, 'data', 'hf_test.magres'), "utf8");
+        var a = loader.load(magres, 'magres')['magres'];
+
+        expect(loader.status).to.equal(Loader.STATUS_SUCCESS);
+        expect(a.length()).to.equal(2);
+
+        // hf array should exist
+        var hf = a.get_array('hf');
+        expect(hf).to.have.lengthOf(2);
+
+        // Each entry should be a TensorData object
+        expect(hf[0]).to.have.property('data');
+        expect(hf[1]).to.have.property('data');
+
+        // Check H 1 tensor matrix values
+        expect(hf[0].data).to.deep.almost.equal([
+            [ 1.2345, -0.5678,  0.1234],
+            [-0.5678,  2.3456,  0.4567],
+            [ 0.1234,  0.4567,  3.4567]
+        ]);
+
+        // Check C 1 tensor matrix values
+        expect(hf[1].data).to.deep.almost.equal([
+            [5.0, 1.0, 0.0],
+            [1.0, 5.0, 0.0],
+            [0.0, 0.0, 3.0]
+        ]);
+
+        // Check isotropic values (trace/3)
+        expect(hf[0].isotropy).to.almost.equal((1.2345 + 2.3456 + 3.4567) / 3);
+        expect(hf[1].isotropy).to.almost.equal((5.0 + 5.0 + 3.0) / 3);
+
+        // Check eigenvalues of C 1 (symmetric: known values 3, 4, 6)
+        var c_evals = hf[1].eigenvalues;
+        expect(c_evals).to.deep.almost.equal([3.0, 4.0, 6.0]);
+
+        // Check gamma ratios parsed from the synthetic file
+        var ratios = a.info['hf-gyromagnetic-ratios'];
+        expect(ratios).to.exist;
+        expect(ratios['H']).to.exist;
+        expect(ratios['H'].isotope).to.equal(1);
+        expect(ratios['H'].gamma).to.almost.equal(2.6752e8);
+        expect(ratios['C']).to.exist;
+        expect(ratios['C'].isotope).to.equal(13);
+        expect(ratios['C'].gamma).to.almost.equal(6.7283e7);
+
+        // Test with optimized_muon_65-hf.magres (real CASTEP output with non-zero HF tensors and H:Mu)
+        var muon_magres = fs.readFileSync(path.join(__dirname, 'data', 'optimized_muon_65-hf.magres'), "utf8");
+        var am = loader.load(muon_magres, 'magres')['magres'];
+
+        expect(am.length()).to.equal(69); // 16 H + 1 H:Mu + 28 C + 4 Fe + 2 N + 12 O + 4 S + 2 Br
+
+        var hf_m = am.get_array('hf');
+        expect(hf_m).to.have.lengthOf(69);
+
+        // All entries should be TensorData objects (not null)
+        hf_m.forEach(function(t) {
+            expect(t).to.have.property('data');
+            expect(t.data).to.have.lengthOf(3);
+        });
+
+        // H 1 tensor values are non-trivial
+        expect(hf_m[0].data).to.deep.almost.equal([
+            [-2.5897,  2.2293,  0.4459],
+            [ 2.2293,  0.8275, -0.5108],
+            [ 0.4459, -0.5108,  0.9140]
+        ]);
+
+        // H:Mu 1 is the last atom; check its isotropy
+        expect(hf_m[68].isotropy).to.almost.equal(-431.5713);
+
+        // Gamma ratios should include H:Mu as user-defined
+        var ratios_m = am.info['hf-gyromagnetic-ratios'];
+        expect(ratios_m['H:Mu'].isotope).to.equal(null);
+        expect(ratios_m['H:Mu'].gamma).to.almost.equal(8.5162e8);
+    });
+    it('should handle custom species (H:Mu) in magres files', function() {
+
+        var loader = new Loader();
+
+        var magres = fs.readFileSync(path.join(__dirname, 'data', 'hf_mu_test.magres'), "utf8");
+        var a = loader.load(magres, 'magres')['magres'];
+
+        expect(loader.status).to.equal(Loader.STATUS_SUCCESS);
+        expect(a.length()).to.equal(2);
+
+        // H:Mu should be stored as element H (colon-suffix stripped)
+        expect(a.get_chemical_symbols()).to.deep.equal(['H', 'H']);
+
+        // Both atoms should have HF tensors
+        var hf = a.get_array('hf');
+        expect(hf).to.have.lengthOf(2);
+        expect(hf[0]).to.have.property('data');
+        expect(hf[1]).to.have.property('data');
+
+        // H 1 tensor is diagonal [1,2,3]
+        expect(hf[0].eigenvalues).to.deep.almost.equal([1.0, 2.0, 3.0]);
+
+        // H:Mu 1 tensor was stored (check isotropy ~ -20)
+        expect(hf[1].isotropy).to.almost.equal((-10 - 20 - 30) / 3);
+
+        // Gamma ratios: standard H and user-defined H:Mu
+        var ratios = a.info['hf-gyromagnetic-ratios'];
+        expect(ratios['H'].isotope).to.equal(1);
+        expect(ratios['H'].gamma).to.almost.equal(2.6752e8);
+        expect(ratios['H:Mu'].isotope).to.equal(null);
+        expect(ratios['H:Mu'].gamma).to.almost.equal(8.5162e8);
+    });
+
+    it('should load properly a CELL file', function() {
         var loader = new Loader();
 
         var cell = fs.readFileSync(path.join(__dirname, 'data', 'ethanol.cell'), "utf8");
