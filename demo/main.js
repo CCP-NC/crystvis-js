@@ -3,44 +3,9 @@
 const CrystVis = require('../lib/visualizer.js').CrystVis;
 const Primitives = require('../lib/primitives/index.js');
 
-const shiftCpkColor = require('../lib/utils').shiftCpkColor;
-
 var visualizer = new CrystVis('#main-app', 0, 0);
 visualizer.highlight_selected = true;
 visualizer.theme = 'dark';
-
-// Generate color grid (for testing shiftCpkColor)
-const gridEl = document.getElementById('colorgrid');
-const gridSize = 10;
-
-function int2hex(c) {
-    c = c.toString(16);
-    return '0'.repeat(6-c.length) + c;
-}
-
-for (let i = 0; i < gridSize; ++i) {
-    for (let j = 0; j < gridSize; ++j) {
-
-        const hue = parseInt(j/gridSize*360);
-        const light = parseInt(i/(gridSize-1)*100);
-        const cbase = `hsl(${hue}, 100%, ${light}%)`;
-        const cplus = shiftCpkColor(cbase, 1.0);
-        const cminus = shiftCpkColor(cbase, -1.0);
-
-        let el = document.createElement('div');
-        el.style['background-color'] = '#' + int2hex(cminus);
-        gridEl.append(el);
-
-        el = document.createElement('div');
-        el.style['background-color'] = cbase;
-        gridEl.append(el);
-
-        el = document.createElement('div');
-        el.style['background-color'] = '#' + int2hex(cplus);
-        gridEl.append(el);
-
-    }
-}
 
 function showError(msg) {
     var banner = document.getElementById('error-banner');
@@ -86,6 +51,32 @@ window.loadFile = function() {
             'all': []
         });
 
+        // Update checkbox/slider states based on available data in the loaded model
+        var model = visualizer.model;
+
+        var ellipsoidCheck = document.getElementById('ellipsoid-check');
+        var msSlider = document.getElementById('ms-scale');
+        var hasMs = model.hasArray('ms');
+        ellipsoidCheck.disabled = !hasMs;
+        msSlider.disabled = !hasMs;
+        if (!hasMs && ellipsoidCheck.checked) {
+            ellipsoidCheck.checked = false;
+            visualizer.displayed.removeEllipsoids('ms');
+        }
+
+        var hfEllipsoidCheck = document.getElementById('hf-ellipsoid-check');
+        var hfSlider = document.getElementById('hf-scale');
+        var hasHf = model.hasArray('hf');
+        hfEllipsoidCheck.disabled = !hasHf;
+        hfSlider.disabled = !hasHf;
+        if (!hasHf && hfEllipsoidCheck.checked) {
+            hfEllipsoidCheck.checked = false;
+            visualizer.displayed.removeEllipsoids('hf');
+        }
+
+        // Isosurface only makes sense once a model (with a cell) is loaded
+        document.getElementById('isosurf-check').disabled = false;
+
     };
 }
 
@@ -107,23 +98,31 @@ window.changeLabels = function() {
 
 window.changeEllipsoids = function() {
     var val = document.getElementById('ellipsoid-check').checked;
+    var scale = parseFloat(document.getElementById('ms-scale').value);
     if (val) {
         visualizer.displayed.find({
             'elements': 'H'
         }).addEllipsoids((a) => {
             return a.getArrayValue('ms');
         }, 'ms', {
-            scalingFactor: 0.05,
+            scalingFactor: scale,
             opacity: 0.2
         });
-
     } else {
         visualizer.displayed.removeEllipsoids('ms');
     }
 }
 
+window.changeMsScale = function() {
+    document.getElementById('ms-scale-val').textContent = parseFloat(document.getElementById('ms-scale').value).toFixed(3);
+    if (document.getElementById('ellipsoid-check').checked) {
+        window.changeEllipsoids();
+    }
+}
+
 window.changeHFEllipsoids = function() {
     var val = document.getElementById('hf-ellipsoid-check').checked;
+    var scale = parseFloat(document.getElementById('hf-scale').value);
     if (val) {
         // Show HF (hyperfine) tensor ellipsoids for all atoms that have data
         visualizer.displayed.addEllipsoids((a) => {
@@ -133,11 +132,18 @@ window.changeHFEllipsoids = function() {
                 return null;
             }
         }, 'hf', {
-            scalingFactor: 0.1,
+            scalingFactor: scale,
             opacity: 0.3
         });
     } else {
         visualizer.displayed.removeEllipsoids('hf');
+    }
+}
+
+window.changeHfScale = function() {
+    document.getElementById('hf-scale-val').textContent = parseFloat(document.getElementById('hf-scale').value).toFixed(3);
+    if (document.getElementById('hf-ellipsoid-check').checked) {
+        window.changeHFEllipsoids();
     }
 }
 
