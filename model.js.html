@@ -1779,6 +1779,37 @@ class Model {
     }
 
     /**
+     * Reconstruct a {@link ModelView} from a plain array of atom-image indices,
+     * as produced by {@link ModelView#toIndices}.  This is the stable public API
+     * for deserialising a saved selection.
+     *
+     * @param  {number[]} indices
+     * @return {ModelView}
+     */
+    viewFromIndices(indices = []) {
+        return this.view(indices);
+    }
+
+    /**
+     * Reconstruct a {@link ModelView} from an array of crystallographic site
+     * labels (`crystLabel`), as produced by {@link ModelView#toLabels}.  This
+     * is resilient to atom-index reordering across reloads.
+     *
+     * @param  {string[]} labels
+     * @return {ModelView}
+     */
+    viewFromLabels(labels = []) {
+        const wanted = new Set(labels);
+        const indices = [];
+        for (let i = 0; i &lt; this._atom_images.length; ++i) {
+            if (wanted.has(this._atom_images[i].crystLabel)) {
+                indices.push(i);
+            }
+        }
+        return this.view(indices);
+    }
+
+    /**
      * Set a property on a series of atom images
      *
      * @private

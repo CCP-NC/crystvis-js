@@ -13,4 +13,47 @@ if (loaded[modelName] !== 0) {
 } else {
     visualizer.displayModel(modelName);
 }
+</code></pre><h3>API highlights</h3><p>Full JSDoc documentation is available at <a href="https://ccp-nc.github.io/crystvis-js/">ccp-nc.github.io/crystvis-js</a>.</p><h4>Camera state — save, restore and react to view changes</h4><pre class="prettyprint source lang-js"><code>// Snapshot the current camera (position, target, zoom) — plain JSON-serialisable object
+const snap = visualizer.getCameraState();
+// { position: {x,y,z}, target: {x,y,z}, zoom: 1 }
+
+// Restore a previously saved snapshot
+visualizer.setCameraState(snap);
+
+// React to every rotate/pan/zoom (returns an unsubscribe function)
+const unsub = visualizer.onCameraChange(state => {
+    console.log('Camera moved:', state);
+});
+unsub(); // stop listening
+</code></pre><h4>Lifecycle events — react to model and display changes</h4><pre class="prettyprint source lang-js"><code>// Fired whenever models are loaded, deleted, or all cleared
+const unsubList = visualizer.onModelListChange(names => {
+    console.log('Loaded models:', names);
+});
+
+// Fired whenever displayModel() completes; receives model name or null
+const unsubDisplay = visualizer.onDisplayChange(name => {
+    console.log('Now displaying:', name);
+});
+
+// Remove all loaded models in one atomic operation
+visualizer.unloadAll();
+</code></pre><h4>Model metadata — access source and parameters after loading</h4><pre class="prettyprint source lang-js"><code>// Retrieve the raw file text and extension originally passed to loadModels()
+const src = visualizer.getModelSource(modelName);
+// { text: '...', extension: 'cif' }
+
+// Retrieve the merged loading parameters (supercell, molecularCrystal, …)
+const params = visualizer.getModelParameters(modelName);
+
+// Retrieve prefix and original structure name
+const meta = visualizer.getModelMeta(modelName);
+// { prefix: 'cif', originalName: 'struct' }
+</code></pre><h4>Selection serialisation — save and reconstruct atom subsets</h4><pre class="prettyprint source lang-js"><code>// Serialise a selection to plain data
+const indices = visualizer.selected.toIndices(); // number[]
+const labels  = visualizer.selected.toLabels();  // string[] (crystLabel per atom)
+
+// Reconstruct from indices later
+visualizer.selected = visualizer.model.viewFromIndices(indices);
+
+// Reconstruct from labels — resilient to atom-index reordering on reload
+visualizer.selected = visualizer.model.viewFromLabels(labels);
 </code></pre><h3>Preparing for development</h3><p>If you want to develop for crystvis-js, you should follow these steps:</p><ul><li>fork the repository</li><li>clone the forked repository locally to your system</li><li>install all the required packages, <em>including the development dependencies</em>, with <code>npm install --production=false</code></li></ul><p>You're then ready to develop. In particular you can use:</p><ul><li><code>npm test</code> to run with Mocha the suite of tests found in <code>./test</code></li><li><code>npm start</code> to start a server that includes the in-browser tests from <code>./test/test-html</code> as well as the demo from <code>./demo</code></li><li><code>npm run docs</code> to compile the documents</li><li><code>npm run deploy-docs</code> to compile the documents and then deploy them to the <code>gh-pages</code> branch of your repository</li></ul><h4>Fonts and shaders</h4><p>Some additional steps are necessary when dealing with fonts and shaders. You generally shouldn't worry about these when working with most of the code, but in some special cases it might be necessary to do this.</p><p>Fonts in crystvis-js need to be translated to a bitmap format to be usable. In other words, a regular font format (like a TTF file) must be rendered into a bitmap texture and a table of coordinates designating each letter to then be used in graphical rendering. This operation relies on the library <code>msdf-bmfont-xml</code> and is executed by running the command <code>npm run build-fonts</code>. The original fonts are found in the <code>./fonts</code> folder, and they get rendered to <code>./lib/assets/fonts</code>. This command needs only to be rerun <em>if the TTF files change</em>.</p><p>Shaders are provided as <code>.frag</code> and <code>.vert</code> files. Both shaders and font textures need to baked directly into the JavaScript files in order to be included in the final build. Since ESBuild (the package used to build crystvis-js) has a hard time dealing with them in the final pass, they get pre-baked with an additional step that only needs to be repeated whenever either of them changes. This consists of taking &quot;template&quot; JS files (for shaders it's <code>./lib/shaders/index.in.js</code>, for fonts <code>./lib/assets/fonts/bmpfonts.in.js</code>) and rebuilding them into final files with the assets imported in data URL form. The script to do this is <code>npm run build-resources</code>. This command only needs to be rerun <em>if the fonts were rebuilt, if the shader code was edited, or if any of the two template files was changed</em>.</p></article></section></div></div></div><div class="search-container" id="PkfLWpAbet" style="display:none"><div class="wrapper" id="iCxFxjkHbP"><button class="icon-button search-close-button" id="VjLlGakifb" aria-label="close search"><svg><use xlink:href="#close-icon"></use></svg></button><div class="search-box-c"><svg><use xlink:href="#search-icon"></use></svg> <input type="text" id="vpcKVYIppa" class="search-input" placeholder="Search..." autofocus></div><div class="search-result-c" id="fWwVHRuDuN"><span class="search-result-c-text">Type anything to view search result</span></div></div></div><div class="mobile-menu-icon-container"><button class="icon-button" id="mobile-menu" data-isopen="false" aria-label="menu"><svg><use xlink:href="#menu-icon"></use></svg></button></div><div id="mobile-sidebar" class="mobile-sidebar-container"><div class="mobile-sidebar-wrapper"><div class="mobile-nav-links"></div><div class="mobile-sidebar-items-c"><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-modules"><div>Modules</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="lib_model.module_js.html">lib/model.js</a></div><div class="sidebar-section-children"><a href="lib_modelview.module_js.html">lib/modelview.js</a></div><div class="sidebar-section-children"><a href="lib_visualizer.module_js.html">lib/visualizer.js</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-classes"><div>Classes</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="lib_model.module_js-AtomImage.html">AtomImage</a></div><div class="sidebar-section-children"><a href="lib_model.module_js-BondImage.html">BondImage</a></div><div class="sidebar-section-children"><a href="lib_model.module_js-Model.html">Model</a></div><div class="sidebar-section-children"><a href="lib_modelview.module_js-ModelView.html">ModelView</a></div><div class="sidebar-section-children"><a href="lib_visualizer.module_js-CrystVis.html">CrystVis</a></div></div><div class="sidebar-section-title with-arrow" data-isopen="false" id="sidebar-tutorials"><div>Tutorials</div><svg><use xlink:href="#down-icon"></use></svg></div><div class="sidebar-section-children-container"><div class="sidebar-section-children"><a href="tutorial-Events.html">Events</a></div><div class="sidebar-section-children"><a href="tutorial-Queries.html">Queries</a></div><div class="sidebar-section-children"><a href="tutorial-ThreejsMigration.html">ThreejsMigration</a></div></div></div><div class="mobile-navbar-actions"><div class="navbar-right-item"><button class="icon-button search-button" aria-label="open-search"><svg><use xlink:href="#search-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button theme-toggle" aria-label="toggle-theme"><svg><use class="theme-svg-use" xlink:href="#light-theme-icon"></use></svg></button></div><div class="navbar-right-item"><button class="icon-button font-size" aria-label="change-font-size"><svg><use xlink:href="#font-size-icon"></use></svg></button></div></div></div></div><script type="text/javascript" src="scripts/core.min.js"></script><script src="scripts/search.min.js" defer="defer"></script><script src="scripts/third-party/fuse.js" defer="defer"></script><script type="text/javascript">var tocbotInstance=tocbot.init({tocSelector:"#eed4d2a0bfd64539bb9df78095dec881",contentSelector:".main-content",headingSelector:"h1, h2, h3",hasInnerContainers:!0,scrollContainer:".main-content",headingsOffset:130,onClick:bringLinkToView})</script></body></html>

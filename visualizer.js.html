@@ -90,6 +90,21 @@ class CrystVis {
         // Disposal state
         this._isDisposed = false;
 
+        // Model source / parameter / metadata stores (keyed by model name)
+        this._model_sources = {};     // { text, extension }
+        this._model_parameters = {};  // parameters passed to loadModels / reloadModel
+        this._model_meta = {};        // { prefix, originalName }
+
+        // Lifecycle / camera-change callbacks
+        this._model_list_change_cbs = [];
+        this._display_change_cbs    = [];
+        this._camera_change_cbs     = [];
+
+        // Subscribe to camera changes from the renderer
+        this._camera_unsub = this._renderer.onCameraChange((state) => {
+            this._camera_change_cbs.forEach(cb => cb(state));
+        });
+
     }
 
     /**
@@ -268,6 +283,146 @@ class CrystVis {
             this._atom_box_event = this._defaultAtomBox.bind(this);
     }
 
+    // ─── Private event emitters ─────────────────────────────────────────────────
+
+    _emitModelListChange() {
+        const names = Object.keys(this._models);
+        this._model_list_change_cbs.forEach(cb => cb(names));
+    }
+
+    _emitDisplayChange() {
+        this._display_change_cbs.forEach(cb => cb(this._current_mname));
+    }
+
+    // ─── Camera state API ────────────────────────────────────────────────────────
+
+    /**
+     * Return a plain serialisable snapshot of the current camera state.
+     *
+     * @return {{ position: {x,y,z}, target: {x,y,z}, zoom: number }}
+     */
+    getCameraState() {
+        return this._renderer.getCameraState();
+    }
+
+    /**
+     * Restore a camera snapshot produced by {@link CrystVis#getCameraState}.
+     * Safe to call after `displayModel()`.
+     *
+     * @param {{ position?: {x,y,z}, target?: {x,y,z}, zoom?: number }} state
+     */
+    setCameraState(state) {
+        this._renderer.setCameraState(state);
+    }
+
+    /**
+     * Subscribe to camera-change events (rotate, pan, zoom).
+     * The callback receives a snapshot identical to {@link CrystVis#getCameraState}.
+     *
+     * @param  {Function} callback  `callback(cameraState)`
+     * @return {Function}           Unsubscribe function
+     */
+    onCameraChange(callback) {
+        this._camera_change_cbs.push(callback);
+        return () => {
+            this._camera_change_cbs = this._camera_change_cbs.filter(cb => cb !== callback);
+        };
+    }
+
+    // ─── Lifecycle event APIs ────────────────────────────────────────────────────
+
+    /**
+     * Subscribe to model-list change events (model added or deleted).
+     * The callback receives the new list of model names.
+     *
+     * @param  {Function} callback  `callback(modelNames: string[])`
+     * @return {Function}           Unsubscribe function
+     */
+    onModelListChange(callback) {
+        this._model_list_change_cbs.push(callback);
+        return () => {
+            this._model_list_change_cbs = this._model_list_change_cbs.filter(cb => cb !== callback);
+        };
+    }
+
+    /**
+     * Subscribe to display-change events fired whenever `displayModel()` completes.
+     * The callback receives the name of the newly displayed model (or `null` when cleared).
+     *
+     * @param  {Function} callback  `callback(modelName: string|null)`
+     * @return {Function}           Unsubscribe function
+     */
+    onDisplayChange(callback) {
+        this._display_change_cbs.push(callback);
+        return () => {
+            this._display_change_cbs = this._display_change_cbs.filter(cb => cb !== callback);
+        };
+    }
+
+    // ─── Model source / parameter / metadata APIs ────────────────────────────────
+
+    /**
+     * Return the raw file text and format extension originally passed to
+     * `loadModels()` for the named model.
+     *
+     * @param  {String} name  Model name
+     * @return {{ text: string, extension: string }|null}
+     */
+    getModelSource(name) {
+        const src = this._model_sources[name];
+        return src ? { ...src } : null;
+    }
+
+    /**
+     * Return the loading parameters that were used when the named model was
+     * last loaded / reloaded (a clone of the merged parameter object).
+     *
+     * @param  {String} name  Model name
+     * @return {Object|null}
+     */
+    getModelParameters(name) {
+        const p = this._model_parameters[name];
+        return p ? JSON.parse(JSON.stringify(p)) : null;
+    }
+
+    /**
+     * Return metadata stored alongside the named model:
+     * `{ prefix, originalName }`.
+     *
+     * @param  {String} name  Model name
+     * @return {{ prefix: string, originalName: string }|null}
+     */
+    getModelMeta(name) {
+        const m = this._model_meta[name];
+        return m ? { ...m } : null;
+    }
+
+    // ─── Atomic unload ───────────────────────────────────────────────────────────
+
+    /**
+     * Remove *all* loaded models and reset the view in a single atomic operation
+     * (only one render pass after everything is cleared, unlike calling
+     * `deleteModel()` in a loop).
+     */
+    unloadAll() {
+        if (this._isDisposed) {
+            throw new Error('CrystVis: cannot call unloadAll() on a disposed instance');
+        }
+
+        // Clear the displayed model (handles renderer.clear(), selection reset, etc.)
+        // displayModel() with no args also emits _emitDisplayChange()
+        this.displayModel();
+
+        this._models           = {};
+        this._model_sources    = {};
+        this._model_parameters = {};
+        this._model_meta       = {};
+
+        this._emitModelListChange();
+    }
+
+    // ─── Internal atom-click/box defaults ────────────────────────────────────────
+
     _defaultAtomLeftClick(atom, event) {
         var i = atom.imgIndex;
         this.selected = new ModelView(this._current_model, [i]);
@@ -342,6 +497,12 @@ class CrystVis {
         }
         this._isDisposed = true;
 
+        // Unsubscribe camera-change listener before tearing down the renderer
+        if (this._camera_unsub) {
+            this._camera_unsub();
+            this._camera_unsub = null;
+        }
+
         // Tear down the renderer (animation loop, orbit controls, WebGL context)
         if (this._renderer) {
             this._renderer.dispose();
@@ -354,12 +515,18 @@ class CrystVis {
         this._displayed = null;
         this._selected = null;
         this._models = {};
+        this._model_sources = {};
+        this._model_parameters = {};
+        this._model_meta = {};
 
         // Drop event callbacks
         this._atom_click_events = {};
         this._atom_click_defaults = {};
         this._atom_box_event = null;
         this._notifications = [];
+        this._model_list_change_cbs = [];
+        this._display_change_cbs    = [];
+        this._camera_change_cbs     = [];
     }
 
     centerCamera(center = [0, 0, 0], shift = [0, 0]) {
@@ -433,9 +600,13 @@ class CrystVis {
                 continue;
             }
             this._models[nn] = new Model(s, parameters);
+            this._model_sources[nn]     = { text: contents, extension: format };
+            this._model_parameters[nn]  = JSON.parse(JSON.stringify(parameters));
+            this._model_meta[nn]        = { prefix: prefix, originalName: n };
             status[nn] = 0; // Success
         }
 
+        this._emitModelListChange();
         return status;
     }
 
@@ -466,6 +637,7 @@ class CrystVis {
         parameters = _.merge(model_parameter_defaults, parameters);
 
         this._models[name] = new Model(s, parameters);
+        this._model_parameters[name] = JSON.parse(JSON.stringify(parameters));
 
         if (current) {
             this.displayModel(name);
@@ -495,6 +667,7 @@ class CrystVis {
 
         if (!name) {
             // If called with nothing, just quit here
+            this._emitDisplayChange();
             return;
         }
 
@@ -524,6 +697,7 @@ class CrystVis {
         this._renderer.resetOrbitCenter(c[0], c[1], c[2]);
 
         this._displayed.show();
+        this._emitDisplayChange();
     }
 
     /**
@@ -542,6 +716,10 @@ class CrystVis {
         }
 
         delete this._models[name];
+        delete this._model_sources[name];
+        delete this._model_parameters[name];
+        delete this._model_meta[name];
+        this._emitModelListChange();
     }
 
     /**
