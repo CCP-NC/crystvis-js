@@ -122,6 +122,25 @@ window.changeEllipsoids = function() {
     }
 }
 
+window.changeHFEllipsoids = function() {
+    var val = document.getElementById('hf-ellipsoid-check').checked;
+    if (val) {
+        // Show HF (hyperfine) tensor ellipsoids for all atoms that have data
+        visualizer.displayed.addEllipsoids((a) => {
+            try {
+                return a.getArrayValue('hf');
+            } catch(e) {
+                return null;
+            }
+        }, 'hf', {
+            scalingFactor: 0.1,
+            opacity: 0.3
+        });
+    } else {
+        visualizer.displayed.removeEllipsoids('hf');
+    }
+}
+
 var isosurface = null;
 window.changeIsosurface = function() {
     var val = document.getElementById('isosurf-check').checked;
