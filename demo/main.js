@@ -171,3 +171,67 @@ window.displayMessage = function() {
 window.clearMessages = function() {
     visualizer.clearNotifications();
 }
+
+// ─── Camera state demo ───────────────────────────────────────────────────────
+
+// Keep a snapshot of the last saved camera state so Restore can use it.
+var _savedCameraState = null;
+
+/** Pretty-print a camera state snapshot into the textarea. */
+function updateCameraTextarea(state) {
+    var ta = document.getElementById('camera-json');
+    if (ta) ta.value = JSON.stringify(state, null, 2);
+}
+
+/** Mark the status line briefly then clear it. */
+function setCameraStatus(msg) {
+    var el = document.getElementById('camera-status');
+    if (!el) return;
+    el.textContent = msg;
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => { el.textContent = ''; }, 2500);
+}
+
+// Live-update the textarea whenever the user rotates / pans / zooms.
+visualizer.onCameraChange(function(state) {
+    updateCameraTextarea(state);
+});
+
+/** Save the current camera position so it can be restored later. */
+window.saveCamera = function() {
+    _savedCameraState = visualizer.getCameraState();
+    updateCameraTextarea(_savedCameraState);
+    setCameraStatus('View saved.');
+};
+
+/** Restore the most recently saved camera snapshot. */
+window.restoreCamera = function() {
+    if (!_savedCameraState) {
+        setCameraStatus('Nothing saved yet — click Save view first.');
+        return;
+    }
+    visualizer.setCameraState(_savedCameraState);
+    setCameraStatus('View restored.');
+};
+
+/** Copy the current textarea JSON to the clipboard. */
+window.copyCameraJSON = function() {
+    var ta = document.getElementById('camera-json');
+    if (!ta || !ta.value) { setCameraStatus('Nothing to copy yet.'); return; }
+    navigator.clipboard.writeText(ta.value)
+        .then(() => setCameraStatus('Copied to clipboard.'))
+        .catch(() => { ta.select(); document.execCommand('copy'); setCameraStatus('Copied (fallback).'); });
+};
+
+/** Parse whatever is in the textarea and apply it as the camera state. */
+window.applyPastedJSON = function() {
+    var ta = document.getElementById('camera-json');
+    if (!ta || !ta.value) { setCameraStatus('Textarea is empty.'); return; }
+    try {
+        var state = JSON.parse(ta.value);
+        visualizer.setCameraState(state);
+        setCameraStatus('Camera state applied.');
+    } catch (e) {
+        setCameraStatus('Invalid JSON: ' + e.message);
+    }
+};
