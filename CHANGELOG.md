@@ -5,6 +5,33 @@ All notable changes to crystvis-js will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- `CrystVis.getCameraState()` / `setCameraState(state)` — snapshot and restore the
+  camera position, target and zoom level as a plain serialisable object.
+- `CrystVis.onCameraChange(callback)` — subscribe to live camera-change events
+  (rotate / pan / zoom); returns an unsubscribe function.
+- `CrystVis.getModelSource(name)` — retrieve the raw file text and extension originally
+  passed to `loadModels()`.
+- `CrystVis.getModelParameters(name)` — retrieve the merged loading parameters used when
+  a model was last loaded or reloaded.
+- `CrystVis.getModelMeta(name)` — retrieve `{ prefix, originalName }` metadata stored at
+  load time.
+- `CrystVis.onModelListChange(callback)` — subscribe to events fired whenever the set of
+  loaded models changes (load, delete, unloadAll); returns an unsubscribe function.
+- `CrystVis.onDisplayChange(callback)` — subscribe to events fired whenever the displayed
+  model changes; callback receives the new model name or `null`.
+- `CrystVis.unloadAll()` — remove all loaded models atomically (one renderer clear, one
+  set of change events).
+- `ModelView.toIndices()` — serialise a selection to a plain index array.
+- `ModelView.toLabels()` — serialise a selection to an array of crystallographic site
+  labels (`crystLabel`), resilient to atom-index reordering.
+- `Model.viewFromIndices(indices)` — reconstruct a `ModelView` from a saved index array.
+- `Model.viewFromLabels(labels)` — reconstruct a `ModelView` from a saved label array.
+- `Renderer.getCameraState()` / `setCameraState(state)` / `onCameraChange(callback)` —
+  lower-level camera state API used by `CrystVis`.
+
 ## [0.6.0] - 2025-07-18
 
 ### Changed
