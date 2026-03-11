@@ -395,3 +395,121 @@ describe('#modelview', function() {
             expect(newMV._indices.sort()).to.deep.equal([72]);   
     });
 });
+
+// ---------------------------------------------------------------------------
+// Tests: ModelView serialisation (§6.1, §6.3) and Model reconstruction (§6.2, §6.3)
+// ---------------------------------------------------------------------------
+
+describe('ModelView#toIndices', function() {
+
+    it('returns a plain array equal to the view indices', function() {
+        var mv = h2omodel.find({ elements: ['O'] });
+        var result = mv.toIndices();
+        expect(result).to.deep.equal(mv.indices);
+    });
+
+    it('returns a copy — mutating it does not affect the view', function() {
+        var mv = h2omodel.find({ elements: ['O'] });
+        var result = mv.toIndices();
+        result.push(999);
+        expect(mv.indices.length).to.equal(result.length - 1);
+    });
+
+    it('returns an empty array for an empty view', function() {
+        var mv = h2omodel.view([]);
+        expect(mv.toIndices()).to.deep.equal([]);
+    });
+
+});
+
+describe('ModelView#toLabels', function() {
+
+    it('returns one crystLabel per atom in the view', function() {
+        var mv = h2omodel.find({ elements: ['O'] });
+        var labels = mv.toLabels();
+        expect(labels).to.be.an('array');
+        expect(labels.length).to.equal(mv.length);
+        labels.forEach(l => expect(l).to.be.a('string').and.have.length.above(0));
+    });
+
+    it('all labels contain the element symbol', function() {
+        var mv = h2omodel.find({ elements: ['H'] });
+        mv.toLabels().forEach(l => expect(l).to.match(/^H/));
+    });
+
+    it('returns an empty array for an empty view', function() {
+        var mv = h2omodel.view([]);
+        expect(mv.toLabels()).to.deep.equal([]);
+    });
+
+    it('round-trips: toLabels then viewFromLabels gives the same indices', function() {
+        // Use a multi-site structure for a meaningful round-trip
+        var mv = chamodel.find({ elements: ['O'] });
+        var labels = mv.toLabels();
+        var restored = chamodel.viewFromLabels(labels);
+        expect(restored.indices.sort((a,b)=>a-b))
+            .to.deep.equal(mv.indices.slice().sort((a,b)=>a-b));
+    });
+
+});
+
+describe('Model#viewFromIndices', function() {
+
+    it('produces a view with exactly the specified indices', function() {
+        var indices = [0, 2, 4];
+        var mv = h2omodel.viewFromIndices(indices);
+        expect(mv.indices).to.deep.equal(indices);
+    });
+
+    it('is equivalent to model.view(indices)', function() {
+        var indices = [1, 3];
+        var a = h2omodel.viewFromIndices(indices);
+        var b = h2omodel.view(indices);
+        expect(a.indices).to.deep.equal(b.indices);
+    });
+
+    it('defaults to an empty view when called with no arguments', function() {
+        var mv = h2omodel.viewFromIndices();
+        expect(mv.length).to.equal(0);
+    });
+
+    it('round-trips with toIndices()', function() {
+        var original = h2omodel.find({ elements: ['H'] });
+        var restored = h2omodel.viewFromIndices(original.toIndices());
+        expect(restored.indices).to.deep.equal(original.indices);
+    });
+
+});
+
+describe('Model#viewFromLabels', function() {
+
+    it('finds atoms matching the given labels', function() {
+        var mv = chamodel.find({ elements: ['Si'] });
+        var labels = mv.toLabels();
+        var restored = chamodel.viewFromLabels(labels);
+        expect(restored.length).to.equal(mv.length);
+    });
+
+    it('returns an empty view for an empty label array', function() {
+        var mv = chamodel.viewFromLabels([]);
+        expect(mv.length).to.equal(0);
+    });
+
+    it('ignores unknown labels', function() {
+        // Grab a real label dynamically, then mix it with a nonsense one
+        var validLabel = chamodel._atom_images[0].crystLabel;
+        var mv = chamodel.viewFromLabels([validLabel, 'DOES_NOT_EXIST']);
+        expect(mv.length).to.be.greaterThan(0);
+        mv.toLabels().forEach(l => expect(l).to.not.equal('DOES_NOT_EXIST'));
+    });
+
+    it('round-trips with toLabels() across a different supercell model', function() {
+        // Use the unit-cell model to get labels, then restore on the same model
+        var mv = chamodel.find({ elements: ['O'] });
+        var labels = mv.toLabels();
+        var restored = chamodel.viewFromLabels(labels);
+        expect(restored.indices.sort((a,b)=>a-b))
+            .to.deep.equal(mv.indices.slice().sort((a,b)=>a-b));
+    });
+
+});

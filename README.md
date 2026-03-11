@@ -53,6 +53,73 @@ if (loaded[modelName] !== 0) {
 }
 ```
 
+### API highlights
+
+Full JSDoc documentation is available at [ccp-nc.github.io/crystvis-js](https://ccp-nc.github.io/crystvis-js/).
+
+#### Camera state — save, restore and react to view changes
+
+```js
+// Snapshot the current camera (position, target, zoom) — plain JSON-serialisable object
+const snap = visualizer.getCameraState();
+// { position: {x,y,z}, target: {x,y,z}, zoom: 1 }
+
+// Restore a previously saved snapshot
+visualizer.setCameraState(snap);
+
+// React to every rotate/pan/zoom (returns an unsubscribe function)
+const unsub = visualizer.onCameraChange(state => {
+    console.log('Camera moved:', state);
+});
+unsub(); // stop listening
+```
+
+#### Lifecycle events — react to model and display changes
+
+```js
+// Fired whenever models are loaded, deleted, or all cleared
+const unsubList = visualizer.onModelListChange(names => {
+    console.log('Loaded models:', names);
+});
+
+// Fired whenever displayModel() completes; receives model name or null
+const unsubDisplay = visualizer.onDisplayChange(name => {
+    console.log('Now displaying:', name);
+});
+
+// Remove all loaded models in one atomic operation
+visualizer.unloadAll();
+```
+
+#### Model metadata — access source and parameters after loading
+
+```js
+// Retrieve the raw file text and extension originally passed to loadModels()
+const src = visualizer.getModelSource(modelName);
+// { text: '...', extension: 'cif' }
+
+// Retrieve the merged loading parameters (supercell, molecularCrystal, …)
+const params = visualizer.getModelParameters(modelName);
+
+// Retrieve prefix and original structure name
+const meta = visualizer.getModelMeta(modelName);
+// { prefix: 'cif', originalName: 'struct' }
+```
+
+#### Selection serialisation — save and reconstruct atom subsets
+
+```js
+// Serialise a selection to plain data
+const indices = visualizer.selected.toIndices(); // number[]
+const labels  = visualizer.selected.toLabels();  // string[] (crystLabel per atom)
+
+// Reconstruct from indices later
+visualizer.selected = visualizer.model.viewFromIndices(indices);
+
+// Reconstruct from labels — resilient to atom-index reordering on reload
+visualizer.selected = visualizer.model.viewFromLabels(labels);
+```
+
 ### Preparing for development
 
 If you want to develop for crystvis-js, you should follow these steps:
