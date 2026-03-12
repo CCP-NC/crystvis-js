@@ -69,7 +69,7 @@
   },
   "homepage": "https://github.com/ccp-nc/crystvis-js#readme",
   "dependencies": {
-    "@ccp-nc/crystcif-parse": "^0.2.9",
+    "@ccp-nc/crystcif-parse": "^0.3.0",
     "@jkshenton/three-bmfont-text": "^4.0.1",
     "buffer": "^6.0.3",
     "chroma-js": "^3.2.0",
@@ -78,6 +78,7 @@
     "load-bmfont": "^1.4.2",
     "lodash": "^4.17.23",
     "mathjs": "^14.9.1",
+    "mendeleev": "^1.2.2",
     "three": "^0.178.0",
     "yargs-parser": "^22.0.0"
   },
