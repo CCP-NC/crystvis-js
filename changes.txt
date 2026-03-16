@@ -1,2 +1,3 @@
 ## Updated Packages
-See package.json diff for details
+-    "jsdom": "^27.0.1",
++    "jsdom": "^27.4.0",
