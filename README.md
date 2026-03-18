@@ -106,6 +106,54 @@ const meta = visualizer.getModelMeta(modelName);
 // { prefix: 'cif', originalName: 'struct' }
 ```
 
+#### Scene appearance — background, colours and lighting
+
+Individual appearance properties can be changed at any time without replacing the whole theme object.
+
+```js
+// ── Background & colours ──────────────────────────────────────────────────────
+
+// Background colour (hex int, CSS string, or any THREE.Color-compatible value)
+visualizer.background = '#1a1a2e';
+visualizer.background = 0x1a1a2e;         // equivalent
+
+// Colour of the aura rendered around highlighted atoms
+visualizer.highlightColor = '#00ffcc';
+
+// Default colour for text labels added via view.addLabels()
+visualizer.labelColor = 0xffffff;
+
+// Colour of the unit-cell wireframe box
+// Note: call reloadModel() to apply to an already-displayed model
+visualizer.cellLineColor = '#888888';
+
+// Selection-box overlay (drag to multi-select)
+visualizer.selboxBkgColor    = '#1111aa';
+visualizer.selboxBorderColor = '#5555dd';
+visualizer.selboxOpacity     = 0.4;
+
+// ── Full theme replacement (as before) ────────────────────────────────────────
+visualizer.theme = 'light';                // built-in preset
+visualizer.theme = 'dark';                 // built-in preset (default)
+visualizer.theme = {                       // fully custom theme
+    background:      0x1a1a2e,
+    foreground:      0xeaeaea,
+    highlight:       0x00ffcc,
+    cell_line_color: 0x888888,
+    label_color:     0xffffff,
+};
+
+// ── Lighting ──────────────────────────────────────────────────────────────────
+
+// Ambient (scene-wide) light intensity (default 0.3)
+visualizer.setAmbientLight(0.5);
+
+// Directional light intensity + direction (default intensity 0.6, direction [0, 1, -1])
+// Pass null for any direction component to leave it unchanged
+visualizer.setDirectionalLight(0.8, 0, 1, -1);
+visualizer.setDirectionalLight(0.6, null, null, -1);   // only change pz
+```
+
 #### Selection serialisation — save and reconstruct atom subsets
 
 ```js
