@@ -108,34 +108,60 @@ const meta = visualizer.getModelMeta(modelName);
 
 #### Scene appearance — background, colours and lighting
 
-Individual appearance properties can be changed at any time without replacing the whole theme object.
+All appearance properties live under `vis.appearance.*` and take effect immediately, retroactively updating any already-rendered objects.
 
 ```js
-// ── Background & colours ──────────────────────────────────────────────────────
+// ── Background ────────────────────────────────────────────────────────────────
 
 // Background colour (hex int, CSS string, or any THREE.Color-compatible value)
-visualizer.background = '#1a1a2e';
-visualizer.background = 0x1a1a2e;         // equivalent
+visualizer.appearance.background = '#1a1a2e';
+visualizer.appearance.background = 0x1a1a2e;   // equivalent
 
-// Colour of the aura rendered around highlighted atoms
-visualizer.highlightColor = '#00ffcc';
+// ── Atom label colour ─────────────────────────────────────────────────────────
 
-// Default colour for text labels added via view.addLabels()
-visualizer.labelColor = 0xffffff;
+// Colour for text labels added via view.addLabels(); updates existing sprites immediately
+visualizer.appearance.label.color = 0xffffff;
 
-// Colour of the unit-cell wireframe box
-// Updates the live wireframe immediately; new models pick it up too
-visualizer.cellLineColor = '#888888';
+// ── Highlight (aura) ──────────────────────────────────────────────────────────
 
-// Selection-box overlay (drag to multi-select)
-visualizer.selboxBkgColor    = '#1111aa';
-visualizer.selboxBorderColor = '#5555dd';
-visualizer.selboxOpacity     = 0.4;
+visualizer.appearance.highlight.color          = '#00ffcc';  // fill colour
+visualizer.appearance.highlight.borderColor    = '#ffffff';  // outer ring colour
+visualizer.appearance.highlight.borderFraction = 0.15;       // ring width 0–1
+visualizer.appearance.highlight.opacity        = 0.6;        // 0 = transparent, 1 = opaque
 
-// ── Full theme replacement (as before) ────────────────────────────────────────
-visualizer.theme = 'light';                // built-in preset
-visualizer.theme = 'dark';                 // built-in preset (default)
-visualizer.theme = {                       // fully custom theme
+// ── Unit-cell lines ───────────────────────────────────────────────────────────
+
+visualizer.appearance.cell.lineColor = '#888888';   // wireframe box
+visualizer.appearance.cell.axisX     = '#ff4444';   // a-axis arrow
+visualizer.appearance.cell.axisY     = '#44ff44';   // b-axis arrow
+visualizer.appearance.cell.axisZ     = '#4444ff';   // c-axis arrow
+
+// ── Selection-box overlay (drag to multi-select) ──────────────────────────────
+
+visualizer.appearance.selbox.background = '#1111aa';
+visualizer.appearance.selbox.border     = '#5555dd';
+visualizer.appearance.selbox.opacity    = 0.4;
+
+// ── Lighting ──────────────────────────────────────────────────────────────────
+
+// Ambient (scene-wide) light intensity (default 0.3)
+visualizer.appearance.lighting.ambient = 0.5;
+
+// Directional light intensity (preserves current direction)
+visualizer.appearance.lighting.directional = 0.8;
+
+// Directional light intensity + direction; pass null to keep any component unchanged
+visualizer.appearance.lighting.setDirectional(0.8, 0, 1, -1);
+visualizer.appearance.lighting.setDirectional(0.6, null, null, -1);   // only change pz
+
+// ── Full theme replacement ────────────────────────────────────────────────────
+
+// Built-in presets ('dark' is the default)
+visualizer.appearance.theme = 'light';
+visualizer.appearance.theme = 'dark';
+
+// Fully custom theme object
+visualizer.appearance.theme = {
     background:      0x1a1a2e,
     foreground:      0xeaeaea,
     highlight:       0x00ffcc,
@@ -143,15 +169,8 @@ visualizer.theme = {                       // fully custom theme
     label_color:     0xffffff,
 };
 
-// ── Lighting ──────────────────────────────────────────────────────────────────
-
-// Ambient (scene-wide) light intensity (default 0.3)
-visualizer.setAmbientLight(0.5);
-
-// Directional light intensity + direction (default intensity 0.6, direction [0, 1, -1])
-// Pass null for any direction component to leave it unchanged
-visualizer.setDirectionalLight(0.8, 0, 1, -1);
-visualizer.setDirectionalLight(0.6, null, null, -1);   // only change pz
+// vis.theme is kept as a shortcut alias for vis.appearance.theme
+visualizer.theme = 'light';
 ```
 
 #### Selection serialisation — save and reconstruct atom subsets
