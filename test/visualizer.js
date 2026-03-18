@@ -9,7 +9,7 @@
  */
 
 import * as chai from 'chai';
-import { CrystVis } from '../lib/visualizer.js';
+import { CrystVis, _buildAppearanceController } from '../lib/visualizer.js';
 
 const expect = chai.expect;
 
@@ -21,6 +21,7 @@ const expect = chai.expect;
  * Build the bare minimum mock Renderer that dispose() expects to find on
  * this._renderer.  Each call-count field starts at 0 so tests can assert
  * that the matching method was called exactly once.
+ * Mirrors the boundary methods added to the real Renderer in render.js.
  */
 function makeMockRenderer() {
     const renderer = {
@@ -30,23 +31,54 @@ function makeMockRenderer() {
         _cameraChangeHandlers: [],
         _cameraState: { position: { x: 0, y: 0, z: 10 }, target: { x: 0, y: 0, z: 0 }, zoom: 1 },
 
-        // ── Appearance state ─────────────────────────────────────────────────
-        theme: {
-            background: 0x000000,
-            foreground: 0xffffff,
-            highlight: 0x00ff00,
+        // ── Appearance state (mirrors Renderer constructor defaults) ─────────
+        _theme: {
+            background:     0x000000,
+            foreground:     0xffffff,
+            highlight:      0x00ff00,
             cell_line_color: 0xffffff,
-            label_color: 0xffffff,
+            label_color:    0xffffff,
         },
-        background:      0x000000,
-        highlightColor:  0x00ff00,
-        labelColor:      0xffffff,
-        cellLineColor:   0xffffff,
+        // label colour injected into new TextSprites
+        _labelColor:          0xffffff,
+        // aura appearance injected into new AuraMesh instances
+        _auraFill:            0xaaaa00,
+        _auraBorder:          0xffff00,
+        _auraBorderFraction:  0.8,
+        _auraOpacity:         0.8,
+        // cell axis colours
+        _cell_x_color: 0xff0000,
+        _cell_y_color: 0x00ff00,
+        _cell_z_color: 0x0000ff,
+        // selbox CSS state (live setters update these)
         selbox_bkg_color:    0x1111aa,
         selbox_border_color: 0x5555dd,
         selbox_opacity:      0.5,
 
-        // ── Lighting call-tracking ────────────────────────────────────────────
+        // theme: forward to _theme so appearance namespace can read it
+        get theme() { return this._theme; },
+        set theme(t) { this._theme = t; },
+
+        // ── Boundary colour/light methods ─────────────────────────────────────
+        setClearColor(c) {
+            this._theme = Object.assign({}, this._theme, { background: c });
+        },
+        setLabelColor(c) {
+            this._labelColor = c;
+            this._theme = Object.assign({}, this._theme, { label_color: c });
+        },
+        setCellLineColor(c) {
+            this._theme = Object.assign({}, this._theme, { cell_line_color: c });
+        },
+        setAuraFill(c)           { this._auraFill = c; },
+        setAuraBorder(c)         { this._auraBorder = c; },
+        setAuraBorderFraction(v) { this._auraBorderFraction = v; },
+        setAuraOpacity(v)        { this._auraOpacity = v; },
+        setCellAxisX(c)          { this._cell_x_color = c; },
+        setCellAxisY(c)          { this._cell_y_color = c; },
+        setCellAxisZ(c)          { this._cell_z_color = c; },
+
+        // ── Lighting call-tracking ─────────────────────────────────────────────
         _ambientLightCalls:     [],
         _directionalLightCalls: [],
         setAmbientLight(intensity) {
@@ -56,7 +88,7 @@ function makeMockRenderer() {
             this._directionalLightCalls.push({ intensity, px, py, pz });
         },
 
-        // ── Other methods ─────────────────────────────────────────────────────
+        // ── Other methods ──────────────────────────────────────────────────────
         dispose() {
             this._disposed = true;
             this._disposeCalls++;
@@ -130,6 +162,9 @@ function makeMockVis(mockRenderer) {
     vis._camera_unsub = r.onCameraChange((state) => {
         vis._camera_change_cbs.forEach(cb => cb(state));
     });
+
+    // Build the vis.appearance namespace (mirrors what the real constructor does)
+    vis._appearance = _buildAppearanceController(vis);
 
     return { vis, renderer: r };
 }
@@ -502,153 +537,288 @@ describe('CrystVis#unloadAll', function () {
 
 });
 // ---------------------------------------------------------------------------
-// Tests: appearance API (§6)
+// Tests: appearance API namespace (vis.appearance.*)
 // ---------------------------------------------------------------------------
 
-describe('CrystVis appearance API — theme shortcuts', function () {
+describe('CrystVis appearance API — vis.appearance.background', function () {
 
-    it('background getter reads from the renderer', function () {
+    it('getter reads background from renderer theme', function () {
         const { vis, renderer } = makeMockVis();
-        renderer.background = 0xff0000;
-        expect(vis.background).to.equal(0xff0000);
+        renderer._theme = Object.assign({}, renderer._theme, { background: 0xff0000 });
+        expect(vis.appearance.background).to.equal(0xff0000);
     });
 
-    it('background setter writes to the renderer', function () {
+    it('setter calls renderer.setClearColor()', function () {
         const { vis, renderer } = makeMockVis();
-        vis.background = 0x123456;
-        expect(renderer.background).to.equal(0x123456);
-    });
-
-    it('highlightColor getter reads from the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        renderer.highlightColor = 0xaabbcc;
-        expect(vis.highlightColor).to.equal(0xaabbcc);
-    });
-
-    it('highlightColor setter writes to the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        vis.highlightColor = 0xddeeff;
-        expect(renderer.highlightColor).to.equal(0xddeeff);
-    });
-
-    it('labelColor getter reads from the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        renderer.labelColor = 0x111111;
-        expect(vis.labelColor).to.equal(0x111111);
-    });
-
-    it('labelColor setter writes to the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        vis.labelColor = 0x222222;
-        expect(renderer.labelColor).to.equal(0x222222);
-    });
-
-    it('cellLineColor getter reads from the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        renderer.cellLineColor = 0x333333;
-        expect(vis.cellLineColor).to.equal(0x333333);
-    });
-
-    it('cellLineColor setter writes to the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        vis.cellLineColor = 0x444444;
-        expect(renderer.cellLineColor).to.equal(0x444444);
-    });
-
-    it('theme setter with string "dark" delegates to the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        vis.theme = 'dark';
-        expect(renderer.theme).to.have.property('background');
-        expect(renderer.theme.background).to.equal(0x000000);
-    });
-
-    it('theme setter with string "light" delegates to the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        vis.theme = 'light';
-        expect(renderer.theme).to.have.property('background');
-        expect(renderer.theme.background).to.equal(0xffffff);
-    });
-
-    it('theme setter with unknown string throws', function () {
-        const { vis } = makeMockVis();
-        expect(() => vis.theme = 'notheme').to.throw(/Theme notheme not found/);
-    });
-
-    it('theme getter reads from the renderer', function () {
-        const { vis, renderer } = makeMockVis();
-        const t = { background: 0xabcdef, foreground: 0x000000, highlight: 0xff00ff,
-                    cell_line_color: 0x888888, label_color: 0xcccccc };
-        renderer.theme = t;
-        expect(vis.theme).to.equal(t);
+        const calls = [];
+        renderer.setClearColor = (c) => {
+            calls.push(c);
+            renderer._theme = Object.assign({}, renderer._theme, { background: c });
+        };
+        vis.appearance.background = 0x123456;
+        expect(calls).to.have.length(1);
+        expect(calls[0]).to.equal(0x123456);
     });
 
 });
 
-describe('CrystVis appearance API — selection box style', function () {
+describe('CrystVis appearance API — vis.appearance.label', function () {
 
-    it('selboxBkgColor getter reads from the renderer', function () {
+    it('label.color getter reads _labelColor from renderer', function () {
         const { vis, renderer } = makeMockVis();
-        renderer.selbox_bkg_color = 0xaaaaff;
-        expect(vis.selboxBkgColor).to.equal(0xaaaaff);
+        renderer._labelColor = 0x111111;
+        expect(vis.appearance.label.color).to.equal(0x111111);
     });
 
-    it('selboxBkgColor setter writes to the renderer', function () {
+    it('label.color setter calls renderer.setLabelColor()', function () {
         const { vis, renderer } = makeMockVis();
-        vis.selboxBkgColor = 0xbbbbff;
+        const calls = [];
+        renderer.setLabelColor = function(c) { calls.push(c); this._labelColor = c; };
+        vis.appearance.label.color = 0x222222;
+        expect(calls).to.have.length(1);
+        expect(calls[0]).to.equal(0x222222);
+    });
+
+    it('label.color setter retroactively updates existing atom label sprites', function () {
+        const { vis, renderer } = makeMockVis();
+        const labelA = { color: 0xffffff };
+        const labelB = { color: 0xffffff };
+        vis._current_model = {
+            atoms: [
+                { _labels: { name: labelA } },
+                { _labels: { name: labelB } },
+            ],
+        };
+        renderer.setLabelColor = function(c) { this._labelColor = c; };
+        renderer._labelColor = 0xaabbcc;
+        vis.appearance.label.color = 0xaabbcc;
+        expect(labelA.color).to.equal(0xaabbcc);
+        expect(labelB.color).to.equal(0xaabbcc);
+    });
+
+    it('label.color setter does not throw when no model is displayed', function () {
+        const { vis } = makeMockVis();
+        vis._current_model = null;
+        expect(() => vis.appearance.label.color = 0x123456).to.not.throw();
+    });
+
+});
+
+describe('CrystVis appearance API — vis.appearance.highlight', function () {
+
+    it('highlight.color getter reads _auraFill from renderer', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer._auraFill = 0xaaaaff;
+        expect(vis.appearance.highlight.color).to.equal(0xaaaaff);
+    });
+
+    it('highlight.color setter calls renderer.setAuraFill()', function () {
+        const { vis, renderer } = makeMockVis();
+        const calls = [];
+        renderer.setAuraFill = function(c) { calls.push(c); this._auraFill = c; };
+        vis.appearance.highlight.color = 0xbbbbff;
+        expect(calls).to.have.length(1);
+        expect(calls[0]).to.equal(0xbbbbff);
+    });
+
+    it('highlight.color setter retroactively updates live AuraMesh fill', function () {
+        const { vis, renderer } = makeMockVis();
+        const aura = { fill: 0xffffff, border: 0xffffff, borderFraction: 0.8, opacity: 0.8 };
+        vis._current_model = { atoms: [{ _aura: aura }] };
+        renderer.setAuraFill = function(c) { this._auraFill = c; };
+        renderer._auraFill   = 0xccccff;
+        vis.appearance.highlight.color = 0xccccff;
+        expect(aura.fill).to.equal(0xccccff);
+    });
+
+    it('highlight.borderColor getter reads _auraBorder from renderer', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer._auraBorder = 0xddddff;
+        expect(vis.appearance.highlight.borderColor).to.equal(0xddddff);
+    });
+
+    it('highlight.borderFraction getter reads _auraBorderFraction', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer._auraBorderFraction = 0.5;
+        expect(vis.appearance.highlight.borderFraction).to.equal(0.5);
+    });
+
+    it('highlight.opacity getter reads _auraOpacity', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer._auraOpacity = 0.4;
+        expect(vis.appearance.highlight.opacity).to.equal(0.4);
+    });
+
+    it('highlight.color setter does not throw without a current model', function () {
+        const { vis } = makeMockVis();
+        vis._current_model = null;
+        expect(() => vis.appearance.highlight.color = 0xffffff).to.not.throw();
+    });
+
+});
+
+describe('CrystVis appearance API — vis.appearance.cell', function () {
+
+    it('cell.lineColor getter reads cell_line_color from renderer theme', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer._theme = Object.assign({}, renderer._theme, { cell_line_color: 0x333333 });
+        expect(vis.appearance.cell.lineColor).to.equal(0x333333);
+    });
+
+    it('cell.lineColor setter calls renderer.setCellLineColor()', function () {
+        const { vis, renderer } = makeMockVis();
+        const calls = [];
+        renderer.setCellLineColor = function(c) {
+            calls.push(c);
+            this._theme = Object.assign({}, this._theme, { cell_line_color: c });
+        };
+        vis.appearance.cell.lineColor = 0x444444;
+        expect(calls).to.have.length(1);
+        expect(calls[0]).to.equal(0x444444);
+    });
+
+    it('cell.lineColor setter retroactively updates the live BoxMesh', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer.setCellLineColor = function(c) {
+            this._theme = Object.assign({}, this._theme, { cell_line_color: c });
+        };
+        const box = { color: 0xffffff };
+        vis._current_model = { box, atoms: [] };
+        renderer._theme.cell_line_color = 0x556677;
+        vis.appearance.cell.lineColor = 0x556677;
+        expect(box.color).to.equal(0x556677);
+    });
+
+    it('cell.lineColor setter does not throw when no model is displayed', function () {
+        const { vis } = makeMockVis();
+        vis._current_model = null;
+        expect(() => vis.appearance.cell.lineColor = 0x123456).to.not.throw();
+    });
+
+    it('cell.lineColor setter does not throw for non-periodic model (no box)', function () {
+        const { vis } = makeMockVis();
+        vis._current_model = { box: null, atoms: [] };
+        expect(() => vis.appearance.cell.lineColor = 0x123456).to.not.throw();
+    });
+
+    it('cell.axisX getter reads _cell_x_color from renderer', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer._cell_x_color = 0xff1234;
+        expect(vis.appearance.cell.axisX).to.equal(0xff1234);
+    });
+
+    it('cell.axisX setter calls renderer.setCellAxisX() and updates live AxesMesh', function () {
+        const { vis, renderer } = makeMockVis();
+        const calls = [];
+        renderer.setCellAxisX = function(c) { calls.push(c); this._cell_x_color = c; };
+        const axes = { xColor: 0xffffff };
+        vis._current_model = { axes };
+        vis.appearance.cell.axisX = 0xabcdef;
+        expect(calls).to.have.length(1);
+        expect(axes.xColor).to.equal(0xabcdef);
+    });
+
+    it('cell.axisY setter calls renderer.setCellAxisY() and updates live AxesMesh', function () {
+        const { vis, renderer } = makeMockVis();
+        const calls = [];
+        renderer.setCellAxisY = function(c) { calls.push(c); this._cell_y_color = c; };
+        const axes = { yColor: 0xffffff };
+        vis._current_model = { axes };
+        vis.appearance.cell.axisY = 0x112233;
+        expect(calls).to.have.length(1);
+        expect(axes.yColor).to.equal(0x112233);
+    });
+
+    it('cell.axisZ setter calls renderer.setCellAxisZ() and updates live AxesMesh', function () {
+        const { vis, renderer } = makeMockVis();
+        const calls = [];
+        renderer.setCellAxisZ = function(c) { calls.push(c); this._cell_z_color = c; };
+        const axes = { zColor: 0xffffff };
+        vis._current_model = { axes };
+        vis.appearance.cell.axisZ = 0x667788;
+        expect(calls).to.have.length(1);
+        expect(axes.zColor).to.equal(0x667788);
+    });
+
+});
+
+describe('CrystVis appearance API — vis.appearance.selbox', function () {
+
+    it('selbox.background getter reads from renderer', function () {
+        const { vis, renderer } = makeMockVis();
+        renderer.selbox_bkg_color = 0xaaaaff;
+        expect(vis.appearance.selbox.background).to.equal(0xaaaaff);
+    });
+
+    it('selbox.background setter writes to renderer', function () {
+        const { vis, renderer } = makeMockVis();
+        vis.appearance.selbox.background = 0xbbbbff;
         expect(renderer.selbox_bkg_color).to.equal(0xbbbbff);
     });
 
-    it('selboxBorderColor getter reads from the renderer', function () {
+    it('selbox.border getter reads from renderer', function () {
         const { vis, renderer } = makeMockVis();
         renderer.selbox_border_color = 0xccccff;
-        expect(vis.selboxBorderColor).to.equal(0xccccff);
+        expect(vis.appearance.selbox.border).to.equal(0xccccff);
     });
 
-    it('selboxBorderColor setter writes to the renderer', function () {
+    it('selbox.border setter writes to renderer', function () {
         const { vis, renderer } = makeMockVis();
-        vis.selboxBorderColor = 0xddddff;
+        vis.appearance.selbox.border = 0xddddff;
         expect(renderer.selbox_border_color).to.equal(0xddddff);
     });
 
-    it('selboxOpacity getter reads from the renderer', function () {
+    it('selbox.opacity getter reads from renderer', function () {
         const { vis, renderer } = makeMockVis();
         renderer.selbox_opacity = 0.3;
-        expect(vis.selboxOpacity).to.equal(0.3);
+        expect(vis.appearance.selbox.opacity).to.equal(0.3);
     });
 
-    it('selboxOpacity setter writes to the renderer', function () {
+    it('selbox.opacity setter writes to renderer', function () {
         const { vis, renderer } = makeMockVis();
-        vis.selboxOpacity = 0.75;
+        vis.appearance.selbox.opacity = 0.75;
         expect(renderer.selbox_opacity).to.equal(0.75);
     });
 
 });
 
-describe('CrystVis appearance API — lighting', function () {
+describe('CrystVis appearance API — vis.appearance.lighting', function () {
 
-    it('setAmbientLight() calls the renderer method with the given intensity', function () {
+    it('lighting.ambient setter calls renderer.setAmbientLight()', function () {
         const { vis, renderer } = makeMockVis();
-        vis.setAmbientLight(0.8);
+        vis.appearance.lighting.ambient = 0.8;
         expect(renderer._ambientLightCalls).to.deep.equal([0.8]);
     });
 
-    it('setAmbientLight() can be called multiple times and all calls are recorded', function () {
-        const { vis, renderer } = makeMockVis();
-        vis.setAmbientLight(0.1);
-        vis.setAmbientLight(0.5);
-        expect(renderer._ambientLightCalls).to.deep.equal([0.1, 0.5]);
+    it('lighting.ambient getter returns the stored value', function () {
+        const { vis } = makeMockVis();
+        vis.appearance.lighting.ambient = 0.55;
+        expect(vis.appearance.lighting.ambient).to.equal(0.55);
     });
 
-    it('setDirectionalLight() calls the renderer method with all four arguments', function () {
+    it('lighting.directional setter calls renderer.setDirectionalLight()', function () {
         const { vis, renderer } = makeMockVis();
-        vis.setDirectionalLight(0.6, 1, -1, 0);
+        vis.appearance.lighting.directional = 0.6;
+        expect(renderer._directionalLightCalls).to.have.length(1);
+        expect(renderer._directionalLightCalls[0].intensity).to.equal(0.6);
+    });
+
+    it('lighting.directional getter returns the stored value', function () {
+        const { vis } = makeMockVis();
+        vis.appearance.lighting.directional = 0.45;
+        expect(vis.appearance.lighting.directional).to.equal(0.45);
+    });
+
+    it('lighting.setDirectional(i, x, y, z) calls renderer.setDirectionalLight with all args', function () {
+        const { vis, renderer } = makeMockVis();
+        vis.appearance.lighting.setDirectional(0.6, 1, -1, 0);
         expect(renderer._directionalLightCalls).to.have.length(1);
         expect(renderer._directionalLightCalls[0]).to.deep.equal({ intensity: 0.6, px: 1, py: -1, pz: 0 });
     });
 
-    it('setDirectionalLight() passes null for omitted direction components', function () {
+    it('lighting.setDirectional() passes null for omitted direction components', function () {
         const { vis, renderer } = makeMockVis();
-        vis.setDirectionalLight(0.4);
+        vis.appearance.lighting.setDirectional(0.4);
         const call = renderer._directionalLightCalls[0];
         expect(call.intensity).to.equal(0.4);
         expect(call.px).to.be.null;
@@ -656,13 +826,79 @@ describe('CrystVis appearance API — lighting', function () {
         expect(call.pz).to.be.null;
     });
 
-    it('setDirectionalLight() supports partial direction updates (only pz)', function () {
+});
+
+describe('CrystVis appearance API — vis.appearance.theme and vis.theme shortcut', function () {
+
+    it('appearance.theme getter reads the renderer theme', function () {
         const { vis, renderer } = makeMockVis();
-        vis.setDirectionalLight(0.6, null, null, -1);
-        const call = renderer._directionalLightCalls[0];
-        expect(call.px).to.be.null;
-        expect(call.py).to.be.null;
-        expect(call.pz).to.equal(-1);
+        const t = { background: 0xabcdef, foreground: 0x000000, highlight: 0xff00ff,
+                    cell_line_color: 0x888888, label_color: 0xcccccc };
+        renderer._theme = t;
+        expect(vis.appearance.theme).to.equal(t);
+    });
+
+    it('appearance.theme setter with string "dark" sets a dark background', function () {
+        const { vis, renderer } = makeMockVis();
+        vis.appearance.theme = 'dark';
+        expect(renderer._theme).to.have.property('background');
+        expect(renderer._theme.background).to.equal(0x000000);
+    });
+
+    it('appearance.theme setter with string "light" sets a light background', function () {
+        const { vis, renderer } = makeMockVis();
+        vis.appearance.theme = 'light';
+        expect(renderer._theme).to.have.property('background');
+        expect(renderer._theme.background).to.equal(0xffffff);
+    });
+
+    it('appearance.theme setter retroactively updates the live BoxMesh', function () {
+        const { vis } = makeMockVis();
+        const box = { color: 0xffffff };
+        vis._current_model = { box, atoms: [] };
+        vis.appearance.theme = { background: 0x000000, foreground: 0xffffff, highlight: 0x00ff00,
+                                 cell_line_color: 0xaabbcc, label_color: 0xffffff };
+        expect(box.color).to.equal(0xaabbcc);
+    });
+
+    it('appearance.theme setter retroactively updates existing atom labels', function () {
+        const { vis, renderer } = makeMockVis();
+        const labelA = { color: 0xffffff };
+        const labelB = { color: 0xffffff };
+        vis._current_model = {
+            box: null,
+            atoms: [
+                { _labels: { name: labelA } },
+                { _labels: { name: labelB } },
+            ],
+        };
+        renderer._labelColor = 0x112233;
+        vis.appearance.theme = { background: 0x000000, foreground: 0x000000, highlight: 0x00ff00,
+                                 cell_line_color: 0xffffff, label_color: 0x112233 };
+        expect(labelA.color).to.equal(0x112233);
+        expect(labelB.color).to.equal(0x112233);
+    });
+
+    it('appearance.theme setter with unknown string throws', function () {
+        const { vis } = makeMockVis();
+        expect(() => vis.appearance.theme = 'notheme').to.throw(/Theme notheme not found/);
+    });
+
+    it('vis.theme shortcut getter delegates to vis.appearance.theme', function () {
+        const { vis, renderer } = makeMockVis();
+        const t = renderer._theme;
+        expect(vis.theme).to.equal(t);
+    });
+
+    it('vis.theme shortcut setter delegates to vis.appearance.theme', function () {
+        const { vis, renderer } = makeMockVis();
+        vis.theme = 'light';
+        expect(renderer._theme.background).to.equal(0xffffff);
+    });
+
+    it('vis.theme shortcut setter with unknown string throws', function () {
+        const { vis } = makeMockVis();
+        expect(() => vis.theme = 'notheme').to.throw(/Theme notheme not found/);
     });
 
 });

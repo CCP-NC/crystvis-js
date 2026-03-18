@@ -124,7 +124,7 @@ visualizer.highlightColor = '#00ffcc';
 visualizer.labelColor = 0xffffff;
 
 // Colour of the unit-cell wireframe box
-// Note: call reloadModel() to apply to an already-displayed model
+// Updates the live wireframe immediately; new models pick it up too
 visualizer.cellLineColor = '#888888';
 
 // Selection-box overlay (drag to multi-select)

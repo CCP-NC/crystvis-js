@@ -260,3 +260,58 @@ window.applyPastedJSON = function() {
         setCameraStatus('Invalid JSON: ' + e.message);
     }
 };
+
+// ─── Appearance controls ─────────────────────────────────────────────────────
+
+/** Sync all color-picker inputs and sliders to match the current visualizer state. */
+function syncAppearanceControls() {
+    var a = visualizer.appearance;
+    function toPickerVal(hex) { return '#' + (hex & 0xffffff).toString(16).padStart(6, '0'); }
+    document.getElementById('bg-color').value         = toPickerVal(a.background);
+    document.getElementById('highlight-color').value  = toPickerVal(a.highlight.color);
+    document.getElementById('label-color').value      = toPickerVal(a.label.color);
+    document.getElementById('cell-line-color').value  = toPickerVal(a.cell.lineColor);
+}
+
+// Initialise pickers once the DOM is ready.
+window.addEventListener('DOMContentLoaded', syncAppearanceControls);
+
+window.changeTheme = function() {
+    var val = document.getElementById('theme-select').value;
+    visualizer.appearance.theme = val;
+    syncAppearanceControls();
+};
+
+window.changeBackground = function() {
+    visualizer.appearance.background = document.getElementById('bg-color').value;
+};
+
+window.changeHighlightColor = function() {
+    visualizer.appearance.highlight.color = document.getElementById('highlight-color').value;
+};
+
+window.changeLabelColor = function() {
+    visualizer.appearance.label.color = document.getElementById('label-color').value;
+};
+
+window.changeCellLineColor = function() {
+    visualizer.appearance.cell.lineColor = document.getElementById('cell-line-color').value;
+};
+
+window.changeSelboxOpacity = function() {
+    var v = parseFloat(document.getElementById('selbox-opacity').value);
+    document.getElementById('selbox-opacity-val').textContent = v.toFixed(2);
+    visualizer.appearance.selbox.opacity = v;
+};
+
+window.changeAmbientLight = function() {
+    var v = parseFloat(document.getElementById('ambient-light').value);
+    document.getElementById('ambient-light-val').textContent = v.toFixed(2);
+    visualizer.appearance.lighting.ambient = v;
+};
+
+window.changeDirectionalLight = function() {
+    var v = parseFloat(document.getElementById('dir-light').value);
+    document.getElementById('dir-light-val').textContent = v.toFixed(2);
+    visualizer.appearance.lighting.directional = v;
+};
