@@ -2,10 +2,14 @@
 
 const CrystVis = require('../lib/visualizer.js').CrystVis;
 const Primitives = require('../lib/primitives/index.js');
+const { createGUIPanel } = require('../lib/gui-panel.js');
 
 var visualizer = new CrystVis('#main-app', 0, 0);
 visualizer.highlight_selected = true;
 visualizer.theme = 'dark';
+
+// Attach the floating GUI panel
+var guiPanel = createGUIPanel(visualizer);
 
 function showError(msg) {
     var banner = document.getElementById('error-banner');
