@@ -8,8 +8,8 @@ var visualizer = new CrystVis('#main-app', 0, 0);
 visualizer.highlight_selected = true;
 visualizer.theme = 'dark';
 
-// Attach the floating GUI panel
-var guiPanel = createGUIPanel(visualizer);
+// Attach the GUI panel into the right-hand sidebar (inline, no overlap)
+var guiPanel = createGUIPanel(visualizer, document.getElementById('gui-mount'));
 
 function showError(msg) {
     var banner = document.getElementById('error-banner');
@@ -27,8 +27,6 @@ window.loadFile = function() {
     var sy = parseInt(document.getElementById("scell-y").value) || 1;
     var sz = parseInt(document.getElementById("scell-z").value) || 1;
 
-    var vdwf = parseFloat(document.getElementById("vdw-f").value) || 1;
-
     reader.readAsText(file);
     reader.onload = function() {
         var mcryst = document.getElementById('molcryst-check').checked;
@@ -38,7 +36,6 @@ window.loadFile = function() {
             loaded = visualizer.loadModels(reader.result, extension, name, {
                 supercell: [sx, sy, sz],
                 molecularCrystal: mcryst,
-                vdwScaling: vdwf
             });
         } catch (e) {
             showError('Could not load file: ' + e.message);
@@ -265,57 +262,4 @@ window.applyPastedJSON = function() {
     }
 };
 
-// ─── Appearance controls ─────────────────────────────────────────────────────
-
-/** Sync all color-picker inputs and sliders to match the current visualizer state. */
-function syncAppearanceControls() {
-    var a = visualizer.appearance;
-    function toPickerVal(hex) { return '#' + (hex & 0xffffff).toString(16).padStart(6, '0'); }
-    document.getElementById('bg-color').value         = toPickerVal(a.background);
-    document.getElementById('highlight-color').value  = toPickerVal(a.highlight.color);
-    document.getElementById('label-color').value      = toPickerVal(a.label.color);
-    document.getElementById('cell-line-color').value  = toPickerVal(a.cell.lineColor);
-}
-
-// Initialise pickers once the DOM is ready.
-window.addEventListener('DOMContentLoaded', syncAppearanceControls);
-
-window.changeTheme = function() {
-    var val = document.getElementById('theme-select').value;
-    visualizer.appearance.theme = val;
-    syncAppearanceControls();
-};
-
-window.changeBackground = function() {
-    visualizer.appearance.background = document.getElementById('bg-color').value;
-};
-
-window.changeHighlightColor = function() {
-    visualizer.appearance.highlight.color = document.getElementById('highlight-color').value;
-};
-
-window.changeLabelColor = function() {
-    visualizer.appearance.label.color = document.getElementById('label-color').value;
-};
-
-window.changeCellLineColor = function() {
-    visualizer.appearance.cell.lineColor = document.getElementById('cell-line-color').value;
-};
-
-window.changeSelboxOpacity = function() {
-    var v = parseFloat(document.getElementById('selbox-opacity').value);
-    document.getElementById('selbox-opacity-val').textContent = v.toFixed(2);
-    visualizer.appearance.selbox.opacity = v;
-};
-
-window.changeAmbientLight = function() {
-    var v = parseFloat(document.getElementById('ambient-light').value);
-    document.getElementById('ambient-light-val').textContent = v.toFixed(2);
-    visualizer.appearance.lighting.ambient = v;
-};
-
-window.changeDirectionalLight = function() {
-    var v = parseFloat(document.getElementById('dir-light').value);
-    document.getElementById('dir-light-val').textContent = v.toFixed(2);
-    visualizer.appearance.lighting.directional = v;
-};
+// Appearance: colours, lighting and theme are now handled by the GUI panel.

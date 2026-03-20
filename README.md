@@ -173,6 +173,88 @@ visualizer.appearance.theme = {
 visualizer.theme = 'light';
 ```
 
+#### Optional GUI control panel
+
+`crystvis-js` ships a ready-made floating control panel built on
+[lil-gui](https://lil-gui.georgealways.com/). It exposes some common
+appearance parameters — lighting, colours, atom/bond sizes, supercell, and
+display mode — without any manual wiring.
+
+**No additional install needed.** `lil-gui` is listed as a peer dependency
+and bundled automatically when you build with esbuild / Vite / webpack.
+
+##### Vanilla JS
+
+```js
+import { CrystVis, createGUIPanel } from '@ccp-nc/crystvis-js';
+
+const vis = new CrystVis('#app');
+const gui = createGUIPanel(vis);   // attaches to <body> by default
+
+// The returned lil-gui instance gives you full control:
+gui.hide();     // collapse / hide the panel programmatically
+gui.show();     // reveal it again
+gui.destroy();  // remove it from the DOM entirely
+```
+
+##### Mounting into a specific container
+
+Pass any DOM element as the second argument to `createGUIPanel` and the panel
+will be appended there instead of `<body>`:
+
+```js
+const container = document.getElementById('controls');
+const gui = createGUIPanel(vis, container);
+```
+
+##### React / Vue (e.g. MagresView 2)
+
+```jsx
+import { useEffect, useRef } from 'react';
+import { CrystVis, createGUIPanel } from '@ccp-nc/crystvis-js';
+
+function Viewer() {
+    const mountRef = useRef(null);
+    const visRef   = useRef(null);
+    const guiRef   = useRef(null);
+
+    useEffect(() => {
+        visRef.current = new CrystVis(mountRef.current);
+        guiRef.current = createGUIPanel(visRef.current);
+        return () => { guiRef.current?.destroy(); };
+    }, []);
+
+    const togglePanel = () => {
+        const gui = guiRef.current;
+        gui._hidden ? gui.show() : gui.hide();
+    };
+
+    return (
+        <>
+            <div ref={mountRef} style={{ width: '100%', height: '600px' }} />
+            <button onClick={togglePanel}>Toggle controls</button>
+        </>
+    );
+}
+```
+
+##### Panel sections
+
+| Section | Controls |
+|---------|----------|
+| **Scene** | Theme preset (dark / light), background colour |
+| **Lighting** | Ambient intensity, directional intensity, XYZ light direction |
+| **Labels** | Label text colour |
+| **Selection highlight** | Fill colour, border colour, border fraction, opacity |
+| **Unit cell appearance** | Box colour, a / b / c axis colours |
+| **Structure ⚠ requires reload** | Supercell a/b/c (1–5), molecular crystal flag, VdW radius scale, Apply & Reload button |
+| **Displayed atoms** | Show mode (Unit cell / All atoms / 5 Å sphere), atom scale, atom sphere opacity |
+| **Bonds** | Bond radius (Å), bond opacity, show/hide bonds |
+
+> **Note on "Apply & Reload":** the *Structure* section changes (supercell size, VdW
+> scaling, molecular-crystal mode) take effect only after clicking **→ Apply & Reload**,
+> because they require the bond graph to be recomputed.
+
 #### Selection serialisation — save and reconstruct atom subsets
 
 ```js

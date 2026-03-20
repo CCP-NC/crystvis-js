@@ -43,10 +43,10 @@
                        </tr>
                        <tr>
                             <td>
-                                <input type="button" name="" value="Show unit cell" onclick="changeDisplayed({'cell': [[0,0,0]]})">
+                                <input type="button" name="" value="Show unit cell" onclick="changeDisplayed({'cell': [[0,0,0]]})"> 
                             </td>
                             <td>
-                                <input type="button" name="" value="Show 5 Ang sphere" onclick="changeDisplayed({'sphere': [[0,0,0], 5.0]})">
+                                <input type="button" name="" value="Show 5 Ang sphere" onclick="changeDisplayed({'sphere': [[0,0,0], 5.0]})"> 
                             </td>
                        </tr>
                         <tr>
@@ -65,11 +65,8 @@
                             </td>
                         </tr>
                         <tr>
-                          <td>
+                          <td colspan="2">
                             <input id="isosurf-check" type="checkbox" name="" value="false" onchange="changeIsosurface()" disabled>Show isosurface
-                          </td>
-                          <td>
-                              <input type="text" id="vdw-f" size="5" value="1.0"> Van der Waals scaling
                           </td>
                         </tr>
                         <tr>
@@ -108,61 +105,9 @@
                             <td colspan="2" id="camera-status" style="font-size:11px;color:#555"></td>
                         </tr>
 
-                        <!-- ── Appearance ───────────────────────────────────── -->
-                        <tr>
-                            <td colspan="2"><hr style="margin:6px 0"><strong>Appearance</strong></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Theme:
-                                <select id="theme-select" onchange="changeTheme()">
-                                    <option value="dark" selected>Dark</option>
-                                    <option value="light">Light</option>
-                                </select>
-                            </td>
-                            <td>
-                                Background:
-                                <input id="bg-color" type="color" value="#000000" oninput="changeBackground()">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Highlight:
-                                <input id="highlight-color" type="color" value="#00ff00" oninput="changeHighlightColor()">
-                            </td>
-                            <td>
-                                Label colour:
-                                <input id="label-color" type="color" value="#ffffff" oninput="changeLabelColor()">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Cell line:
-                                <input id="cell-line-color" type="color" value="#ffffff" oninput="changeCellLineColor()">
-                            </td>
-                            <td>
-                                Sel-box opacity:
-                                <input id="selbox-opacity" type="range" min="0" max="1" step="0.05" value="0.5"
-                                       oninput="changeSelboxOpacity()">
-                                <span id="selbox-opacity-val">0.50</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Ambient light:
-                                <input id="ambient-light" type="range" min="0" max="2" step="0.05" value="0.3"
-                                       oninput="changeAmbientLight()">
-                                <span id="ambient-light-val">0.30</span>
-                            </td>
-                            <td>
-                                Directional light:
-                                <input id="dir-light" type="range" min="0" max="2" step="0.05" value="0.6"
-                                       oninput="changeDirectionalLight()">
-                                <span id="dir-light-val">0.60</span>
-                            </td>
-                        </tr>
                    </tbody>
-           </table> 
+           </table>
+           <div id="gui-mount" style="margin-top:8px"></div>
         </div>
 
     </div>
