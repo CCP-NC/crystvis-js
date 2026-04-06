@@ -11,14 +11,113 @@ node_modules/diff
   Depends on vulnerable versions of serialize-javascript
   node_modules/mocha
 
-serialize-javascript  <=7.0.2
+file-type  13.0.0 - 21.3.0
+Severity: moderate
+file-type affected by infinite loop in ASF parser on malformed input with zero-size sub-header - https://github.com/advisories/GHSA-5v7r-6r5c-r473
+fix available via `npm audit fix --force`
+Will install msdf-bmfont-xml@2.7.0, which is a breaking change
+node_modules/file-type
+  @jimp/core  >=0.16.3-canary.993.1592.0
+  Depends on vulnerable versions of file-type
+  node_modules/@jimp/core
+    @jimp/js-bmp  *
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/js-bmp
+    @jimp/js-gif  *
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/js-gif
+    @jimp/js-jpeg  *
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/js-jpeg
+    @jimp/js-png  *
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/js-png
+    @jimp/js-tiff  *
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/js-tiff
+    @jimp/plugin-blur  >=1.1.2
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/plugin-blur
+      jimp  >=1.0.2--canary.4e85de0.0
+      Depends on vulnerable versions of @jimp/core
+      Depends on vulnerable versions of @jimp/diff
+      Depends on vulnerable versions of @jimp/js-bmp
+      Depends on vulnerable versions of @jimp/js-gif
+      Depends on vulnerable versions of @jimp/js-jpeg
+      Depends on vulnerable versions of @jimp/js-png
+      Depends on vulnerable versions of @jimp/js-tiff
+      Depends on vulnerable versions of @jimp/plugin-blur
+      Depends on vulnerable versions of @jimp/plugin-color
+      Depends on vulnerable versions of @jimp/plugin-contain
+      Depends on vulnerable versions of @jimp/plugin-cover
+      Depends on vulnerable versions of @jimp/plugin-crop
+      Depends on vulnerable versions of @jimp/plugin-hash
+      Depends on vulnerable versions of @jimp/plugin-print
+      Depends on vulnerable versions of @jimp/plugin-resize
+      Depends on vulnerable versions of @jimp/plugin-rotate
+      Depends on vulnerable versions of @jimp/plugin-threshold
+      node_modules/jimp
+        msdf-bmfont-xml  >=2.8.0
+        Depends on vulnerable versions of jimp
+        node_modules/msdf-bmfont-xml
+    @jimp/plugin-color  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/plugin-color
+    @jimp/plugin-contain  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    Depends on vulnerable versions of @jimp/plugin-resize
+    node_modules/@jimp/plugin-contain
+    @jimp/plugin-cover  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    Depends on vulnerable versions of @jimp/plugin-crop
+    Depends on vulnerable versions of @jimp/plugin-resize
+    node_modules/@jimp/plugin-cover
+    @jimp/plugin-crop  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/plugin-crop
+      @jimp/plugin-rotate  <=0.3.6-alpha.6 || >=1.0.2--canary.4e85de0.0
+      Depends on vulnerable versions of @jimp/core
+      Depends on vulnerable versions of @jimp/plugin-crop
+      Depends on vulnerable versions of @jimp/plugin-resize
+      node_modules/@jimp/plugin-rotate
+    @jimp/plugin-hash  *
+    Depends on vulnerable versions of @jimp/core
+    Depends on vulnerable versions of @jimp/js-bmp
+    Depends on vulnerable versions of @jimp/js-jpeg
+    Depends on vulnerable versions of @jimp/js-png
+    Depends on vulnerable versions of @jimp/js-tiff
+    Depends on vulnerable versions of @jimp/plugin-color
+    Depends on vulnerable versions of @jimp/plugin-resize
+    node_modules/@jimp/plugin-hash
+    @jimp/plugin-print  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    Depends on vulnerable versions of @jimp/js-jpeg
+    Depends on vulnerable versions of @jimp/js-png
+    node_modules/@jimp/plugin-print
+    @jimp/plugin-resize  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    node_modules/@jimp/plugin-resize
+      @jimp/diff  *
+      Depends on vulnerable versions of @jimp/plugin-resize
+      node_modules/@jimp/diff
+    @jimp/plugin-threshold  >=1.0.2--canary.4e85de0.0
+    Depends on vulnerable versions of @jimp/core
+    Depends on vulnerable versions of @jimp/plugin-color
+    Depends on vulnerable versions of @jimp/plugin-hash
+    node_modules/@jimp/plugin-threshold
+
+serialize-javascript  <=7.0.4
 Severity: high
 Serialize JavaScript is Vulnerable to RCE via RegExp.flags and Date.prototype.toISOString() - https://github.com/advisories/GHSA-5c6j-r48x-rmvq
+Serialize JavaScript has CPU Exhaustion Denial of Service via crafted array-like objects - https://github.com/advisories/GHSA-qj8w-gfj5-8c6v
 fix available via `npm audit fix --force`
 Will install mocha@11.3.0, which is a breaking change
 node_modules/serialize-javascript
 
-3 vulnerabilities (1 low, 2 high)
+23 vulnerabilities (1 low, 20 moderate, 2 high)
+
+To address issues that do not require attention, run:
+  npm audit fix
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
