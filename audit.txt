@@ -11,14 +11,22 @@ node_modules/diff
   Depends on vulnerable versions of serialize-javascript
   node_modules/mocha
 
-serialize-javascript  <=7.0.2
+mathjs  <15.2.0
+Severity: high
+mathjs Allows Improperly Controlled Modification of Dynamically-Determined Object Attributes - https://github.com/advisories/GHSA-jvff-x2qm-6286
+fix available via `npm audit fix --force`
+Will install mathjs@15.2.0, which is a breaking change
+node_modules/mathjs
+
+serialize-javascript  <=7.0.4
 Severity: high
 Serialize JavaScript is Vulnerable to RCE via RegExp.flags and Date.prototype.toISOString() - https://github.com/advisories/GHSA-5c6j-r48x-rmvq
+Serialize JavaScript has CPU Exhaustion Denial of Service via crafted array-like objects - https://github.com/advisories/GHSA-qj8w-gfj5-8c6v
 fix available via `npm audit fix --force`
 Will install mocha@11.3.0, which is a breaking change
 node_modules/serialize-javascript
 
-3 vulnerabilities (1 low, 2 high)
+4 vulnerabilities (1 low, 3 high)
 
 To address all issues (including breaking changes), run:
   npm audit fix --force
