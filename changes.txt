@@ -1,2 +1,7 @@
 ## Updated Packages
-See package.json diff for details
+-    "lodash": "^4.17.23",
++    "lodash": "^4.18.1",
+-    "clean-jsdoc-theme": "^4.3.0",
++    "clean-jsdoc-theme": "^4.3.2",
+-    "jsdom": "^27.0.1",
++    "jsdom": "^27.4.0",
