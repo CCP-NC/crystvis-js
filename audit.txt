@@ -13,8 +13,8 @@ node_modules/diff
 
 mathjs  13.1.0 - 15.1.1
 Severity: high
-Unsafe object property setter in mathjs - https://github.com/advisories/GHSA-29qv-4j9f-fjw5
 mathjs Allows Improperly Controlled Modification of Dynamically-Determined Object Attributes - https://github.com/advisories/GHSA-jvff-x2qm-6286
+Unsafe object property setter in mathjs - https://github.com/advisories/GHSA-29qv-4j9f-fjw5
 fix available via `npm audit fix --force`
 Will install mathjs@15.2.0, which is a breaking change
 node_modules/mathjs
