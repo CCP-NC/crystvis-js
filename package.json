@@ -33,6 +33,7 @@
   },
   "scripts": {
     "test": "mocha --reporter spec",
+    "prestart": "npm run build-resources && npm run build-demo && npm run build-html-test",
     "start": "npm run watch-testserver",
     "clean-docs": "rm -rf docs/* || true",
     "predocs": "npm run clean-docs",
