@@ -1,2 +1,3 @@
 ## Updated Packages
-See package.json diff for details
+-    "mocha": "^11.7.5",
++    "mocha": "^11.7.6",
