@@ -1,2 +1,5 @@
 ## Updated Packages
-See package.json diff for details
+-    "@babel/eslint-parser": "^7.28.6",
++    "@babel/eslint-parser": "^7.29.7",
+-    "mocha": "^11.7.5",
++    "mocha": "^11.7.6",
