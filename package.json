@@ -84,7 +84,7 @@
     "yargs-parser": "^22.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.28.6",
+    "@babel/eslint-parser": "^7.29.7",
     "chai": "^5.3.3",
     "chai-almost": "^1.0.1",
     "clean-jsdoc-theme": "^4.3.2",
@@ -97,7 +97,7 @@
     "jsdoc": "^4.0.5",
     "jsdom": "^27.4.0",
     "minimist": "^1.2.8",
-    "mocha": "^11.7.5",
+    "mocha": "^11.7.6",
     "msdf-bmfont-xml": "^2.8.0",
     "npm-watch": "^0.13.0",
     "serve": "^14.2.6"
