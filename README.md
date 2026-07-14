@@ -21,7 +21,8 @@ The currently supported file formats are the following:
 * **CIF**, using [crystcif-parse](https://github.com/CCP-NC/crystcif-parse);
 * **XYZ**, specifically the Extended XYZ such as the one written by the [Atomic Simulation Environment](https://wiki.fysik.dtu.dk/ase/);
 * **CELL**, input file supported by the DFT package [CASTEP](http://www.castep.org/);
-* **Magres**, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the [CCP for NMR Crystallography](https://www.ccpnc.ac.uk/).
+* **Magres**, output file format for simulated NMR parameters used by CASTEP and Quantum Espresso and developed by the [CCP for NMR Crystallography](https://www.ccpnc.ac.uk/);
+* **Magres-JSON**, a JSON serialisation of the Magres format. The schema is defined in `schemas/magres.json` and is inspired by the [magres-format](https://github.com/tfgg/magres-format/blob/master/magres/schema/schema.json) JSON schema.
 
 ### Getting started 
 
@@ -39,7 +40,7 @@ import CrystVis from 'crystvis-js';
 const visualizer = new CrystVis('#target-id', 800, 600)
 ```
 
-will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string and then pass them to the visualizer's `loadModels` method:
+will create an 800x600 canvas with the visualizer inside the element specified by the given selector. To load a model, simply load the contents of your file as a text string or JSON object and then pass them to the visualizer's `loadModels` method:
 
 ```js
 var loaded = visualizer.loadModels(contents);
@@ -52,6 +53,29 @@ if (loaded[modelName] !== 0) {
     visualizer.displayModel(modelName);
 }
 ```
+
+#### Magres-JSON
+
+Magres-JSON version `1.0` accepts either its JSON text or a parsed object. The
+published contract is [schemas/magres.json](schemas/magres.json); CrystVis
+validates the payload before loading it.
+
+```js
+const json = await fetch('/structure.magres.json').then(response => response.json());
+const loaded = visualizer.loadModels(json, 'magres-json');
+```
+
+The `atoms` block must contain a non-empty atom list, a lattice, and explicit
+`Angstrom` units for both. Every populated supported property must declare a
+unit: `ms` (`ppm`), `efg` (`au`), `isc` (`10^19.T^2.J^-1`), `sus`
+(`10^-6.cm^3.mol^-1`), or `hf` (`MHz`). Custom species use an element-symbol
+prefix, for example `H:Mu`; tensors address atoms through unique `(label,
+index)` pairs.
+
+The parser loads `ms`, `efg`, `isc`, `sus`, `hf`, and gyromagnetic ratios.
+Unknown `magres` extension tags and structured `calculation` metadata are
+preserved but not interpreted. Validation errors identify the failing JSON
+path, such as `/magres/ms/2/sigma`.
 
 ### API highlights
 

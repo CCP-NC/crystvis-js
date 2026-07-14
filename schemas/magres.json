@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "This schema is inspired by https://github.com/tfgg/magres-format/blob/master/magres/schema/schema.json",
+  "description": "JSON serialisation of an ab-initio magres file",
+  "title": "magres file",
+  "type": "object",
+  "required": ["version", "atoms"],
+  "additionalProperties": false,
+  "definitions": {
+    "units": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "minItems": 2,
+        "maxItems": 2,
+        "items": { "type": "string" }
+      }
+    },
+    "atomindex": {
+      "type": "object",
+      "required": ["label", "index"],
+      "additionalProperties": false,
+      "properties": {
+        "index": { "type": "integer", "minimum": 0 },
+        "label": { "type": "string", "minLength": 1 }
+      }
+    },
+    "tensor33": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "array",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": { "type": "number" }
+      }
+    },
+    "atom": {
+      "type": "object",
+      "required": ["species", "label", "index", "position"],
+      "additionalProperties": false,
+      "properties": {
+        "species": { "type": "string", "minLength": 1 },
+        "label": { "type": "string", "minLength": 1 },
+        "index": { "type": "integer", "minimum": 0 },
+        "position": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": { "type": "number" }
+        }
+      }
+    }
+  },
+  "properties": {
+    "version": { "const": "1.0" },
+    "atoms": {
+      "type": "object",
+      "required": ["units", "atom", "lattice"],
+      "additionalProperties": false,
+      "properties": {
+        "units": { "$ref": "#/definitions/units" },
+        "lattice": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": { "$ref": "#/definitions/tensor33" }
+        },
+        "symmetry": { "type": "array", "items": { "type": "string" } },
+        "atom": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/definitions/atom" }
+        }
+      }
+    },
+    "magres": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "units": { "$ref": "#/definitions/units" },
+        "gyromagnetic_ratios": {
+          "type": "object",
+          "patternProperties": {
+            ".*": {
+              "type": "object",
+              "required": ["gamma"],
+              "additionalProperties": false,
+              "properties": {
+                "isotope": { "type": ["integer", "null"] },
+                "gamma": { "type": "number" }
+              }
+            }
+          }
+        }
+      },
+      "patternProperties": {
+        "^(sus|sus_.*)$": { "$ref": "#/definitions/tensor33" },
+        "^(ms|ms_.*)$": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sigma", "atom"],
+            "additionalProperties": false,
+            "properties": {
+              "sigma": { "$ref": "#/definitions/tensor33" },
+              "atom": { "$ref": "#/definitions/atomindex" }
+            }
+          }
+        },
+        "^(efg|efg_.*)$": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["V", "atom"],
+            "additionalProperties": false,
+            "properties": {
+              "V": { "$ref": "#/definitions/tensor33" },
+              "atom": { "$ref": "#/definitions/atomindex" }
+            }
+          }
+        },
+        "^(isc|isc_.*)$": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["K", "atom1", "atom2"],
+            "additionalProperties": false,
+            "properties": {
+              "K": { "$ref": "#/definitions/tensor33" },
+              "atom1": { "$ref": "#/definitions/atomindex" },
+              "atom2": { "$ref": "#/definitions/atomindex" }
+            }
+          }
+        },
+        "^(hf|hf_.*)$": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["A", "atom"],
+            "additionalProperties": false,
+            "properties": {
+              "A": { "$ref": "#/definitions/tensor33" },
+              "atom": { "$ref": "#/definitions/atomindex" }
+            }
+          }
+        }
+      }
+    },
+    "calculation": { "type": "object", "additionalProperties": true }
+  }
+}

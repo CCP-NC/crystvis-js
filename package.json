@@ -72,6 +72,7 @@
   "dependencies": {
     "@ccp-nc/crystcif-parse": "^0.3.0",
     "@jkshenton/three-bmfont-text": "^4.0.1",
+    "ajv": "^8.20.0",
     "buffer": "^6.0.3",
     "chroma-js": "^3.2.0",
     "isosurface": "^1.0.0",
