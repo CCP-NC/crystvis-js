@@ -9,9 +9,14 @@
  */
 
 import * as chai from 'chai';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { CrystVis } from '../lib/visualizer.js';
+import { Loader } from '../lib/loader.js';
 
 const expect = chai.expect;
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -105,6 +110,23 @@ function makeMockVis(mockRenderer) {
 
     return { vis, renderer: r };
 }
+
+describe('CrystVis#loadModels Magres-JSON input', function () {
+
+    it('loads a parsed object and stores its JSON source', function () {
+        const { vis } = makeMockVis();
+        const data = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'test.magres.json'), 'utf8'));
+        vis._loader = new Loader();
+
+        const status = vis.loadModels(data, 'magres-json');
+
+        expect(status).to.deep.equal({ 'magres-json': 0 });
+        expect(vis.getModelSource('magres-json')).to.deep.equal({
+            text: JSON.stringify(data),
+            extension: 'magres-json'
+        });
+    });
+});
 
 // ---------------------------------------------------------------------------
 // Tests: dispose()

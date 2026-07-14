@@ -1,0 +1,118 @@
+{
+  "version": "1.0",
+  "atoms": {
+    "units": [
+      ["lattice", "Angstrom"],
+      ["atom", "Angstrom"]
+    ],
+    "lattice": [
+      [
+        [10, 0, 0],
+        [0, 10, 0],
+        [0, 0, 10]
+      ]
+    ],
+    "symmetry": ["P1"],
+    "atom": [
+      {
+        "species": "H",
+        "label": "H",
+        "index": 1,
+        "position": [1, 2, 3]
+      },
+      {
+        "species": "H:Mu",
+        "label": "H:Mu",
+        "index": 1,
+        "position": [4, 5, 6]
+      }
+    ]
+  },
+  "magres": {
+    "units": [
+      ["ms", "ppm"],
+      ["efg", "au"],
+      ["isc", "10^19.T^2.J^-1"],
+      ["sus", "10^-6.cm^3.mol^-1"],
+      ["hf", "MHz"]
+    ],
+    "sus": [
+      [1, 0, 0],
+      [0, 1, 0],
+      [0, 0, 1]
+    ],
+    "ms": [
+      {
+        "atom": { "label": "H", "index": 1 },
+        "sigma": [
+          [1, 0, 0],
+          [0, 2, 0],
+          [0, 0, 3]
+        ]
+      },
+      {
+        "atom": { "label": "H:Mu", "index": 1 },
+        "sigma": [
+          [4, 0, 0],
+          [0, 5, 0],
+          [0, 0, 6]
+        ]
+      }
+    ],
+    "efg": [
+      {
+        "atom": { "label": "H", "index": 1 },
+        "V": [
+          [0, 0, 0],
+          [0, 0, 0],
+          [0, 0, 0]
+        ]
+      },
+      {
+        "atom": { "label": "H:Mu", "index": 1 },
+        "V": [
+          [0.1, 0, 0],
+          [0, 0.2, 0],
+          [0, 0, 0.3]
+        ]
+      }
+    ],
+    "isc": [
+      {
+        "atom1": { "label": "H", "index": 1 },
+        "atom2": { "label": "H:Mu", "index": 1 },
+        "K": [
+          [1, 0, 0],
+          [0, 2, 0],
+          [0, 0, 3]
+        ]
+      }
+    ],
+    "hf": [
+      {
+        "atom": { "label": "H", "index": 1 },
+        "A": [
+          [1, 0, 0],
+          [0, 2, 0],
+          [0, 0, 3]
+        ]
+      },
+      {
+        "atom": { "label": "H:Mu", "index": 1 },
+        "A": [
+          [-10, 0, 0],
+          [0, -20, 0],
+          [0, 0, -30]
+        ]
+      }
+    ],
+    "gyromagnetic_ratios": {
+      "H": { "isotope": 1, "gamma": 267520000 },
+      "H:Mu": { "isotope": null, "gamma": 851620000 }
+    }
+  },
+  "calculation": {
+    "calc_code": [["CASTEP"]],
+    "calc_name": [["test"]]
+  }
+}

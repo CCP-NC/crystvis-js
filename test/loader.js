@@ -399,4 +399,129 @@ H 0.0 1.0 0.0`;
         expect(a.get_cell()).to.almost.deep.equal([[3.7042404756, 0, 0], [0, 3.7042404756, 0], [0, 0, 3.7042404756]]);
         expect(a.get_positions()[1]).to.almost.deep.equal([1.8521202378, 0.0, 0.0]);
     });
+
+    it('should load properly a Magres JSON file from a string', function() {
+
+        var loader = new Loader();
+
+        var json = fs.readFileSync(path.join(__dirname, 'data', 'test.magres.json'), "utf8");
+        var a = loader.load(json, 'magres-json')['magres-json'];
+
+        expect(loader.status).to.equal(Loader.STATUS_SUCCESS);
+        expect(a.length()).to.equal(2);
+        expect(a.get_chemical_symbols()).to.deep.equal(['H', 'H']);
+        expect(a.get_positions()[0]).to.deep.equal([1, 2, 3]);
+        expect(a.get_positions()[1]).to.deep.equal([4, 5, 6]);
+        expect(a.get_cell()).to.deep.equal([[10, 0, 0], [0, 10, 0], [0, 0, 10]]);
+
+        // Labels
+        expect(a.get_array('labels')).to.deep.equal(['H', 'H:Mu']);
+        expect(a.get_array('magres-labels')).to.deep.equal([['H', 1], ['H:Mu', 1]]);
+
+        // Susceptibility
+        expect(a.info.sus.data).to.deep.equal([[1, 0, 0], [0, 1, 0], [0, 0, 1]]);
+
+        // Shielding
+        var ms = a.get_array('ms');
+        expect(ms).to.have.lengthOf(2);
+        expect(ms[0].data).to.deep.equal([[1, 0, 0], [0, 2, 0], [0, 0, 3]]);
+        expect(ms[1].data).to.deep.equal([[4, 0, 0], [0, 5, 0], [0, 0, 6]]);
+
+        // EFG
+        var efg = a.get_array('efg');
+        expect(efg).to.have.lengthOf(2);
+        expect(efg[0].data).to.deep.equal([[0, 0, 0], [0, 0, 0], [0, 0, 0]]);
+        expect(efg[1].data).to.deep.equal([[0.1, 0, 0], [0, 0.2, 0], [0, 0, 0.3]]);
+
+        // ISC
+        var isc = a.get_array('isc');
+        expect(isc).to.have.lengthOf(2);
+        expect(isc[0][1].data).to.deep.equal([[1, 0, 0], [0, 2, 0], [0, 0, 3]]);
+        expect(isc[1][0].data).to.deep.equal([[1, 0, 0], [0, 2, 0], [0, 0, 3]]);
+
+        // HF
+        var hf = a.get_array('hf');
+        expect(hf).to.have.lengthOf(2);
+        expect(hf[0].data).to.deep.equal([[1, 0, 0], [0, 2, 0], [0, 0, 3]]);
+        expect(hf[1].data).to.deep.equal([[-10, 0, 0], [0, -20, 0], [0, 0, -30]]);
+
+        // Gyromagnetic ratios
+        var ratios = a.info['hf-gyromagnetic-ratios'];
+        expect(ratios).to.exist;
+        expect(ratios['H'].isotope).to.equal(1);
+        expect(ratios['H'].gamma).to.equal(267520000);
+        expect(ratios['H:Mu'].isotope).to.equal(null);
+        expect(ratios['H:Mu'].gamma).to.equal(851620000);
+
+        // Calculation block preserved
+        expect(a.info['magres-blocks'].calculation).to.exist;
+        expect(a.info['magres-blocks'].calculation.calc_code).to.deep.equal([['CASTEP']]);
+    });
+
+    it('should load properly a Magres JSON file from a parsed object', function() {
+
+        var loader = new Loader();
+
+        var json = fs.readFileSync(path.join(__dirname, 'data', 'test.magres.json'), "utf8");
+        var obj = JSON.parse(json);
+        var a = loader.load(obj, 'magres-json')['magres-json'];
+
+        expect(loader.status).to.equal(Loader.STATUS_SUCCESS);
+        expect(a.length()).to.equal(2);
+        var ms = a.get_array('ms');
+        expect(ms[1].data).to.deep.equal([[4, 0, 0], [0, 5, 0], [0, 0, 6]]);
+    });
+
+    it('should fail to load a Magres JSON file without atoms', function() {
+
+        var loader = new Loader();
+
+        loader.load('{"version": "1.0", "magres": {}}', 'magres-json');
+
+        expect(loader.status).to.equal(Loader.STATUS_ERROR);
+        expect(loader.error_message).to.contain("Invalid magres-json at /: must have required property 'atoms'");
+    });
+
+    it('should reject invalid Magres JSON with an actionable path', function() {
+
+        const source = fs.readFileSync(path.join(__dirname, 'data', 'test.magres.json'), 'utf8');
+        const cases = [
+            ['unsupported version', data => { data.version = '2.0'; }, '/version'],
+            ['empty atom list', data => { data.atoms.atom = []; }, '/atoms/atom'],
+            ['malformed lattice', data => { data.atoms.lattice = [[[1]]]; }, '/atoms/lattice/0'],
+            ['non-numeric position', data => { data.atoms.atom[0].position[0] = 'x'; }, '/atoms/atom/0/position/0'],
+            ['missing property unit', data => { data.magres.units = data.magres.units.filter(([tag]) => tag !== 'ms'); }, '/magres/units'],
+            ['unknown property unit', data => { data.magres.units[2][1] = 'invalid'; }, '/magres/units'],
+            ['wrong tensor key', data => { data.magres.ms[0].A = data.magres.ms[0].sigma; delete data.magres.ms[0].sigma; }, '/magres/ms/0'],
+            ['duplicate atom reference', data => { data.atoms.atom[1].label = 'H'; }, '/atoms/atom/1'],
+            ['duplicate tensor assignment', data => { data.magres.ms.push(structuredClone(data.magres.ms[0])); }, '/magres/ms/2'],
+            ['dangling atom reference', data => { data.magres.ms[0].atom.label = 'missing'; }, '/magres/ms/0/atom'],
+            ['unknown element', data => { data.atoms.atom[0].species = 'Xx:Mu'; }, '/atoms/atom/0/species']
+        ];
+
+        for (const [, change, expectedPath] of cases) {
+            const loader = new Loader();
+            const data = JSON.parse(source);
+            change(data);
+            loader.load(data, 'magres-json');
+            expect(loader.status).to.equal(Loader.STATUS_ERROR);
+            expect(loader.error_message).to.contain('Invalid magres-json at ' + expectedPath);
+        }
+    });
+
+    it('should preserve extension tags and structured calculation metadata', function() {
+
+        const loader = new Loader();
+        const source = fs.readFileSync(path.join(__dirname, 'data', 'test.magres.json'), 'utf8');
+        const data = JSON.parse(source);
+        data.magres.nomad_extension = { source: 'NOMAD' };
+        data.calculation = { provider: { name: 'NOMAD', revision: 3 } };
+
+        const atoms = loader.load(data, 'magres-json')['magres-json'];
+
+        expect(loader.status).to.equal(Loader.STATUS_SUCCESS);
+        expect(atoms.info['magres-blocks'].magres.nomad_extension).to.deep.equal({ source: 'NOMAD' });
+        expect(atoms.info['magres-blocks'].calculation).to.deep.equal(data.calculation);
+    });
+
 });
