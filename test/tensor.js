@@ -16,12 +16,9 @@ import {
 import {
     getIsotopeData
 } from '../lib/data.js'
-import { deepAlmostEqualUnordered } from '../lib/utils.js';
-
 chai.use(chaiAlmost(1e-3));
 
 const expect = chai.expect;
-const assert = chai.assert;
 
 
 const PI = mjs.pi;
@@ -559,12 +556,6 @@ describe('#tensordata', function() {
         // expect(B.euler('zxz', false)).to.deep.almost.equal([0, 0, 225].map((x) => x*PI/180));
     
 
-        // efg H 1 0  0  2. 1.41421356 1.41421356 0   1.41421356 -1.41421356  0  
-        let C = new TensorData([
-            [0, 0, 2],
-            [mjs.sqrt(2), mjs.sqrt(2), 0],
-            [mjs.sqrt(2), -mjs.sqrt(2), 0]
-        ]);
         // TODO! add more. Fix the ones that are failing.
 
         let D = new TensorData([
@@ -584,11 +575,11 @@ describe('#tensordata', function() {
 
     });
 
-    it ('should properly calculate relative rotation matrices', function() {
+    it ('should construct labelled relative PAS-frame rotations', function() {
         let A = new TensorData([
-            [0, 0, 2],
-            [mjs.sqrt(2), mjs.sqrt(2), 0],
-            [mjs.sqrt(2), -mjs.sqrt(2), 0]
+            [1, 0, 0],
+            [0, 2, 0],
+            [0, 0, 4]
         ]);
 
         const Bdata = [
@@ -599,42 +590,31 @@ describe('#tensordata', function() {
         
         let B = new TensorData(Bdata);
 
-        let I = [
-            [1,0,0],
-            [0,1,0],
-            [0,0,1]
-        ]
-        let Itensor = new TensorData(I);
-        // basic tests:
-        // Self rotation -> identity
-        let R = A.rotationTo(A);
-        expect(R).to.deep.almost.equal(I);
-        // Rotation to itself -> identity
-        expect(Itensor.rotationTo(Itensor)).to.deep.almost.equal(I);
-        // // Rotation from identity to another tensor -> that tensor
-        expect(Itensor.rotationTo(A)).to.deep.almost.equal(mjs.transpose(A.eigenvectors));
-        expect(Itensor.rotationTo(B)).to.deep.almost.equal(mjs.transpose(B.eigenvectors));
-        
-        // actual tests:
-        R = A.rotationTo(B);
-        // make sure it's a rotation matrix
-        // make sure determinant is 1
-        expect(mjs.det(R)).to.almost.equal(1);
-        // make sure it's orthogonal
-        expect(mjs.multiply(R, mjs.transpose(R))).to.deep.almost.equal(I);
-
-        // make sure it rotates A into B
-        expect(mjs.multiply(R, mjs.transpose(A.eigenvectors))).to.deep.almost.equal(mjs.transpose(B.eigenvectors));
-        // survives re-ordering of eigenvalues
-        A.convention = "decreasing";
-        B.convention = "nqr";
-        R = A.rotationTo(B);
-        expect(mjs.multiply(R, mjs.transpose(A.eigenvectors))).to.deep.almost.equal(mjs.transpose(B.eigenvectors));
-        
+        for (const sequence of ['zyz', 'zxz']) {
+            for (const active of [true, false]) {
+                const orientation = A.relativeOrientationTo(B, { sequence, active });
+                expect(orientation.orientationClass).to.equal('discrete');
+                expect(orientation.configurations).to.have.length(16);
+                expect(new Set(orientation.configurations.map(({ id }) => id)).size).to.equal(16);
+                for (const configuration of orientation.configurations) {
+                    const source = mjs.matrix(configuration.source.frame);
+                    const target = mjs.matrix(configuration.target.frame);
+                    const activeRotation = mjs.matrix(configuration.activeRotation);
+                    const passiveRotation = mjs.matrix(configuration.passiveRotation);
+                    expect(mjs.det(source)).to.almost.equal(1);
+                    expect(mjs.det(target)).to.almost.equal(1);
+                    expect(mjs.det(activeRotation)).to.almost.equal(1);
+                    expect(mjs.multiply(activeRotation, source)).to.deep.almost.equal(target);
+                    expect(passiveRotation).to.deep.almost.equal(mjs.transpose(activeRotation));
+                    expect(configuration.singular.isSingular).to.equal(false);
+                    expect(configuration.euler.every(Number.isFinite)).to.equal(true);
+                    expect(configuration.euler[1]).to.be.within(0, PI);
+                }
+            }
+        }
     });
 
-    // spherical tensor
-    it('should calculate relative Euler angles correctly for spherical tensors', () => {
+    it('should report spherical relative orientations as indeterminate', () => {
 
         let A = new TensorData([
             [1,0,0],
@@ -647,31 +627,14 @@ describe('#tensordata', function() {
             [0,0,2]
         ]);
 
-        const equivalent_eulers = A.equivalentEulerTo(B, "zyz", true, 1e-12, true)
-        const ref_eulers = [
-            [  0.0,   0.0,   0.0],
-            [180.0, 180.0,   0.0],
-            [180.0, 180.0, 180.0],
-            [  0.0,   0.0, 180.0],
-            [  0.0, 180.0, 180.0],
-            [180.0,   0.0, 180.0],
-            [180.0,   0.0,   0.0],
-            [  0.0, 180.0,   0.0],
-            [180.0, 180.0, 180.0],
-            [  0.0,   0.0, 180.0],
-            [  0.0,   0.0,   0.0],
-            [180.0, 180.0,   0.0],
-            [180.0,   0.0,   0.0],
-            [  0.0, 180.0,   0.0],
-            [  0.0, 180.0, 180.0],
-            [180.0,   0.0, 180.0]
-        ];
-        expect(equivalent_eulers).to.deep.almost.equal(ref_eulers);
-
-
+        const orientation = A.relativeOrientationTo(B);
+        expect(orientation.orientationClass).to.equal('indeterminate');
+        expect(orientation.configurations).to.deep.equal([]);
+        expect(orientation.freeRotation).to.equal(null);
+        expect(orientation.configuration('source:identity|target:identity')).to.equal(null);
     });
 
-    it('calculates relative Euler angles correctly for general case', () => {
+    it('should reconstruct all relative rotations for the TensorView triaxial example', () => {
         // # ALA case from the TensorView for MATLAB examples dir
         // Note the ordering of the equivalent Euler angle sets is 
         // not the same as in TensorView for MATLAB,
@@ -690,102 +653,23 @@ describe('#tensordata', function() {
             [ 0.2987, 0.9829, -0.5929]
         ]);
 
-        let equivalent_eulers = A.equivalentEulerTo(B, "zyz", true, 1e-12, true)
-        let ref_eulers = [
-            [155.10491563,  89.95022697,  24.80660839],
-            [335.10491563,  90.04977303, 335.19339161],
-            [335.10491563,  90.04977303, 155.19339161],
-            [155.10491563,  89.95022697, 204.80660839],
-            [204.89508437,  90.04977303, 204.80660839],
-            [ 24.89508437,  89.95022697, 155.19339161],
-            [ 24.89508437,  89.95022697, 335.19339161],
-            [204.89508437,  90.04977303,  24.80660839],
-            [ 24.89508437,  90.04977303, 204.80660839],
-            [204.89508437,  89.95022697, 155.19339161],
-            [204.89508437,  89.95022697, 335.19339161],
-            [ 24.89508437,  90.04977303,  24.80660839],
-            [335.10491563,  89.95022697,  24.80660839],
-            [155.10491563,  90.04977303, 335.19339161],
-            [155.10491563,  90.04977303, 155.19339161],
-            [335.10491563,  89.95022697, 204.80660839],
-        ];
-        expect(equivalent_eulers).to.deep.almost.equal(ref_eulers);
-
-        // ZYZ passive
-        equivalent_eulers = A.equivalentEulerTo(B, "zyz", false, 1e-12, true)
-        ref_eulers = [
-            [ 155.19339161,  89.95022697,  24.89508437],
-            [ 204.80660839,  90.04977303, 204.89508437],
-            [  24.80660839,  90.04977303, 204.89508437],
-            [ 335.19339161,  89.95022697,  24.89508437],
-            [ 335.19339161,  90.04977303, 335.10491563],
-            [  24.80660839,  89.95022697, 155.10491563],
-            [ 204.80660839,  89.95022697, 155.10491563],
-            [ 155.19339161,  90.04977303, 335.10491563],
-            [ 335.19339161,  90.04977303, 155.10491563],
-            [  24.80660839,  89.95022697, 335.10491563],
-            [ 204.80660839,  89.95022697, 335.10491563],
-            [ 155.19339161,  90.04977303, 155.10491563],
-            [ 155.19339161,  89.95022697, 204.89508437],
-            [ 204.80660839,  90.04977303,  24.89508437],
-            [  24.80660839,  90.04977303,  24.89508437],
-            [ 335.19339161,  89.95022697, 204.89508437]
-        ];
-        expect(equivalent_eulers).to.deep.almost.equal(ref_eulers);
-
-        // ZXZ active
-        equivalent_eulers = A.equivalentEulerTo(B, "zxz", true, 1e-12, true)
-        ref_eulers = [
-            [245.10491563,  89.95022697, 114.80660839],
-            [ 65.10491563,  90.04977303, 245.19339161],
-            [ 65.10491563,  90.04977303,  65.19339161],
-            [245.10491563,  89.95022697, 294.80660839],
-            [114.89508437,  90.04977303, 294.80660839],
-            [294.89508437,  89.95022697,  65.19339161],
-            [294.89508437,  89.95022697, 245.19339161],
-            [114.89508437,  90.04977303, 114.80660839],
-            [294.89508437,  90.04977303, 294.80660839],
-            [114.89508437,  89.95022697,  65.19339161],
-            [114.89508437,  89.95022697, 245.19339161],
-            [294.89508437,  90.04977303, 114.80660839],
-            [ 65.10491563,  89.95022697, 114.80660839],
-            [245.10491563,  90.04977303, 245.19339161],
-            [245.10491563,  90.04977303,  65.19339161],
-            [ 65.10491563,  89.95022697, 294.80660839],
-        ];
-        expect(equivalent_eulers).to.deep.almost.equal(ref_eulers);
-
-        // ZXZ passive
-        equivalent_eulers = A.equivalentEulerTo(B, "zxz", false, 1e-12, true)
-        ref_eulers = [
-            [ 65.19339161,  89.95022697, 294.89508437],
-            [294.80660839,  90.04977303, 114.89508437],
-            [114.80660839,  90.04977303, 114.89508437],
-            [245.19339161,  89.95022697, 294.89508437],
-            [245.19339161,  90.04977303,  65.10491563],
-            [114.80660839,  89.95022697, 245.10491563],
-            [294.80660839,  89.95022697, 245.10491563],
-            [ 65.19339161,  90.04977303,  65.10491563],
-            [245.19339161,  90.04977303, 245.10491563],
-            [114.80660839,  89.95022697,  65.10491563],
-            [294.80660839,  89.95022697,  65.10491563],
-            [ 65.19339161,  90.04977303, 245.10491563],
-            [ 65.19339161,  89.95022697, 114.89508437],
-            [294.80660839,  90.04977303, 294.89508437],
-            [114.80660839,  90.04977303, 294.89508437],
-            [245.19339161,  89.95022697, 114.89508437],
-        ];
-        expect(equivalent_eulers).to.deep.almost.equal(ref_eulers);
-        // I manually re-ordered the reference angle sets, but we could 
-        // also use the deepAlmostEqualUnordered function
-        // assert.isTrue(deepAlmostEqualUnordered(equivalent_eulers, ref_eulers, 1e-3), 'Arrays are deeply almost equal');
+        for (const sequence of ['zyz', 'zxz']) {
+            for (const active of [true, false]) {
+                const orientation = A.relativeOrientationTo(B, { sequence, active });
+                expect(orientation.configurations).to.have.length(16);
+                for (const configuration of orientation.configurations) {
+                    const expected = active ? configuration.activeRotation : configuration.passiveRotation;
+                    expect(configuration.rotation).to.deep.almost.equal(expected);
+                }
+            }
+        }
 
 
 
     });
 
 
-    it('calculates relative Euler angles correctly for axial symmetry cases', () => {
+    it('should report axial tensor pairs as continuous orientation families', () => {
 
         // First an example from the MagresView2 tests 
         // (Both are axially symmetric tensors - tricky case!)
@@ -814,60 +698,16 @@ describe('#tensordata', function() {
         expect(B.euler("zyz", true, null, true)).to.deep.almost.equal([ 92.1953, 51.7056, 0.0])
 
 
-        let eulers = A.equivalentEulerTo(B, "zyz", true, 1e-4, true)
-        let ref_euler = [
-            [  0.0000,  85.5337,   0.0000], // 1
-            [180.0000,  94.4663,   0.0000], // 2
-            [180.0000,  94.4663, 180.0000], // 3
-            [  0.0000,  85.5337, 180.0000], // 4
-            [  0.0000,  94.4663, 180.0000], // 5
-            [180.0000,  85.5337, 180.0000], // 6
-            [180.0000,  85.5337,   0.0000], // 7
-            [  0.0000,  94.4663,   0.0000], // 8
-            [180.0000,  94.4663, 180.0000], // 9
-            [  0.0000,  85.5337, 180.0000], // 10
-            [  0.0000,  85.5337,   0.0000], // 11
-            [180.0000,  94.4663,   0.0000], // 12
-            [180.0000,  85.5337,   0.0000], // 13
-            [  0.0000,  94.4663,   0.0000], // 14
-            [  0.0000,  94.4663, 180.0000], // 15
-            [180.0000,  85.5337, 180.0000], // 16
-        ];
-        expect(eulers).to.deep.almost.equal(ref_euler);
-
-        // ZXZ
-
-        // Now let's check the individual Euler angles
-        expect(A.euler("zxz", true, null, true)).to.deep.almost.equal([ 279.8040, 87.5997, 0.0])
-        expect(B.euler("zxz", true, null, true)).to.deep.almost.equal([ 182.1953, 51.7056, 0.0])
-
-
-        eulers = A.equivalentEulerTo(B, "zxz", true, 1e-4, true)
-        ref_euler = [
-            [ 90.0000000,  85.53372296,   0.0000000], // 1
-            [270.0000000,  94.46627704,   0.0000000], // 2
-            [270.0000000,  94.46627704, 180.0000000], // 3
-            [ 90.0000000,  85.53372296, 180.0000000], // 4
-            [270.0000000,  94.46627704, 180.0000000], // 5
-            [ 90.0000000,  85.53372296, 180.0000000], // 6
-            [ 90.0000000,  85.53372296,   0.0000000], // 7
-            [270.0000000,  94.46627704,   0.0000000], // 8
-            [ 90.0000000,  94.46627704, 180.0000000], // 9
-            [270.0000000,  85.53372296, 180.0000000], // 10
-            [270.0000000,  85.53372296,   0.0000000], // 11
-            [ 90.0000000,  94.46627704,   0.0000000], // 12
-            [270.0000000,  85.53372296,   0.0000000], // 13
-            [ 90.0000000,  94.46627704,   0.0000000], // 14
-            [ 90.0000000,  94.46627704, 180.0000000], // 15
-            [270.0000000,  85.53372296, 180.0000000] // 16
-        ];
-        expect(eulers).to.deep.almost.equal(ref_euler);
-
+        const orientation = A.relativeOrientationTo(B, { tolerance: 1e-4 });
+        expect(orientation.sourceClass).to.equal('axial');
+        expect(orientation.targetClass).to.equal('axial');
+        expect(orientation.orientationClass).to.equal('continuous');
+        expect(orientation.configurations).to.deep.equal([]);
+        expect(orientation.freeRotation.source.uniqueAxis).to.equal(2);
+        expect(orientation.freeRotation.target.uniqueAxis).to.equal(2);
     });
 
-    // # Now let's test the case where the first tensor is axially symmetry 
-    // # and the second has no symmetry
-    it('calculates relative Euler angles correctly for mixed symmetry cases', () => {
+    it('should report mixed-symmetry tensor pairs as continuous orientation families', () => {
         let A = new TensorData([
             [1.0, 0.0, 0.0],
             [0.0, 2.0, 0.0],
@@ -878,159 +718,37 @@ describe('#tensordata', function() {
             [0.21, 2.00,  0.23],
             [0.31, 0.32, -6.00]
         ]);
-        let euler1 = A.euler("zyz", true, null, true);
-        let euler2 = B.euler("zyz", true, null, true);
-        expect(euler1).to.deep.almost.equal([90.0, 90.0, 0.0]);
-        expect(euler2).to.deep.almost.equal([80.51125,  87.80920, 178.59213]);
-
-        // ----------------------------------------------
-        // Non-axially symmetric -> axially symmetric
-        // (B->A (A is axially symmetric, B is not))
-        let eulers = B.equivalentEulerTo(A, "zyz", true, 1e-4, true)
-        let ref_zyza = [
-            [  0.000000,     9.73611618,  78.52514082],
-            [180.000000,   170.26388382, 281.47485918],
-            [180.000000,   170.26388382, 101.47485918],
-            [  0.000000,     9.73611618, 258.52514082],
-            [  0.000000,   170.26388382, 258.52514082],
-            [180.000000,     9.73611618, 101.47485918],
-            [180.000000,     9.73611618, 281.47485918],
-            [  0.000000,   170.26388382,  78.52514082],
-            [180.000000,   170.26388382, 258.52514082],
-            [  0.000000,     9.73611618, 101.47485918],
-            [  0.000000,     9.73611618, 281.47485918],
-            [180.000000,   170.26388382,  78.52514082],
-            [180.000000,     9.73611618,  78.52514082],
-            [  0.000000,   170.26388382, 281.47485918],
-            [  0.000000,   170.26388382, 101.47485918],
-            [180.000000,     9.73611618, 258.52514082],
-        ];
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zyza, 1e-3), 'Arrays are deeply almost equal');
-
-        // ZYZ passive
-        eulers = B.equivalentEulerTo(A, "zyz", false, 1e-4, true)
-        let ref_zyzp = [
-            [ 78.52514082,   9.73611618,   0.00000000 ],
-            [281.47485918, 170.26388382, 180.00000000 ],
-            [101.47485918, 170.26388382, 180.00000000 ],
-            [258.52514082,   9.73611618,   0.00000000 ],
-            [258.52514082, 170.26388382,   0.00000000 ],
-            [101.47485918,   9.73611618, 180.00000000 ],
-            [281.47485918,   9.73611618, 180.00000000 ],
-            [ 78.52514082, 170.26388382,   0.00000000 ],
-            [258.52514082, 170.26388382, 180.00000000 ],
-            [101.47485918,   9.73611618,   0.00000000 ],
-            [281.47485918,   9.73611618,   0.00000000 ],
-            [ 78.52514082, 170.26388382, 180.00000000 ],
-            [ 78.52514082,   9.73611618, 180.00000000 ],
-            [281.47485918, 170.26388382,   0.00000000 ],
-            [101.47485918, 170.26388382,   0.00000000 ],
-            [258.52514082,   9.73611618, 180.00000000 ],
-        ];
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zyzp, 1e-3), 'Arrays are deeply almost equal');
-
-        // ZXZ active
-        eulers = B.equivalentEulerTo(A, "zxz", true, 1e-4, true)
-        let ref_zxza = [
-            [  0.000000,     9.73611618, 348.52514082],
-            [180.000000,   170.26388382,  11.47485918],
-            [180.000000,   170.26388382, 191.47485918],
-            [  0.000000,     9.73611618, 168.52514082],
-            [  0.000000,   170.26388382, 168.52514082],
-            [180.000000,     9.73611618, 191.47485918],
-            [180.000000,     9.73611618,  11.47485918],
-            [  0.000000,   170.26388382, 348.52514082],
-            [180.000000,   170.26388382, 168.52514082],
-            [  0.000000,     9.73611618, 191.47485918],
-            [  0.000000,     9.73611618,  11.47485918],
-            [180.000000,   170.26388382, 348.52514082],
-            [180.000000,     9.73611618, 348.52514082],
-            [  0.000000,   170.26388382,  11.47485918],
-            [  0.000000,   170.26388382, 191.47485918],
-            [180.000000,     9.73611618 ,168.52514082]
-        ];
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zxza, 1e-3), 'Arrays are deeply almost equal');
-
-        // ZXZ passive
-        eulers = B.equivalentEulerTo(A, "zxz", false, 1e-4, true)
-        let ref_zxzp = [
-            [348.52514082,   9.73611618,   0.00000000 ],
-            [ 11.47485918, 170.26388382, 180.00000000 ],
-            [191.47485918, 170.26388382, 180.00000000 ],
-            [168.52514082,   9.73611618,   0.00000000 ],
-            [168.52514082, 170.26388382,   0.00000000 ],
-            [191.47485918,   9.73611618, 180.00000000 ],
-            [ 11.47485918,   9.73611618, 180.00000000 ],
-            [348.52514082, 170.26388382,   0.00000000 ],
-            [168.52514082, 170.26388382, 180.00000000 ],
-            [191.47485918,   9.73611618,   0.00000000 ],
-            [ 11.47485918,   9.73611618,   0.00000000 ],
-            [348.52514082, 170.26388382, 180.00000000 ],
-            [348.52514082,   9.73611618, 180.00000000 ],
-            [ 11.47485918, 170.26388382,   0.00000000 ],
-            [191.47485918, 170.26388382,   0.00000000 ],
-            [168.52514082,   9.73611618, 180.00000000 ],
-        ];
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zxzp, 1e-3), 'Arrays are deeply almost equal');
-
-
-
-        // ----------------------------------------------
-        // Axially symmetric -> non-axially symmetric
-
-        // ZYZ active
-        // active zyz from A to B should give the same results as passive B to A, ignoring order 
-        eulers = A.equivalentEulerTo(B, "zyz", true, 1e-4, true)
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zyzp, 1e-3), 'Arrays are deeply almost equal');
-
-        // ZYZ passive
-        // active zyz from A to B should give the same results as active B to A, ignoring order of 
-        eulers = A.equivalentEulerTo(B, "zyz", false, 1e-4, true)
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zyza, 1e-3), 'Arrays are deeply almost equal');
-
-        // ZXZ active
-        // active zxz from A to B should give the same results as passive B to A, ignoring order
-        eulers = A.equivalentEulerTo(B, "zxz", true, 1e-4, true)
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zxzp, 1e-3), 'Arrays are deeply almost equal');
-
-        // ZXZ passive
-        // passive zxz from A to B should give the same results as active B to A, ignoring order
-        eulers = A.equivalentEulerTo(B, "zxz", false, 1e-4, true)
-        assert.isTrue(deepAlmostEqualUnordered(eulers, ref_zxza, 1e-3), 'Arrays are deeply almost equal');
-
-
+        const forward = B.relativeOrientationTo(A, { tolerance: 1e-4 });
+        const reverse = A.relativeOrientationTo(B, { tolerance: 1e-4 });
+        expect(forward.orientationClass).to.equal('continuous');
+        expect(reverse.orientationClass).to.equal('continuous');
+        expect(forward.configurations).to.deep.equal([]);
+        expect(reverse.configurations).to.deep.equal([]);
+        expect(forward.freeRotation.source).to.equal(null);
+        expect(forward.freeRotation.target.uniqueAxis).to.equal(2);
+        expect(reverse.freeRotation.source.uniqueAxis).to.equal(2);
+        expect(reverse.freeRotation.target).to.equal(null);
     });
 
 
 
 
-    it('calculates relative Euler angles correctly for gimbal lock case', () => {
-
-        const c30 = mjs.sqrt(3)/ 2.0;
-        const c45 = mjs.sqrt(2) / 2.0;
-        const c60 = 0.5;
-        // 
-        let A = new TensorData([
-            [c30,  c60, 0.0],
-            [-c60, c30, 0.0],
-            [ 0.0, 0.0, 1.0]
-        ]);
-        // 
-        let B = new TensorData([
-            [c45,  c45, 0.0],
-            [-c45, c45, 0.0],
-            [ 0.0, 0.0, 1.0]
-        ]);
-
-        const eulers1 = A.eulerTo(B, "zyz", true, 1e-12)
-        const eulers2 = A.eulerTo(B, "zxz", true, 1e-12,)
-        const eulers3 = A.eulerTo(B, "zyz", false, 1e-12)
-        const eulers4 = A.eulerTo(B, "zxz", false, 1e-12)
-        const ref_euler = [0.0, 0.0, 0.0];
-        expect(eulers1).to.deep.almost.equal(ref_euler);
-        expect(eulers2).to.deep.almost.equal(ref_euler);
-        expect(eulers3).to.deep.almost.equal(ref_euler);
-        expect(eulers4).to.deep.almost.equal(ref_euler);
+    it('should mark parallel and anti-parallel triaxial PAS frames as singular', () => {
+        const tensor = new TensorData([[1, 0, 0], [0, 2, 0], [0, 0, 3]]);
+        for (const sequence of ['zyz', 'zxz']) {
+            for (const active of [true, false]) {
+                const orientation = tensor.relativeOrientationTo(tensor, { sequence, active });
+                expect(orientation.configurations).to.have.length(16);
+                for (const configuration of orientation.configurations) {
+                    expect(configuration.singular.isSingular).to.equal(true);
+                    expect(configuration.singular.lineOfNodesDefined).to.equal(false);
+                    expect(configuration.singular.gauge).to.equal('gamma-zero');
+                    expect(configuration.euler[2]).to.almost.equal(0);
+                    const zAlignment = configuration.rotation[2][2];
+                    expect(configuration.euler[1]).to.almost.equal(zAlignment > 0 ? 0 : PI);
+                }
+            }
+        }
     });
 
 
