@@ -105,5 +105,10 @@
   },
   "overrides": {
     "minimist": "$minimist"
-  }
+  },
+  "files": [
+    "lib",
+    "index.js",
+    "schemas"
+  ]
 }
