@@ -43,7 +43,10 @@ _Avoid_: ambiguous tensor
 The displayed but physically arbitrary transverse-axis orientation chosen for an axial PAS; its free rotation is explicit and is not included in the discrete configuration count.
 
 **Orientation class**:
-The physical determinacy of a relative tensor orientation: `discrete` for a finite set of PAS-frame configurations, `continuous` for an axial free rotation about a unique axis, or `indeterminate` for a spherical tensor.
+The physical determinacy of a relative tensor orientation: `discrete` for a finite set of PAS-frame configurations (including an axial tensor whose unique axis lies on the PAS Z, whose free rotation is gauged to zero), `continuous` for the fallback case where an axial tensor's chosen ordering places its unique axis on X so there is no simple single-angle gauge (shown statically), or `indeterminate` for a spherical tensor.
+
+**Gauged Euler angle**:
+The Euler angle corresponding to the free rotation about an axial tensor's unique axis, fixed to zero by convention: the last angle (γ, active) for an axial target, the first (α, active) for an axial source, both when both tensors are axial. It is displayed as zero and marked by the reference-gauge ring rather than a rotation arc.
 
 **Configuration transition**:
 An animation between PAS-frame configurations that interpolates the source and target PAS frames independently, then derives the changing relative rotation and visual annotations from those frames.

@@ -653,13 +653,31 @@ describe('#tensordata', function() {
             [ 0.2987, 0.9829, -0.5929]
         ]);
 
+        // Reconstruct the intrinsic relative rotation (z-y-z / z-x-z) from the
+        // reported Euler angles, and check the physical invariants.
+        const rz = a => [[Math.cos(a), -Math.sin(a), 0], [Math.sin(a), Math.cos(a), 0], [0, 0, 1]];
+        function eulerRotation(alpha, beta, gamma, sequence, active) {
+            const middle = sequence === 'zyz'
+                ? [[Math.cos(beta), 0, Math.sin(beta)], [0, 1, 0], [-Math.sin(beta), 0, Math.cos(beta)]]
+                : [[1, 0, 0], [0, Math.cos(beta), -Math.sin(beta)], [0, Math.sin(beta), Math.cos(beta)]];
+            const first = mjs.matrix(rz(alpha));
+            const last = mjs.matrix(rz(gamma));
+            return active
+                ? mjs.multiply(mjs.multiply(first, middle), last)
+                : mjs.multiply(mjs.multiply(mjs.inv(last), mjs.inv(middle)), mjs.inv(first));
+        }
+
         for (const sequence of ['zyz', 'zxz']) {
             for (const active of [true, false]) {
                 const orientation = A.relativeOrientationTo(B, { sequence, active });
                 expect(orientation.configurations).to.have.length(16);
                 for (const configuration of orientation.configurations) {
-                    const expected = active ? configuration.activeRotation : configuration.passiveRotation;
-                    expect(configuration.rotation).to.deep.almost.equal(expected);
+                    // Euler angles reconstruct the (intrinsic) relative rotation.
+                    const reconstructed = eulerRotation(...configuration.euler, sequence, active);
+                    expect(reconstructed).to.deep.almost.equal(mjs.matrix(configuration.rotation));
+                    // The lab-frame active rotation maps the source frame onto the target.
+                    expect(mjs.multiply(mjs.matrix(configuration.activeRotation), mjs.matrix(configuration.source.frame)))
+                        .to.deep.almost.equal(mjs.matrix(configuration.target.frame));
                 }
             }
         }
@@ -669,7 +687,7 @@ describe('#tensordata', function() {
     });
 
 
-    it('should report axial tensor pairs as continuous orientation families', () => {
+    it('should give axial tensor pairs (unique axis on Z) a discrete gauged solution', () => {
 
         // First an example from the MagresView2 tests 
         // (Both are axially symmetric tensors - tricky case!)
@@ -701,13 +719,18 @@ describe('#tensordata', function() {
         const orientation = A.relativeOrientationTo(B, { tolerance: 1e-4 });
         expect(orientation.sourceClass).to.equal('axial');
         expect(orientation.targetClass).to.equal('axial');
-        expect(orientation.orientationClass).to.equal('continuous');
-        expect(orientation.configurations).to.deep.equal([]);
-        expect(orientation.freeRotation.source.uniqueAxis).to.equal(2);
-        expect(orientation.freeRotation.target.uniqueAxis).to.equal(2);
+        // Both unique axes on Z ⇒ discrete, alpha=gamma=0, deduped to 4 configs.
+        expect(orientation.orientationClass).to.equal('discrete');
+        expect(orientation.configurations).to.have.length(4);
+        for (const c of orientation.configurations) {
+            expect(c.euler[0]).to.equal(0);
+            expect(c.euler[2]).to.equal(0);
+            expect(c.gauge.axialSource).to.equal(true);
+            expect(c.gauge.axialTarget).to.equal(true);
+        }
     });
 
-    it('should report mixed-symmetry tensor pairs as continuous orientation families', () => {
+    it('should give mixed-symmetry (one axial, unique on Z) pairs a discrete gauged solution', () => {
         let A = new TensorData([
             [1.0, 0.0, 0.0],
             [0.0, 2.0, 0.0],
@@ -718,16 +741,15 @@ describe('#tensordata', function() {
             [0.21, 2.00,  0.23],
             [0.31, 0.32, -6.00]
         ]);
-        const forward = B.relativeOrientationTo(A, { tolerance: 1e-4 });
-        const reverse = A.relativeOrientationTo(B, { tolerance: 1e-4 });
-        expect(forward.orientationClass).to.equal('continuous');
-        expect(reverse.orientationClass).to.equal('continuous');
-        expect(forward.configurations).to.deep.equal([]);
-        expect(reverse.configurations).to.deep.equal([]);
-        expect(forward.freeRotation.source).to.equal(null);
-        expect(forward.freeRotation.target.uniqueAxis).to.equal(2);
-        expect(reverse.freeRotation.source.uniqueAxis).to.equal(2);
-        expect(reverse.freeRotation.target).to.equal(null);
+        // A is axial with its unique axis on Z (eigenvalues 1,1,2 → Haeberlen z).
+        const forward = B.relativeOrientationTo(A, { tolerance: 1e-4 });  // target axial
+        const reverse = A.relativeOrientationTo(B, { tolerance: 1e-4 });  // source axial
+        expect(forward.orientationClass).to.equal('discrete');
+        expect(reverse.orientationClass).to.equal('discrete');
+        expect(forward.configurations).to.have.length(8);
+        expect(reverse.configurations).to.have.length(8);
+        for (const c of forward.configurations) expect(c.euler[2]).to.equal(0);  // gamma gauged
+        for (const c of reverse.configurations) expect(c.euler[0]).to.equal(0);  // alpha gauged
     });
 
 

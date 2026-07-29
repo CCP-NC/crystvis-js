@@ -76,3 +76,5 @@ docs/*
 # Yalc
 .yalc
 yalc.lock
+
+.serena
