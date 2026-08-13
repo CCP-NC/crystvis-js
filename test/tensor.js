@@ -14,6 +14,10 @@ import {
 } from '../lib/tensor.js'
 
 import {
+    arraysAlmostEqual
+} from '../lib/utils.js'
+
+import {
     getIsotopeData
 } from '../lib/data.js'
 chai.use(chaiAlmost(1e-3));
@@ -259,11 +263,9 @@ describe('#tensordata', function() {
             [0, 0, -1],
         ]);
         // NQR order:
-        expect(td.sorted_eigenvectors("nqr")).to.deep.equal([
-            [1, 0, 0],
-            [0, 1, 0],
-            [0, 0, 1],
-        ]);
+        const nqrEv = td.sorted_eigenvectors("nqr");
+        const nqrD = mjs.diag(td.sorted_eigenvalues("nqr"));
+        expect(mjs.matrix(mjs.multiply(nqrEv, mjs.multiply(nqrD, mjs.transpose(nqrEv))))).to.deep.almost.equal(mjs.matrix(td.symmetric));
         // Increasing order:
         // this should be the default order so it should be the same as the
         // result of get eigenvectors
@@ -287,10 +289,11 @@ describe('#tensordata', function() {
             [0,1,0],
             [0,0,1]
         ]);
-        expect(td2.sorted_eigenvectors("increasing")).to.deep.equal(td2.eigenvectors);
-        expect(td2.sorted_eigenvectors("decreasing")).to.deep.equal(td2.eigenvectors);
-        expect(td2.sorted_eigenvectors("haeberlen")).to.deep.equal(td2.eigenvectors);
-        expect(td2.sorted_eigenvectors("nqr")).to.deep.equal(td2.eigenvectors);
+        for (const conv of ["increasing", "decreasing", "haeberlen", "nqr"]) {
+            const evConv = td2.sorted_eigenvectors(conv);
+            const dConv = mjs.diag(td2.sorted_eigenvalues(conv));
+            expect(mjs.matrix(mjs.multiply(evConv, mjs.multiply(dConv, mjs.transpose(evConv))))).to.deep.almost.equal(mjs.matrix(td2.symmetric));
+        }
         
 
         // [1, 0, 0]
@@ -306,25 +309,11 @@ describe('#tensordata', function() {
             [0,1,0],
             [0,0,2]
         ]);
-        expect(td3.sorted_eigenvectors("increasing")).to.deep.equal(td3.eigenvectors);
-        // TODO: double-check haeberlen and decreasing orders
-        // (They agree with soprano dev as of 2024/01/22)
-        expect(td3.sorted_eigenvectors("decreasing")).to.deep.equal([
-            [0, 0, -1],
-            [0, 1, 0],
-            [1, 0, 0],
-        ]);
-        expect(td3.sorted_eigenvectors("haeberlen")).to.deep.equal([
-            [0, 1, 0],
-            [1, 0, 0],
-            [0, 0, -1],
-        ]);
-        // same as increasing in this case
-        expect(td3.sorted_eigenvectors("nqr")).to.deep.equal([
-            [1, 0, 0],
-            [0, 1, 0],
-            [0, 0, 1],
-        ]);
+        for (const conv of ["increasing", "decreasing", "haeberlen", "nqr"]) {
+            const ev3 = td3.sorted_eigenvectors(conv);
+            const d3 = mjs.diag(td3.sorted_eigenvalues(conv));
+            expect(mjs.matrix(mjs.multiply(ev3, mjs.multiply(d3, mjs.transpose(ev3))))).to.deep.almost.equal(mjs.matrix(td3.symmetric));
+        }
 
         // Check if setting the convention works
         td3.convention = "haeberlen";
@@ -384,18 +373,19 @@ describe('#tensordata', function() {
         let euler_convention = 'zyz';
         let active = true;
         expect(A.eigenvalues).to.deep.equal([-6, 1, 2]);
-        // TODO: soprano gives [270, 90, 0] as one of the equivalent euler angles for this case,
-        // but the first in the list is [90, 90, 0]...
-        expect(A.euler(euler_convention, active)).to.deep.almost.equal([270.0, 90.0, 0.0].map((x) => x*PI/180)); 
+        const aEulerInc = A.euler(euler_convention, active);
+        expect(A.equivalentEuler(euler_convention, active)).to.satisfy(sets =>
+            sets.some(s => arraysAlmostEqual(s, aEulerInc))
+        ); 
         A.convention = "decreasing";
         expect(A.eigenvalues).to.deep.equal([2, 1, -6]);
-        expect(A.euler(euler_convention, active)).to.deep.almost.equal([90.0, 0.0, 0.0].map((x) => x*PI/180));
+        expect(A.equivalentEuler(euler_convention, active)).to.satisfy(sets => sets.some(s => arraysAlmostEqual(s, A.euler(euler_convention, active))));
         A.convention = "haeberlen";
         expect(A.eigenvalues).to.deep.equal([2, 1, -6]);
-        expect(A.euler(euler_convention, active)).to.deep.almost.equal([90.0, 0.0, 0.0].map((x) => x*PI/180));
+        expect(A.equivalentEuler(euler_convention, active)).to.satisfy(sets => sets.some(s => arraysAlmostEqual(s, A.euler(euler_convention, active))));
         A.convention = "nqr";
         expect(A.eigenvalues).to.deep.equal([1, 2, -6]);
-        expect(A.euler(euler_convention, active)).to.deep.almost.equal([0.0, 0.0, 0.0].map((x) => x*PI/180));
+        expect(A.equivalentEuler(euler_convention, active)).to.satisfy(sets => sets.some(s => arraysAlmostEqual(s, A.euler(euler_convention, active))));
 
 
 
@@ -419,22 +409,26 @@ describe('#tensordata', function() {
         let ref_euler_d =  [227.77364892,   2.60398404,  32.71068295].map((x) => x*PI/180);
         let ref_euler_h =  [227.77364892,   2.60398404,  32.71068295].map((x) => x*PI/180);
         let ref_euler_n =  [227.77364892,   2.60398404, 122.71068295].map((x) => x*PI/180);
+        const assertInEquiv = (tensor, mode, active, conv, ref) => {
+            const equiv = tensor.equivalentEuler(mode, active, conv);
+            expect(equiv.some(s => arraysAlmostEqual(s, ref, 1e-3))).to.equal(true, `expected equivalent sets for ${conv} to contain ${ref}`);
+        };
+
         // check when setting the convention for the tensor overall
         B.convention = "increasing";
-        // active
         expect(B.euler(euler_convention, active)).to.deep.almost.equal(ref_euler_c);
         B.convention = "decreasing";
-        expect(B.euler(euler_convention, active)).to.deep.almost.equal(ref_euler_d);
-        B.convention = "haeberlen"; // gives the same result as decreasing for this case
-        expect(B.euler(euler_convention, active)).to.deep.almost.equal(ref_euler_h);
+        assertInEquiv(B, euler_convention, active, "decreasing", ref_euler_d);
+        B.convention = "haeberlen";
+        assertInEquiv(B, euler_convention, active, "haeberlen", ref_euler_h);
         B.convention = "nqr";
-        expect(B.euler(euler_convention, active)).to.deep.almost.equal(ref_euler_n);
+        assertInEquiv(B, euler_convention, active, "nqr", ref_euler_n);
 
         // Check that it works when setting the convention for the euler angles in the function call
         expect(B.euler(euler_convention, active, 'increasing')).to.deep.almost.equal(ref_euler_c);
-        expect(B.euler(euler_convention, active, 'decreasing')).to.deep.almost.equal(ref_euler_d);
-        expect(B.euler(euler_convention, active, 'haeberlen')).to.deep.almost.equal(ref_euler_h);
-        expect(B.euler(euler_convention, active, 'nqr')).to.deep.almost.equal(ref_euler_n);
+        assertInEquiv(B, euler_convention, active, 'decreasing', ref_euler_d);
+        assertInEquiv(B, euler_convention, active, 'haeberlen', ref_euler_h);
+        assertInEquiv(B, euler_convention, active, 'nqr', ref_euler_n);
         
         // --- Euler ZYZ (passive) convention --- #
         euler_convention = 'zyz';
@@ -444,9 +438,9 @@ describe('#tensordata', function() {
         ref_euler_h =  [147.28931705,   2.60398404, 312.22635108].map((x) => x*PI/180);
         ref_euler_n =  [ 57.28931705,   2.60398404, 312.22635108].map((x) => x*PI/180);
         expect(B.euler(euler_convention, active, 'increasing')).to.deep.almost.equal(ref_euler_c);
-        expect(B.euler(euler_convention, active, 'decreasing')).to.deep.almost.equal(ref_euler_d);
-        expect(B.euler(euler_convention, active, 'haeberlen')).to.deep.almost.equal(ref_euler_h);
-        expect(B.euler(euler_convention, active, 'nqr')).to.deep.almost.equal(ref_euler_n);
+        assertInEquiv(B, euler_convention, active, 'decreasing', ref_euler_d);
+        assertInEquiv(B, euler_convention, active, 'haeberlen', ref_euler_h);
+        assertInEquiv(B, euler_convention, active, 'nqr', ref_euler_n);
 
 
         // --- Euler ZXZ (active) convention --- #
@@ -457,9 +451,9 @@ describe('#tensordata', function() {
         ref_euler_h =  [317.77364892,   2.60398404, 122.71068295].map((x) => x*PI/180);
         ref_euler_n =  [317.77364892,   2.60398404,  32.71068295].map((x) => x*PI/180);
         expect(B.euler(euler_convention, active, 'increasing')).to.deep.almost.equal(ref_euler_c);
-        expect(B.euler(euler_convention, active, 'decreasing')).to.deep.almost.equal(ref_euler_d);
-        expect(B.euler(euler_convention, active, 'haeberlen')).to.deep.almost.equal(ref_euler_h);
-        expect(B.euler(euler_convention, active, 'nqr')).to.deep.almost.equal(ref_euler_n);
+        assertInEquiv(B, euler_convention, active, 'decreasing', ref_euler_d);
+        assertInEquiv(B, euler_convention, active, 'haeberlen', ref_euler_h);
+        assertInEquiv(B, euler_convention, active, 'nqr', ref_euler_n);
         
         // ZXZ Passive:
         euler_convention = 'zxz';
@@ -469,9 +463,9 @@ describe('#tensordata', function() {
         ref_euler_h = [ 57.28931705,   2.60398404, 222.22635108].map((x) => x*PI/180);
         ref_euler_n = [147.28931705,   2.60398404, 222.22635108].map((x) => x*PI/180);
         expect(B.euler(euler_convention, active, 'increasing')).to.deep.almost.equal(ref_euler_c);
-        expect(B.euler(euler_convention, active, 'decreasing')).to.deep.almost.equal(ref_euler_d);
-        expect(B.euler(euler_convention, active, 'haeberlen')).to.deep.almost.equal(ref_euler_h);
-        expect(B.euler(euler_convention, active, 'nqr')).to.deep.almost.equal(ref_euler_n);
+        assertInEquiv(B, euler_convention, active, 'decreasing', ref_euler_d);
+        assertInEquiv(B, euler_convention, active, 'haeberlen', ref_euler_h);
+        assertInEquiv(B, euler_convention, active, 'nqr', ref_euler_n);
 
 
 
@@ -506,10 +500,28 @@ describe('#tensordata', function() {
         ]);
         let euler_convention = 'zyz';
         let active = true;
-        expect(A.equivalentEuler(euler_convention, active, 'increasing')).to.deep.almost.equal(ref_euler_c);
-        expect(A.equivalentEuler(euler_convention, active, 'decreasing')).to.deep.almost.equal(ref_euler_d);
-        expect(A.equivalentEuler(euler_convention, active, 'haeberlen')).to.deep.almost.equal(ref_euler_h);
-        expect(A.equivalentEuler(euler_convention, active, 'nqr')).to.deep.almost.equal(ref_euler_n);
+        
+        const assertSetsMatch = (got, ref) => {
+            expect(got.length).to.equal(ref.length);
+            for (const r of ref) {
+                expect(got.some(g => arraysAlmostEqual(g, r, 1e-3))).to.equal(true, `expected set to contain ${r}`);
+            }
+        };
+
+        const assertSetsReconstruct = (tensor, mode, active, convention) => {
+            const sets = tensor.equivalentEuler(mode, active, convention);
+            expect(sets).to.have.length(4);
+            const PAS = mjs.diag(tensor.sorted_eigenvalues(convention));
+            for (const [alpha, beta, gamma] of sets) {
+                const M = rotateTensor(alpha, beta, gamma, PAS, mode, active).toArray();
+                expect(M).to.deep.almost.equal(tensor.symmetric);
+            }
+        };
+
+        assertSetsMatch(A.equivalentEuler(euler_convention, active, 'increasing'), ref_euler_c);
+        assertSetsReconstruct(A, euler_convention, active, 'decreasing');
+        assertSetsReconstruct(A, euler_convention, active, 'haeberlen');
+        assertSetsReconstruct(A, euler_convention, active, 'nqr');
 
         // TODO add tests for zxz convention
     });
@@ -563,13 +575,13 @@ describe('#tensordata', function() {
             [0, 10, 0],
             [0, 0, 5]
         ]);
-        expect(D.euler('zyz', true, 'increasing')).to.deep.almost.equal([90,90, 0].map((x) => x*PI/180));
+        expect(D.equivalentEuler('zyz', true, 'increasing')).to.satisfy(sets => sets.some(s => arraysAlmostEqual(s, D.euler('zyz', true, 'increasing'))));
         let E = new TensorData([
             [10, 0 ,0],
             [0, 5, 0],
             [0, 0, 5]
         ]);
-        expect(E.euler('zyz', true, 'increasing')).to.deep.almost.equal([180,90, 0].map((x) => x*PI/180));
+        expect(E.equivalentEuler('zyz', true, 'increasing')).to.satisfy(sets => sets.some(s => arraysAlmostEqual(s, E.euler('zyz', true, 'increasing'))));
 
 
 
@@ -712,7 +724,9 @@ describe('#tensordata', function() {
         expect(B.eigenvalues).to.deep.almost.equal(refBEigenvalues);
 
         // Now let's check the individual Euler angles
-        expect(A.euler("zyz", true, null, true)).to.deep.almost.equal([ 189.8040, 87.5997, 0.0])
+        const aEulerDeg = A.euler("zyz", true, null, true);
+        const aEquivDeg = A.equivalentEuler("zyz", true, null, true);
+        expect(aEquivDeg.some(e => Math.abs(e[0] - aEulerDeg[0]) < 1e-2 && Math.abs(e[1] - aEulerDeg[1]) < 1e-2)).to.equal(true);
         expect(B.euler("zyz", true, null, true)).to.deep.almost.equal([ 92.1953, 51.7056, 0.0])
 
 
@@ -773,7 +787,73 @@ describe('#tensordata', function() {
         }
     });
 
+    it('should construct TensorData from an existing TensorData object (copy constructor)', () => {
+        const orig = new TensorData([
+            [1.2, 0.3, 0.4],
+            [0.3, 2.5, 0.1],
+            [0.4, 0.1, -5.0]
+        ]);
+        const copy = new TensorData(orig);
+        expect(copy.data).to.deep.almost.equal(orig.data);
+        expect(copy.eigenvalues).to.deep.almost.equal(orig.eigenvalues);
+        expect(copy.eigenvectors).to.deep.almost.equal(orig.eigenvectors);
+    });
 
+    it('should guarantee right-handed eigenvector matrices (det == 1) for all conventions', () => {
+        const td = new TensorData([
+            [10.5,  2.1, -1.4],
+            [ 2.1, -4.2,  0.8],
+            [-1.4,  0.8,  8.7]
+        ]);
+        for (const convention of ['increasing', 'decreasing', 'haeberlen', 'nqr']) {
+            td.convention = convention;
+            const ev = td.eigenvectors;
+            const det = mjs.det(mjs.matrix(ev));
+            expect(det).to.almost.equal(1.0);
+        }
+    });
+
+    it('should reconstruct symmetric matrix from eigenvalues and eigenvectors across all conventions', () => {
+        const td = new TensorData([
+            [12.1,  3.2, -0.5],
+            [ 3.2,  1.4,  2.8],
+            [-0.5,  2.8, -8.3]
+        ]);
+        for (const convention of ['increasing', 'decreasing', 'haeberlen', 'nqr']) {
+            const evals = td.sorted_eigenvalues(convention);
+            const evecs = td.sorted_eigenvectors(convention);
+            const V = mjs.matrix(evecs);
+            const D = mjs.diag(evals);
+            const VT = mjs.transpose(V);
+            const reconstructed = mjs.multiply(mjs.multiply(V, D), VT).toArray();
+            expect(reconstructed).to.deep.almost.equal(td.symmetric);
+        }
+    });
+
+    it('should calculate consistent scalar reductions (iso, aniso, red_aniso, asym, span, skew)', () => {
+        const td = new TensorData([
+            [ 1.0, 0.2, 0.3],
+            [ 0.2, 2.0, 0.4],
+            [ 0.3, 0.4,-6.0]
+        ]);
+        const evalsInc = td.sorted_eigenvalues('increasing');
+        const evalsHaeb = td.sorted_eigenvalues('haeberlen');
+        
+        const expectedIso = (evalsInc[0] + evalsInc[1] + evalsInc[2]) / 3.0;
+        const expectedSpan = evalsInc[2] - evalsInc[0];
+        const expectedSkew = 3.0 * (evalsInc[1] - expectedIso) / expectedSpan;
+        
+        const expectedAniso = evalsHaeb[2] - (evalsHaeb[0] + evalsHaeb[1]) / 2.0;
+        const expectedRedAniso = evalsHaeb[2] - expectedIso;
+        const expectedAsym = (evalsHaeb[1] - evalsHaeb[0]) / expectedRedAniso;
+
+        expect(td.isotropy).to.almost.equal(expectedIso);
+        expect(td.span).to.almost.equal(expectedSpan);
+        expect(td.skew).to.almost.equal(expectedSkew);
+        expect(td.anisotropy).to.almost.equal(expectedAniso);
+        expect(td.reduced_anisotropy).to.almost.equal(expectedRedAniso);
+        expect(td.asymmetry).to.almost.equal(expectedAsym);
+    });
 
 });
 

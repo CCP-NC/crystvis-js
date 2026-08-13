@@ -17,5 +17,8 @@ esbuild.build({
     define: {
         'global': 'globalThis',
     },
+    loader: {
+        '.wasm': 'binary',
+    },
     inject: [path.join(__dirname, 'plugins-shim.js')],
 }).catch(() => process.exit(1));

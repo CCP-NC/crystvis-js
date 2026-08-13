@@ -81,6 +81,7 @@
     "lodash": "^4.18.1",
     "mathjs": "^14.9.1",
     "mendeleev": "^1.2.2",
+    "nmrtensor-wasm": "file:../nmrtensor/wasm/pkg",
     "three": "^0.178.0",
     "yargs-parser": "^22.0.0"
   },
