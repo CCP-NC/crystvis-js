@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Added
+- New documentation site with task-oriented guides (getting started, loading, selecting, styling, NMR tensors) and live, runnable examples. It is built by `npm run docs` from `docs-src/` alongside the JSDoc API reference, which now also covers `TensorData` and `RelativeTensorOrientation`.
+- `AGENTS.md`, with architecture notes, conventions, and known gotchas for contributors and coding agents.
+- `CrystVis.fitCamera(view, padding)` centres the camera on a set of atoms (by default the displayed ones) and zooms so they fill the view.
+- A `labels` query selects atoms by crystallographic site label, for example `model.find({labels: ['O1', 'O2']})`.
+- `RelativeTensorOrientation#canonicalConfigurations` lists the configurations whose Euler angles lie in the canonical NMR ranges.
+- `loadModels()` accepts the parser options `frame` (which frame of a multi-frame XYZ file to load), `shieldingTag` and `efgTag`.
+
+### Changed
+- `displayModel()` now fits the camera to the displayed atoms, instead of using a fixed 40 Å view centred on the cell. A saved view can still be restored with `setCameraState()` after `displayModel()`.
+- The `elements`, `indices`, `labels` and `molecule` queries accept a flat list, so `{elements: ['Si', 'O']}` selects both elements. Previously only the first value was used, unless the list was wrapped as `[['Si', 'O']]`, which still works.
+- Objects added with `addPrimitive()` now persist across `displayModel()` calls until `removePrimitive()`.
+- `reloadModel()` merges the new parameters over the model's current ones, instead of resetting the rest to defaults.
+- Every error is now thrown as an `Error`. Some were thrown as plain strings, such as an unknown model name in `displayModel()`.
+- Atom labels default to the theme's label colour, and link labels to the link colour. Both used to be white whatever the theme. Link labels also accept a separate `labelColor`.
+- `addEllipsoids()` skips atoms with no data, such as `hf` on atoms without hyperfine data, instead of throwing. It also no longer changes the `convention` of the tensor passed in.
+- `setProperty('visible')` with no value resets atoms to visible. The `visible`, `highlighted`, `opacity`, `radius` and `scale` setters no longer throw while the model is not displayed.
+- `model.addSphere()` accepts an atom as its centre.
+- The default box-selection handler no longer logs to the console.
+
+### Fixed
+- Parameters passed to `loadModels()` or `reloadModel()` (for example `supercell`) leaked into every later load.
+- The `molecule` query only processed the first atom when given several.
+- Setting an atom's `radius` to `null`, or calling `setProperty('radius')` with no value, made the atom vanish instead of resetting it.
+- `labelProperties`, `ellipsoidProperties`, and `eulerProperties` (and their per-atom versions) ignored falsy values such as `0` or `false`.
+- `displayModel()` with no argument left `displayed` pointing at the old model, so a later `vis.displayed = ...` threw.
+- `IsosurfaceMesh` failed to build, because it called a three.js method removed in r125.
+- `efgAtomicToHz()` and `iscAtomicToHz()` did not convert `nqr_eigenvalues`.
+- The demo's selection highlighting was off, because it set `highlight_selected` instead of `highlightSelected`.
+- JSDoc errors: `efgAtomicToHz` takes Q in millibarn; `rotateByAngleAxis` and `euler()` use radians; `centerCamera`, `getScreenshotData`, and `theme` are now documented.
+
+### Removed
+- `docs-tutorials/`. Its content now lives in the guides, with errors corrected: there is no `elems` query alias, and `CMD_BUTTON` equals `CTRL_BUTTON` on every platform.
+
 ## [0.8.1] - 2026-10-15
 
 ### Fixed
@@ -15,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.8.0] - 2026-07-29
 
 ### Changed
-- **Breaking:** Relative Euler-angle consumers must migrate from `TensorData.eulerTo()` and `TensorData.equivalentEulerTo()` to the planned `TensorData.relativeOrientationTo()` API. See [Relative tensor orientation migration](docs-tutorials/RelativeTensorOrientation.md).
+- **Breaking:** Relative Euler-angle consumers must migrate from `TensorData.eulerTo()` and `TensorData.equivalentEulerTo()` to `TensorData.relativeOrientationTo()`. See the [upgrading notes](https://ccp-nc.github.io/crystvis-js/upgrading.html) and the [NMR tensors guide](https://ccp-nc.github.io/crystvis-js/nmr.html).
 
 ## [0.7.0] - 2026-03-11
 
