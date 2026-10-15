@@ -1,0 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap');
+
+body,
+.light {
+    --cobalt: #2D47C9;
+    font-family: 'Spline Sans', system-ui, sans-serif;
+}
+
+code,
+pre,
+.signature-attributes,
+.type-signature {
+    font-family: 'Spline Sans Mono', ui-monospace, monospace;
+}
+
+.light a,
+.light .sidebar-section-children a:hover {
+    color: var(--cobalt);
+}

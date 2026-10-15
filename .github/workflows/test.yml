@@ -148,11 +148,14 @@ jobs:
           npm run build-resources
           npm run build-demo
           npm run build-html-test
+          npm run docs
 
       - name: Verify builds exist
         run: |
           test -f demo/demo.js || (echo "❌ demo.js not found" && exit 1)
           test -f test/test-html/testbuild.js || (echo "❌ testbuild.js not found" && exit 1)
+          test -f docs/index.html || (echo "❌ docs/index.html not found" && exit 1)
+          test -f docs/api/index.html || (echo "❌ docs/api/index.html not found" && exit 1)
           echo "✅ All build artifacts created successfully"
 
       - name: Check for build warnings

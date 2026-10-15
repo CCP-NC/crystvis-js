@@ -1,14 +1,25 @@
 {
     "source": {
-        "include": ["README.md", "index.js", "lib/visualizer.js", "lib/model.js", 
-                    "lib/modelview.js"]
+        "include": ["index.js", "lib/visualizer.js", "lib/model.js",
+                    "lib/modelview.js", "lib/tensor.js", "lib/relative-orientation.js"]
     },
     "opts": {
         "encoding": "utf8",
+        "readme": "docs-src/api-home.md",
         "template": "node_modules/clean-jsdoc-theme",
         "theme_opts": {
-            "theme": "dark"
+            "default_theme": "light",
+            "homepageTitle": "crystvis-js API reference",
+            "title": "<a href=\"../index.html\">crystvis-js</a>",
+            "menu": [
+                { "title": "Guides", "link": "../index.html" },
+                { "title": "GitHub", "link": "https://github.com/ccp-nc/crystvis-js" }
+            ],
+            "include_css": ["docs-src/api.css"]
         }
+    },
+    "markdown": {
+        "idInHeadings": true
     },
     "plugins": ["plugins/markdown"]
 }
