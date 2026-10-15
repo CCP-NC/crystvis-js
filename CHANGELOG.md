@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - **Breaking:** Relative Euler-angle consumers must migrate from `TensorData.eulerTo()` and `TensorData.equivalentEulerTo()` to the planned `TensorData.relativeOrientationTo()` API. See [Relative tensor orientation migration](docs-tutorials/RelativeTensorOrientation.md).
 
+### Fixed
+- `TensorData.euler()` returned angles that did not rebuild the tensor for axial tensors whose two lowest eigenvalues coincide (for example a dipolar coupling with d > 0, or an axial shielding with zeta > 0 in Haeberlen order) when the passive angles were requested. The free angle is now zeroed on the correct side, and the eigenvalue order used for that choice follows the `eval_convention` argument.
+
 ## [0.7.0] - 2026-03-11
 
 ### Added
