@@ -7,7 +7,7 @@ const cleanedBrowserGlobals = Object.fromEntries(
 
 export default [
   {
-    ignores: ['node_modules/', 'demo/', 'test/test-html/'],
+    ignores: ['node_modules/', 'demo/', 'test/test-html/', 'docs/'],
   },
   js.configs.recommended,
   {

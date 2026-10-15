@@ -4,7 +4,7 @@ const CrystVis = require('../lib/visualizer.js').CrystVis;
 const Primitives = require('../lib/primitives/index.js');
 
 var visualizer = new CrystVis('#main-app', 0, 0);
-visualizer.highlight_selected = true;
+visualizer.highlightSelected = true;
 visualizer.theme = 'dark';
 
 function showError(msg) {

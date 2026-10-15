@@ -7,6 +7,7 @@ import chaiAlmost from 'chai-almost'
 import _ from 'lodash';
 import fs from 'fs';
 import path from 'path';
+import { TensorData } from '../lib/tensor.js';
 import {
     fileURLToPath
 } from 'url';
@@ -512,4 +513,69 @@ describe('Model#viewFromLabels', function() {
             .to.deep.equal(mv.indices.slice().sort((a,b)=>a-b));
     });
 
+});
+describe('regressions', function() {
+    it('molecule query should handle more than one atom', function() {
+        var a = h2omodel._queryMolecule(h2omodel.atoms[0]);
+        var b = h2omodel._queryMolecule(h2omodel.atoms[3]);
+        var both = h2omodel._queryMolecule([h2omodel.atoms[0], h2omodel.atoms[3]]);
+        expect(_.sortBy(_.uniq(both))).to.deep.equal(_.sortBy(_.uniq(a.concat(b))));
+    });
+    it('setting radius to null should reset it to the base radius', function() {
+        var aim = new AtomImage(h2omodel, 0, [0, 0, 0]);
+        Object.defineProperty(aim, 'mesh', { value: {} });
+        aim.radius = 2.0;
+        aim.radius = null;
+        expect(aim.radius).to.almost.equal(aim.baseRadius);
+        expect(aim.radius).to.be.above(0);
+    });
+    it('label/ellipsoid properties should accept falsy values', function() {
+        var aim = new AtomImage(h2omodel, 0, [0, 0, 0]);
+        aim._labels = { l: { opacity: 1 } };
+        aim.labelProperty('l', 'opacity', 0);
+        expect(aim.labelProperty('l', 'opacity')).to.equal(0);
+        aim._ellipsoids = { e: { showAxes: true } };
+        aim.ellipsoidProperty('e', 'showAxes', false);
+        expect(aim.ellipsoidProperty('e', 'showAxes')).to.equal(false);
+    });
+});
+
+describe('query argument forms', function() {
+    it('accepts flat and nested lists for elements, indices and labels', function() {
+        var nested = chamodel.find({ elements: [['Si', 'O']] });
+        var flat = chamodel.find({ elements: ['Si', 'O'] });
+        expect(flat.length).to.equal(nested.length);
+        expect(flat.length).to.equal(chamodel.length);
+        expect(chamodel.find({ indices: [0, 1, 2] }).length).to.equal(3);
+        expect(chamodel.find({ indices: [[0, 1, 2]] }).length).to.equal(3);
+        var label = chamodel.atoms[0].crystLabel;
+        expect(chamodel.find({ labels: label }).length).to.be.above(0);
+    });
+    it('accepts several atoms for molecule as separate arguments', function() {
+        var atoms = [h2omodel.atoms[0], h2omodel.atoms[3]];
+        var flat = h2omodel.find({ molecule: atoms }).indices;
+        var nested = h2omodel.find({ molecule: [atoms] }).indices;
+        expect(_.sortBy(flat)).to.deep.equal(_.sortBy(nested));
+    });
+});
+
+describe('atom images without a renderer', function() {
+    it('store visibility and highlighting without throwing', function() {
+        var aim = new AtomImage(h2omodel, 0, [0, 0, 0]);
+        aim.visible = false;
+        expect(aim.visible).to.equal(false);
+        aim.visible = null;
+        expect(aim.visible).to.equal(true);
+        aim.highlighted = true;
+        expect(aim.highlighted).to.equal(true);
+        aim.opacity = 0.5;
+        expect(aim.opacity).to.equal(0.5);
+    });
+    it('addEllipsoid skips missing data and leaves the tensor unchanged', function() {
+        var aim = new AtomImage(h2omodel, 0, [0, 0, 0]);
+        var t = new TensorData([[1, 0, 0], [0, 2, 0], [0, 0, -6]]);
+        expect(() => aim.addEllipsoid(null, 'hf')).to.not.throw();
+        aim.addEllipsoid(t, 'efg');
+        expect(t.convention).to.equal('increasing');
+    });
 });
