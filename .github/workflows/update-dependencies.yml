@@ -111,24 +111,32 @@ jobs:
           git diff package.json | grep '"' | grep -E '^\+|^\-' >> changes.txt || echo "See package.json diff for details" >> changes.txt
           cat changes.txt
 
+      - name: Get date
+        id: date
+        run: echo "date=$(date +%Y-%m-%d)" >> $GITHUB_OUTPUT
+
       - name: Create Pull Request
         if: steps.changes.outputs.has_changes == 'true'
+        id: cpr
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          add-paths: |
+            package.json
+            package-lock.json
           commit-message: |
-            deps: update dependencies $(date +%Y-%m-%d)
+            deps: update dependencies ${{ steps.date.outputs.date }}
             
             Automated dependency update
             Update type: ${{ github.event.inputs.update_type || 'patch' }}
-          branch: deps/automated-update-${{ github.run_number }}
+          branch: deps/automated-update
           delete-branch: true
-          title: 'deps: update dependencies $(date +%Y-%m-%d)'
+          title: 'deps: update dependencies ${{ steps.date.outputs.date }}'
           body: |
             ## Automated Dependency Update
             
             **Update Type:** `${{ github.event.inputs.update_type || 'patch' }}`
-            **Date:** $(date +%Y-%m-%d)
+            **Date:** ${{ steps.date.outputs.date }}
             
             ### Changes
             This PR updates dependencies to their latest compatible versions.
@@ -156,21 +164,7 @@ jobs:
             
             ---
             
-            <details>
-            <summary>Updated Packages</summary>
-            
-            ```
-            $(cat changes.txt || echo "Check diff for details")
-            ```
-            </details>
-            
-            <details>
-            <summary>Security Audit</summary>
-            
-            ```
-            $(cat audit.txt || echo "No audit information available")
-            ```
-            </details>
+            See the workflow logs for the list of updated packages and the security audit.
             
             ---
             
