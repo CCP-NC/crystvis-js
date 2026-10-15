@@ -833,6 +833,13 @@ describe('euler angles of axially symmetric tensors', () => {
         }
     });
 
+    it('chooses the free angle using the requested eigenvalue convention', () => {
+        // unsorted eigenvalues would pick a different (nonzero) free angle here
+        const tensor = new TensorData(axialTensor([1, 1, -2], 70, 40, 0));
+        expect(tensor.euler('zyz', true, 'nqr', true)).to.deep.almost.equal([40, 70, 0]);
+        expect(tensor.euler('zyz', false, 'nqr', true)).to.deep.almost.equal([0, 70, 140]);
+    });
+
     it('gives the same passive angles whether the eigenvalue convention is passed or set on the tensor', () => {
         const evals = [-1, -1, 2];
         const passed = new TensorData(axialTensor(evals, 70, 40, 0));
