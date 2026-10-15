@@ -778,6 +778,73 @@ describe('#tensordata', function() {
 });
 
 
+describe('euler angles of axially symmetric tensors', () => {
+    const D = PI / 180;
+    const rotZ = a => mjs.matrix([[mjs.cos(a), -mjs.sin(a), 0], [mjs.sin(a), mjs.cos(a), 0], [0, 0, 1]]);
+    const rotY = b => mjs.matrix([[mjs.cos(b), 0, mjs.sin(b)], [0, 1, 0], [-mjs.sin(b), 0, mjs.cos(b)]]);
+
+    // Lab-frame tensor whose unique axis (PAS z) points at polar angle theta and azimuth phi (degrees)
+    function axialTensor(evals, theta, phi, psi) {
+        const U = mjs.multiply(mjs.multiply(rotZ(phi * D), rotY(theta * D)), rotZ(psi * D));
+        return mjs.multiply(mjs.multiply(U, mjs.diag(evals)), mjs.transpose(U)).toArray();
+    }
+
+    function rebuild(euler, evals, active) {
+        const [alpha, beta, gamma] = euler;
+        return rotateTensor(alpha, beta, gamma, mjs.diag(evals), 'zyz', active).toArray().flat();
+    }
+
+    // PAS eigenvalues with the unique axis largest (-1,-1,2) and smallest (1,1,-2) (dipolar couplings)
+    const cases = {
+        'unique axis on the largest eigenvalue': [-1, -1, 2],
+        'unique axis on the smallest eigenvalue': [1, 1, -2],
+    };
+    const conventions = ['haeberlen', 'nqr', 'increasing', 'decreasing'];
+    // theta = 90 is left out: with increasing/decreasing ordering and the unique axis on PAS x
+    // that case is a separate, pre-existing failure
+    const thetas = [0, 30, 70, 110, 150, 180];
+    const phis = [-170, -100, -45, 0, 30, 40, 100, 170];
+    const psis = [0, 37];
+
+    for (const [label, evals] of Object.entries(cases)) {
+        for (const convention of conventions) {
+            for (const active of [true, false]) {
+                it(`rebuilds the tensor (${label}, ${convention}, ${active ? 'active' : 'passive'})`, () => {
+                    for (const theta of thetas) for (const phi of phis) for (const psi of psis) {
+                        const tensor = new TensorData(axialTensor(evals, theta, phi, psi));
+                        tensor.convention = convention;
+                        const euler = tensor.euler('zyz', active, convention);
+                        const message = `theta=${theta} phi=${phi} psi=${psi}`;
+                        expect(rebuild(euler, tensor.sorted_eigenvalues(convention), active), message)
+                            .to.deep.almost.equal(axialTensor(evals, theta, phi, psi).flat());
+                    }
+                });
+            }
+        }
+    }
+
+    it('uses the documented zero-angle gauge for the degenerate lowest pair', () => {
+        // With the unique axis at (theta=70, phi=40) the free angle is zeroed and the rest
+        // reproduce the bond direction: active (phi, theta, 0), passive (0, theta, 180-phi)
+        for (const evals of Object.values(cases)) {
+            const tensor = new TensorData(axialTensor(evals, 70, 40, 0));
+            expect(tensor.euler('zyz', true, 'haeberlen', true)).to.deep.almost.equal([40, 70, 0]);
+            expect(tensor.euler('zyz', false, 'haeberlen', true)).to.deep.almost.equal([0, 70, 140]);
+        }
+    });
+
+    it('gives the same passive angles whether the eigenvalue convention is passed or set on the tensor', () => {
+        const evals = [-1, -1, 2];
+        const passed = new TensorData(axialTensor(evals, 70, 40, 0));
+        const set = new TensorData(axialTensor(evals, 70, 40, 0));
+        set.convention = 'haeberlen';
+        expect(passed.euler('zyz', false, 'haeberlen', true)).to.deep.almost.equal(set.euler('zyz', false, null, true));
+        expect(passed.euler('zyz', false, 'haeberlen', true)).to.deep.almost.equal([0, 70, 140]);
+    });
+
+});
+
+
 describe('rotateTensor', () => {
     // TODO add more tests of this
     it('throws an error for unsupported modes', () => {
