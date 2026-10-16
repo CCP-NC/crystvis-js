@@ -147,22 +147,36 @@ ${extras}
 </ul>`;
 }
 
-// JSDoc names class pages after their module (lib_model.module_js-Model.html);
-// guides link to api/<Class>.html, rewritten here to the real file.
+// JSDoc names class pages after their module (lib_model.module_js-Model.html).
+// Rename them to <Class>.html, the URLs the guides and users link to, and
+// update every link to them in the API reference.
 const apiDir = path.join(out, 'api');
-const apiFiles = fs.existsSync(apiDir) ? fs.readdirSync(apiDir) : [];
-function resolveApiLinks(html) {
-    return html.replace(/href="api\/(\w+)\.html/g, (match, name) => {
-        if (apiFiles.includes(name + '.html')) return match;
-        const file = apiFiles.find((f) => f.endsWith('-' + name + '.html'));
-        return file ? `href="api/${file}` : match;
-    });
+function normalizeApiFiles() {
+    if (!fs.existsSync(apiDir)) return;
+    const renames = new Map();
+    for (const f of fs.readdirSync(apiDir)) {
+        const m = f.match(/^.*\.module_js-(\w+)\.html$/);
+        if (m) renames.set(f, m[1] + '.html');
+    }
+    if (!renames.size) return;
+    // Names also appear in data/search.json, so rewrite every text file.
+    const texts = fs.readdirSync(apiDir, { recursive: true })
+        .filter((f) => /\.(html|json|js)$/.test(f)).map((f) => path.join(apiDir, f));
+    for (const p of texts) {
+        let text = fs.readFileSync(p, 'utf8');
+        for (const [from, to] of renames) text = text.split(from).join(to);
+        fs.writeFileSync(p, text);
+    }
+    for (const [from, to] of renames) {
+        fs.renameSync(path.join(apiDir, from), path.join(apiDir, to));
+    }
 }
+normalizeApiFiles();
 
 function pageHtml(page) {
     const rendered = renderMarkdown(page);
     const headings = rendered.headings;
-    const html = resolveApiLinks(rendered.html);
+    const html = rendered.html;
     const title = page.slug === 'index' ? `crystvis-js: ${page.title}` : `${page.title} · crystvis-js`;
     return `<!doctype html>
 <html lang="en">
