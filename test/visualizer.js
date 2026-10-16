@@ -495,3 +495,56 @@ describe('CrystVis#unloadAll', function () {
     });
 
 });
+
+describe('CrystVis#loadModels parameter defaults', function () {
+    it('does not leak parameters from one load into the next', function () {
+        const { vis } = makeMockVis();
+        vis._loader = new Loader();
+        const xyz = fs.readFileSync(path.join(__dirname, 'data', 'H2O.xyz'), 'utf8');
+        vis.loadModels(xyz, 'xyz', 'a', { supercell: [2, 2, 2] });
+        vis.loadModels(xyz, 'xyz', 'b');
+        expect(vis.getModelParameters('a').supercell).to.deep.equal([2, 2, 2]);
+        expect(vis.getModelParameters('b').supercell).to.deep.equal([1, 1, 1]);
+    });
+});
+
+describe('CrystVis#displayModel clearing', function () {
+    it('resets .displayed so stale views are not reused', function () {
+        const { vis } = makeMockVis();
+        vis._displayed = { hide() { throw new Error('stale view'); } };
+        vis.displayModel();
+        expect(vis.displayed).to.be.null;
+    });
+});
+
+describe('CrystVis loading options', function () {
+    const xyz = fs.readFileSync(path.join(__dirname, 'data', 'ethanol_with_tensors.xyz'), 'utf8');
+
+    it('passes the frame option through to the XYZ parser', function () {
+        const { vis } = makeMockVis();
+        vis._loader = new Loader();
+        vis.loadModels(xyz, 'xyz', 'first', { frame: 0 });
+        vis.loadModels(xyz, 'xyz', 'last');
+        const p0 = vis._models.first._atoms_base.get_positions();
+        const p1 = vis._models.last._atoms_base.get_positions();
+        expect(p0).to.not.deep.equal(p1);
+    });
+
+    it('reloadModel merges new parameters over the stored ones', function () {
+        const { vis } = makeMockVis();
+        vis._loader = new Loader();
+        vis.loadModels(xyz, 'xyz', 'm', { supercell: [2, 2, 2], vdwScaling: 1.2 });
+        vis.reloadModel('m', { vdwScaling: 1.0 });
+        const params = vis.getModelParameters('m');
+        expect(params.supercell).to.deep.equal([2, 2, 2]);
+        expect(params.vdwScaling).to.equal(1.0);
+    });
+
+    it('throws Error objects, not strings, for unknown models', function () {
+        const { vis } = makeMockVis();
+        vis._loader = new Loader();
+        vis.loadModels(xyz, 'xyz', 'm');
+        expect(() => vis.displayModel('nope')).to.throw(Error, /does not exist/);
+        expect(() => vis.deleteModel('nope')).to.throw(Error, /does not exist/);
+    });
+});

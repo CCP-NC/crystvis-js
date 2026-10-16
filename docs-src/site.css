@@ -1,0 +1,645 @@
+/* Guide site styles. Mobile-first; the desktop layout starts at 900px. */
+
+:root {
+    color-scheme: light;
+    --paper: #F2F4F3;
+    --ink: #18202E;
+    --slate: #566173;
+    --rule: #D5DADF;
+    --cobalt: #2D47C9;
+    --cobalt-hover: #1E3399;
+    --field: #101827;
+    --aura: #F2D21B;
+    --code-bg: #E4E8EB;
+    --hl-keyword: #93A4FF;
+    --hl-string: #EBCB6B;
+    --hl-number: #FF8F87;
+    --hl-title: #8FDB95;
+    --hl-comment: #7A8496;
+    --hl-plain: #E6E9EF;
+    --hl-attr: #C9D1DE;
+    --plate-rule: rgba(255, 255, 255, .08);
+    --font-sans: 'Spline Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'Spline Sans Mono', ui-monospace, Menlo, Consolas, monospace;
+    --sidebar-width: 248px;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+}
+
+.skip {
+    position: absolute;
+    left: 12px;
+    top: -100px;
+    z-index: 100;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--ink);
+    color: #fff;
+    text-decoration: none;
+}
+
+.skip:focus {
+    top: 12px;
+}
+
+:focus-visible {
+    outline: 2px solid var(--cobalt);
+    outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Sidebar and navigation
+   --------------------------------------------------------------------------- */
+
+.sidebar {
+    padding: 16px 20px 8px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+}
+
+.brand {
+    display: inline-block;
+    color: var(--ink);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -.01em;
+    text-decoration: none;
+}
+
+.version {
+    margin-left: .3em;
+    color: var(--slate);
+    font-size: .85rem;
+    font-weight: 400;
+}
+
+details.nav-toggle > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    padding: 10px 0;
+    border-top: 1px solid var(--rule);
+    color: var(--ink);
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+}
+
+details.nav-toggle > summary::-webkit-details-marker {
+    display: none;
+}
+
+details.nav-toggle > summary::after {
+    content: '';
+    width: .5em;
+    height: .5em;
+    margin-right: .3em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+}
+
+details.nav-toggle[open] > summary::after {
+    transform: rotate(-135deg);
+}
+
+details.nav-toggle > nav {
+    padding-bottom: 12px;
+}
+
+.nav-pages,
+.nav-extra {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.nav-pages > li {
+    margin: 0;
+    border-left: 3px solid transparent;
+}
+
+.nav-pages > li.current {
+    border-left-color: var(--aura);
+}
+
+.nav-pages > li > a,
+.nav-extra a {
+    display: block;
+    padding: 6px 0 6px 12px;
+    color: var(--slate);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.nav-extra a {
+    padding-left: 15px;
+}
+
+.nav-pages > li.current > a,
+.nav-extra li.current a {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+.nav-pages a:hover,
+.nav-extra a:hover {
+    color: var(--ink);
+}
+
+ol.toc {
+    margin: 0 0 8px;
+    padding: 0 0 0 24px;
+    list-style: none;
+    font-size: .9rem;
+}
+
+ol.toc a {
+    display: block;
+    padding: 3px 0;
+    color: var(--slate);
+    text-decoration: none;
+}
+
+ol.toc a:hover {
+    color: var(--ink);
+}
+
+.nav-extra {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--rule);
+}
+
+/* ---------------------------------------------------------------------------
+   Content and prose
+   --------------------------------------------------------------------------- */
+
+.content {
+    min-width: 0;
+    padding: 28px 20px 64px;
+}
+
+.content > * {
+    max-width: 68ch;
+}
+
+.content h1 {
+    margin: 0 0 .6rem;
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -.02em;
+}
+
+.content h2 {
+    margin: 3rem 0 .75rem;
+    font-size: 1.55rem;
+    font-weight: 600;
+    line-height: 1.25;
+    scroll-margin-top: 16px;
+}
+
+.content h3 {
+    margin: 2rem 0 .5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 1.3;
+    scroll-margin-top: 16px;
+}
+
+.content p,
+.content ul,
+.content ol {
+    margin: 0 0 1rem;
+}
+
+.content ul,
+.content ol {
+    padding-left: 1.4rem;
+}
+
+.content li {
+    margin: .25rem 0;
+}
+
+.content a {
+    color: var(--cobalt);
+    text-decoration-thickness: 1px;
+    text-underline-offset: .2em;
+}
+
+.content a:hover {
+    color: var(--cobalt-hover);
+}
+
+.content code {
+    padding: .1em .35em;
+    border-radius: 4px;
+    background: var(--code-bg);
+    color: var(--ink);
+    font-family: var(--font-mono);
+    font-size: .88em;
+}
+
+/* Heading anchors: the heading text is the link. A slate # appears on hover. */
+.content h2 .anchor,
+.content h3 .anchor {
+    position: relative;
+    color: inherit;
+    text-decoration: none;
+}
+
+.content .anchor::before {
+    content: '#';
+    position: absolute;
+    left: -.85em;
+    color: var(--slate);
+    font-weight: 400;
+    opacity: 0;
+}
+
+.content h2:hover .anchor::before,
+.content h3:hover .anchor::before,
+.content .anchor:focus-visible::before {
+    opacity: 1;
+}
+
+/* Callouts: a quiet slate rule, with the lead word in ink. */
+.content blockquote {
+    margin: 1.5rem 0;
+    padding: 0 0 0 18px;
+    border-left: 3px solid var(--slate);
+    color: var(--slate);
+}
+
+.content blockquote p {
+    margin: 0;
+}
+
+.content blockquote strong {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+/* Tables */
+.table-wrap {
+    max-width: 1080px;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+}
+
+.content table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .95em;
+}
+
+.content th,
+.content td {
+    padding: 8px 16px 8px 0;
+    border-bottom: 1px solid var(--rule);
+    text-align: left;
+    vertical-align: top;
+}
+
+.content th {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   Code blocks outside plates
+   --------------------------------------------------------------------------- */
+
+.content pre {
+    margin: 0;
+    padding: 16px 18px;
+    border-radius: 8px;
+    overflow-x: auto;
+    background: var(--field);
+    color: var(--hl-plain);
+    font-family: var(--font-mono);
+    font-size: .88em;
+    line-height: 1.55;
+}
+
+.content pre code {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: inherit;
+    font-size: 1em;
+}
+
+.code-block {
+    position: relative;
+    max-width: 1080px;
+    margin: 1.25rem 0;
+}
+
+.copy {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 6px 9px;
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, .08);
+    color: var(--hl-attr);
+    font: 500 12px/1 var(--font-sans);
+    cursor: pointer;
+    transition: background-color .15s, color .15s;
+}
+
+.copy:hover {
+    background: rgba(255, 255, 255, .16);
+    color: #fff;
+}
+
+/* ---------------------------------------------------------------------------
+   Plates: live examples
+   --------------------------------------------------------------------------- */
+
+.plate {
+    display: grid;
+    grid-template-columns: minmax(0, 55fr) minmax(0, 45fr);
+    max-width: 1080px;
+    margin: 2rem 0;
+    overflow: hidden;
+    border-radius: 10px;
+    background: var(--field);
+    color: var(--hl-plain);
+}
+
+.plate-view {
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    height: 420px;
+    min-width: 0;
+}
+
+.viewer {
+    position: absolute;
+    inset: 0;
+}
+
+.plate-rerun {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    padding: 7px 10px;
+    border: 1px solid rgba(255, 255, 255, .2);
+    border-radius: 6px;
+    background: rgba(16, 24, 39, .5);
+    color: var(--hl-plain);
+    font: 500 12px/1 var(--font-sans);
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s;
+}
+
+.plate-rerun:hover,
+.plate-rerun:focus-visible {
+    border-color: rgba(255, 255, 255, .4);
+    background: rgba(16, 24, 39, .92);
+}
+
+.plate-code {
+    grid-column: 2;
+    grid-row: 1;
+    max-height: 420px;
+    min-width: 0;
+    padding: 18px 20px;
+    overflow: auto;
+    border-left: 1px solid var(--plate-rule);
+}
+
+.plate-code pre {
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+    background: none;
+    color: var(--hl-plain);
+    font-size: 13.5px;
+    line-height: 1.55;
+}
+
+.plate-log {
+    display: block;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    max-height: 180px;
+    margin: 0;
+    padding: 10px 20px;
+    overflow: auto;
+    border-top: 1px solid var(--plate-rule);
+    color: var(--hl-attr);
+    font: 13px/1.5 var(--font-mono);
+    white-space: pre-wrap;
+}
+
+.plate-log[hidden] {
+    display: none;
+}
+
+.plate-log .err {
+    color: var(--hl-number);
+}
+
+/* Home page hero: a full-width plate with the title overlaid bottom-left. */
+.plate-hero {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.plate-hero .plate-view {
+    height: 520px;
+}
+
+.page-index .plate-hero {
+    margin-top: 0;
+}
+
+.hero-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    max-width: none;
+    padding: 96px 36px 36px;
+    background: linear-gradient(to top, rgba(16, 24, 39, .88) 0%, rgba(16, 24, 39, .55) 50%, rgba(16, 24, 39, 0) 100%);
+    color: #fff;
+    pointer-events: none;
+}
+
+.hero-caption h1 {
+    max-width: 22ch;
+    margin: 0 0 .6rem;
+    color: #fff;
+}
+
+.hero-caption p {
+    max-width: 36rem;
+    margin: 0;
+    color: var(--hl-plain);
+    font-size: 1.05rem;
+}
+
+/* Syntax colours, for dark code blocks and plates. */
+pre .hljs-keyword,
+pre .hljs-selector-tag,
+pre .hljs-built_in,
+pre .hljs-meta,
+pre .hljs-tag,
+pre .hljs-name {
+    color: var(--hl-keyword);
+}
+
+pre .hljs-string,
+pre .hljs-regexp {
+    color: var(--hl-string);
+}
+
+pre .hljs-number,
+pre .hljs-literal {
+    color: var(--hl-number);
+}
+
+pre .hljs-title,
+pre .hljs-title.function_ {
+    color: var(--hl-title);
+}
+
+pre .hljs-comment {
+    color: var(--hl-comment);
+}
+
+pre .hljs-attr,
+pre .hljs-attribute,
+pre .hljs-property {
+    color: var(--hl-attr);
+}
+
+pre .hljs-params,
+pre .hljs-variable {
+    color: var(--hl-plain);
+}
+
+/* Focus rings on the dark plate need a lighter tone to stay visible. */
+.plate :focus-visible,
+.code-block :focus-visible {
+    outline-color: var(--hl-keyword);
+}
+
+/* ---------------------------------------------------------------------------
+   Desktop: sidebar beside the content
+   --------------------------------------------------------------------------- */
+
+@media (min-width: 900px) {
+    .layout {
+        display: grid;
+        grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+        min-height: 100vh;
+    }
+
+    .sidebar {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        padding: 28px 22px 40px 24px;
+        border-right: 1px solid var(--rule);
+        border-bottom: 0;
+    }
+
+    .brand {
+        display: block;
+        margin-bottom: 20px;
+    }
+
+    .version {
+        display: block;
+        margin: 2px 0 0;
+    }
+
+    details.nav-toggle > summary {
+        display: none;
+    }
+
+    details.nav-toggle > nav {
+        padding-bottom: 0;
+    }
+
+    .content {
+        padding: 56px 4rem 96px;
+    }
+
+    .plate-view {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .plate-code {
+        grid-column: 2;
+        grid-row: 1;
+    }
+}
+
+/* Mobile: the plate stacks, the viewer is shorter, and the code follows. */
+@media (max-width: 899px) {
+    .plate {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .plate-view {
+        grid-column: 1;
+        grid-row: 1;
+        height: 340px;
+    }
+
+    .plate-code {
+        grid-column: 1;
+        grid-row: 2;
+        max-height: none;
+        border-left: 0;
+        border-top: 1px solid var(--plate-rule);
+    }
+
+    .plate-log {
+        grid-row: 3;
+    }
+
+    .plate-hero .plate-view {
+        height: 380px;
+    }
+
+    .hero-caption {
+        padding: 72px 20px 24px;
+    }
+
+    .hero-caption h1 {
+        font-size: 2.1rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .copy,
+    .plate-rerun {
+        transition: none;
+    }
+}

@@ -198,3 +198,24 @@ describe('RelativeTensorOrientation', () => {
         }
     });
 });
+describe('RelativeTensorOrientation#canonicalConfigurations', function () {
+    const R = [
+        [0.311302, -0.598137, 0.73846],
+        [0.506809, 0.761837, 0.403423],
+        [-0.803888, 0.248672, 0.540302],
+    ];
+    const A = new TensorData([[10, 0, 0], [0, 20, 0], [0, 0, 60]]);
+    const B = new TensorData([[5, 20, 70], R]);
+
+    for (const active of [true, false]) {
+        it(`keeps four triaxial configurations in the NMR ranges (active=${active})`, function () {
+            const o = A.relativeOrientationTo(B, { active });
+            const canon = o.canonicalConfigurations;
+            chai.expect(canon).to.have.length(4);
+            for (const { euler: [a, b, g] } of canon) {
+                chai.expect(b).to.be.at.most(Math.PI / 2 + 1e-9);
+                chai.expect(active ? g : a).to.be.below(Math.PI);
+            }
+        });
+    }
+});

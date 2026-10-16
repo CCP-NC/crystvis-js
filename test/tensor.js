@@ -354,6 +354,7 @@ describe('#tensordata', function() {
 
         // Comparison in kHz
         expect(efg.haeberlen_eigenvalues[2]/1e3).to.almost.equal(11233.854188);
+        expect(Math.max(...efg.nqr_eigenvalues.map(Math.abs))/1e3).to.almost.equal(11233.854188);
     });
 
     it ('should convert properly an ISC tensor to Hz', function() {

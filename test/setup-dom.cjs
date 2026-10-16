@@ -20,7 +20,7 @@ const dom = new JSDOM('<!DOCTYPE html><html><body><div id="crystvis"></div></bod
 function setGlobal(name, value) {
     try {
         global[name] = value;
-    } catch (_) {
+    } catch {
         Object.defineProperty(global, name, { value, writable: true, configurable: true });
     }
 }

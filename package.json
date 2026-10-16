@@ -37,7 +37,7 @@
     "start": "npm run watch-testserver",
     "clean-docs": "rm -rf docs/* || true",
     "predocs": "npm run clean-docs",
-    "docs": "jsdoc -d docs -u docs-tutorials --configure jsconf.json index.js; touch docs/.nojekyll",
+    "docs": "jsdoc -d docs/api --configure jsconf.json && node scripts/build-docs.js && touch docs/.nojekyll",
     "predeploy-docs": "npm run docs",
     "deploy-docs": "gh-pages -d docs",
     "prepare": "npm run build-resources",
@@ -45,7 +45,8 @@
     "build-demo": "node scripts/build-bundle.js demo/main.js demo/demo.js",
     "build-resources": "node scripts/build-resources.js",
     "build-html-test": "node scripts/build-bundle.js test/test-html/index.js test/test-html/testbuild.js",
-    "watch-testserver": "npx serve & npm-watch build-demo & npm-watch build-html-test & npm-watch build-resources"
+    "watch-testserver": "npx serve & npm-watch build-demo & npm-watch build-html-test & npm-watch build-resources",
+    "docs-serve": "npx serve docs"
   },
   "repository": {
     "type": "git",
@@ -94,9 +95,11 @@
     "eslint": "^9.39.4",
     "gh-pages": "^6.3.0",
     "glob": "^11.1.0",
+    "highlight.js": "^11.12.0",
     "jpeg-js": "^0.4.4",
     "jsdoc": "^4.0.5",
     "jsdom": "^27.4.0",
+    "marked": "^18.1.1",
     "minimist": "^1.2.8",
     "mocha": "^11.7.5",
     "msdf-bmfont-xml": "^2.8.0",
