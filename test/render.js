@@ -109,6 +109,53 @@ describe('Renderer click drag guard', function () {
         expect(raycastCalls).to.equal(0);
     });
 
+    it('should set an accessible role and label on the canvas', function () {
+        const canvas = renderer._r.domElement;
+        expect(canvas.getAttribute('role')).to.equal('img');
+        expect(canvas.getAttribute('aria-label')).to.equal('Crystal structure viewer');
+    });
+
+    it('should construct and dispose without window.matchMedia', function () {
+        expect(window.matchMedia).to.be.undefined;
+        expect(renderer._dprUnwatch).to.not.be.ok;
+        expect(() => renderer.dispose()).to.not.throw();
+        renderer = null;
+    });
+
+    it('should update the pixel ratio when the media query fires and unregister on dispose', function () {
+        const listeners = [];
+        const queries = [];
+        window.matchMedia = (q) => {
+            queries.push(q);
+            const mq = {
+                addEventListener: (_, cb) => listeners.push(cb),
+                removeEventListener: (_, cb) => listeners.splice(listeners.indexOf(cb), 1),
+            };
+            return mq;
+        };
+        try {
+            const host = document.getElementById('crystvis');
+            host.innerHTML = '';
+            const r = new Renderer('#crystvis', 320, 240);
+            r._r.dispose = () => {};
+            expect(listeners).to.have.length(1);
+
+            const ratios = [];
+            r._r.setPixelRatio = (v) => ratios.push(v);
+            window.devicePixelRatio = 2;
+            listeners[0]();
+            expect(ratios).to.deep.equal([2]);
+            expect(queries[queries.length - 1]).to.equal('(resolution: 2dppx)');
+            expect(listeners).to.have.length(1);
+
+            r.dispose();
+            expect(listeners).to.have.length(0);
+        } finally {
+            delete window.matchMedia;
+            window.devicePixelRatio = 1;
+        }
+    });
+
     it('should convert document coordinates using the canvas bounding rect', function () {
         renderer._r.domElement.getBoundingClientRect = () => ({
             left: 40,
