@@ -79,7 +79,7 @@ These do not exist in a fresh clone. Build them before running tests or the demo
 
 - `lib/shaders/index.js` and `lib/assets/fonts/bmpfonts.js` are baked by `npm run build-resources` from `index.in.js` / `bmpfonts.in.js` and the shader and font sources. They exist because consumer bundlers do not reliably inline `.vert`, `.frag`, `.fnt` or `.png` imports, so the package ships them as JS strings and data URIs. Any bundler or packaging change must keep that working. The build runs from the `prepare` script (on `npm install` and `npm ci`) and from `prestart`.
 - `demo/demo.js` (`npm run build-demo`) and `test/test-html/testbuild.js` (`npm run build-html-test`) are bundles built from their sources.
-- `docs/` is wiped and rebuilt by `npm run docs` and deployed with `gh-pages`.
+- `docs/` is wiped and rebuilt by `npm run docs`. On push to `master`, `.github/workflows/deploy-docs.yml` uploads it as a GitHub Pages artifact and deploys it. There is no `gh-pages` branch.
 
 ### Committed but generated
 
