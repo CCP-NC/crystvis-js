@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The default box-selection handler no longer logs to the console.
 
 ### Fixed
+- The bundled bitmap font failed to parse in browsers, because its `%` glyph broke the data-URI decoding. Text labels then threw `must specify a { font } in options`.
 - API reference class pages were saved under their module path, such as `api/lib_visualizer.module_js-CrystVis.html`, so `api/CrystVis.html` returned 404. They now sit at `api/<Class>.html`, and the search index points at the new names.
 - Parameters passed to `loadModels()` or `reloadModel()` (for example `supercell`) leaked into every later load.
 - The `molecule` query only processed the first atom when given several.
