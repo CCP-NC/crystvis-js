@@ -73,7 +73,7 @@
     "@jkshenton/three-bmfont-text": "^4.0.1",
     "ajv": "^8.20.0",
     "buffer": "^6.0.3",
-    "chroma-js": "^3.2.0",
+    "chroma-js": "^3.3.0",
     "isosurface": "^1.0.0",
     "jquery": "^3.7.1",
     "load-bmfont": "^1.4.2",
@@ -84,24 +84,24 @@
     "yargs-parser": "^22.0.0"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.28.6",
+    "@babel/eslint-parser": "^7.29.13",
     "chai": "^5.3.3",
     "chai-almost": "^1.0.1",
-    "clean-jsdoc-theme": "^4.3.2",
+    "clean-jsdoc-theme": "^4.3.3",
     "datauri": "^4.1.0",
     "esbuild": "^0.25.12",
-    "eslint": "^9.39.4",
+    "eslint": "^9.39.5",
     "glob": "^11.1.0",
     "highlight.js": "^11.12.0",
     "jpeg-js": "^0.4.4",
     "jsdoc": "^4.0.5",
     "jsdom": "^27.4.0",
-    "marked": "^18.1.1",
+    "marked": "^18.2.0",
     "minimist": "^1.2.8",
-    "mocha": "^11.7.5",
+    "mocha": "^11.8.0",
     "msdf-bmfont-xml": "^2.8.0",
     "npm-watch": "^0.13.0",
-    "serve": "^14.2.6"
+    "serve": "^14.2.8"
   },
   "overrides": {
     "minimist": "$minimist"
