@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `setProperty('visible')` with no value resets atoms to visible. The `visible`, `highlighted`, `opacity`, `radius` and `scale` setters no longer throw while the model is not displayed.
 - `model.addSphere()` accepts an atom as its centre.
 - The default box-selection handler no longer logs to the console.
+- The canvas has `role="img"` and a default `aria-label` of "Crystal structure viewer", unless it already has a label.
+- The renderer follows changes to `window.devicePixelRatio`, for example when the window moves to another monitor, instead of fixing the pixel ratio at creation.
 
 ### Fixed
 - The bundled bitmap font failed to parse in browsers, because its `%` glyph broke the data-URI decoding. Text labels then threw `must specify a { font } in options`.
@@ -37,6 +39,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `displayModel()` with no argument left `displayed` pointing at the old model, so a later `vis.displayed = ...` threw.
 - `IsosurfaceMesh` failed to build, because it called a three.js method removed in r125.
 - `efgAtomicToHz()` and `iscAtomicToHz()` did not convert `nqr_eigenvalues`.
+- Setting `vis.selected` before any model was displayed threw a `TypeError`. Note that `displayModel()` still replaces the selection with an empty one.
+- The styling guide named the `getScreenshotData()` pixel ratio parameter `pixelRatio`; it is `scale_pixels`.
 - The demo's selection highlighting was off, because it set `highlight_selected` instead of `highlightSelected`.
 - JSDoc errors: `efgAtomicToHz` takes Q in millibarn; `rotateByAngleAxis` and `euler()` use radians; `centerCamera`, `getScreenshotData`, and `theme` are now documented.
 

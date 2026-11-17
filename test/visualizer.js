@@ -548,3 +548,22 @@ describe('CrystVis loading options', function () {
         expect(() => vis.deleteModel('nope')).to.throw(Error, /does not exist/);
     });
 });
+
+describe('CrystVis#selected', function () {
+    const xyz = fs.readFileSync(path.join(__dirname, 'data', 'H2O.xyz'), 'utf8');
+
+    it('can be set before any model is displayed', function () {
+        const { vis } = makeMockVis();
+        vis._loader = new Loader();
+        vis.loadModels(xyz, 'xyz', 'm');
+        expect(vis.selected).to.be.null;
+        const view = vis._models.m.view([]);
+        expect(() => { vis.selected = view; }).to.not.throw();
+        expect(vis.selected).to.equal(view);
+    });
+
+    it('rejects values that are not a ModelView', function () {
+        const { vis } = makeMockVis();
+        expect(() => { vis.selected = []; }).to.throw(Error, /ModelView/);
+    });
+});

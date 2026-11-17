@@ -132,7 +132,7 @@ The example builds a 24³ grid whose values are the distance from the cell centr
 
 ## Save a screenshot
 
-`vis.getScreenshotData(transparent = true, pixelRatio = 3)` returns a PNG data URL of the current view. It is synchronous: it renders a frame and reads the canvas before it returns. Pass `false` for `transparent` to get an opaque background in the theme's background colour.
+`vis.getScreenshotData(transparent = true, scale_pixels = 3)` returns a PNG data URL of the current view. It is synchronous: it renders a frame and reads the canvas before it returns. Pass `false` for `transparent` to get an opaque background in the theme's background colour.
 
 ```js
 const link = document.createElement('a');
